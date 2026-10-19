@@ -36,12 +36,12 @@ button{cursor:pointer}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .primary{background:linear-gradient(135deg,var(--gold),#ff9f43);color:#211008;border:0;border-radius:14px;padding:14px 19px;font-weight:900;box-shadow:0 10px 30px #ff9f432b}
 .secondary{border:1px solid #ffffff30;background:#ffffff0b;color:var(--cream);border-radius:14px;padding:13px 18px;font-weight:800}
-.heroArt{min-height:370px;border-radius:30px;position:relative;overflow:hidden;background:linear-gradient(145deg,#3b2221,#171722 65%);border:1px solid #ffffff1a;box-shadow:var(--shadow);display:grid;place-items:center}
+.heroArt{min-height:390px;border-radius:24px;position:relative;overflow:hidden;background:#231915 url(https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1200&q=85) center/cover no-repeat;border:2px solid #d9a84e;box-shadow:var(--shadow);display:grid;place-items:center}
 .heroArt:before,.heroArt:after{content:"";position:absolute;border-radius:50%;filter:blur(2px)}
 .heroArt:before{width:290px;height:290px;background:#ffb43d18;top:-70px;right:-70px}
 .heroArt:after{width:240px;height:240px;background:#ff6b3522;bottom:-90px;left:-50px}
-.foodOrb{position:relative;width:min(310px,75%);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff0b5,#d98c36 45%,#77351d 70%,#351811 72%);border:13px solid #e9c58c;box-shadow:0 22px 45px #0008,inset 0 0 0 7px #75401e;display:grid;place-items:center;transform:rotate(-9deg)}
-.foodOrb .emoji{font-size:clamp(6rem,14vw,10rem);filter:drop-shadow(0 12px 10px #3a1a0b88);transform:rotate(9deg)}
+.foodOrb{display:none}
+.foodOrb .emoji{display:none}
 .artLabel{position:absolute;z-index:2;bottom:20px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:end;gap:12px}
 .artLabel strong{font-size:1.3rem}
 .artLabel span{color:var(--gold);font-size:.86rem}
@@ -53,15 +53,21 @@ button{cursor:pointer}
 .sectionHead{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:24px}
 .sectionHead h2{font-size:clamp(1.9rem,4vw,3rem);margin:0;letter-spacing:-1px}
 .sectionHead p{color:var(--muted);margin:8px 0 0}
+
+.categoryShowcase{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 18px}
+.categoryTile{min-height:125px;border:1px solid #ffffff26;border-radius:16px;padding:16px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;text-align:left;box-shadow:0 12px 28px #0004;transition:transform .18s;cursor:pointer}
+.categoryTile:hover{transform:translateY(-3px)}.categoryTile .tileIcon{font-size:2rem}.categoryTile strong{font-size:1.05rem;font-style:italic}.categoryTile small{color:#fffde8;line-height:1.4}.categoryTile.noodles{background:linear-gradient(135deg,#f21b35,#a80019)}.categoryTile.starters{background:linear-gradient(135deg,#ff9a16,#c33d08)}.categoryTile.snacks{background:linear-gradient(135deg,#13a95b,#005c32)}.categoryTile.pizza{background:linear-gradient(135deg,#8b35d9,#451079)}
+@media(max-width:600px){.categoryShowcase{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.categoryTile{min-height:100px;padding:12px}.categoryTile strong{font-size:.9rem}.heroArt{min-height:275px}}
+
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
 .filter{border:1px solid #ffffff24;background:#ffffff08;color:#eee4df;padding:9px 14px;border-radius:999px;font-weight:800}
 .filter.active{background:var(--gold);border-color:var(--gold);color:#211008}
 .menuGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .foodCard{background:linear-gradient(145deg,#1c1c27,#14141b);border:1px solid #ffffff14;border-radius:21px;overflow:hidden;box-shadow:0 10px 28px #0002;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
 .foodCard:hover{transform:translateY(-4px);border-color:#ffd16666}
-.foodPic{height:155px;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 60%,#5a3329,#26202b 72%);overflow:hidden}
-.foodPic:before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;border:9px solid #d8b779;background:radial-gradient(circle,#e2a84e,#a95829 72%,#6a321d);box-shadow:0 12px 25px #0007}
-.foodPic .foodEmoji{position:relative;z-index:1;font-size:5rem;filter:drop-shadow(0 9px 6px #0007)}
+.foodPic{height:155px;position:relative;display:block;background:#25202a;overflow:hidden}.foodPic img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .35s}.foodCard:hover .foodPic img{transform:scale(1.045)}
+.foodPic:before{content:none}
+.foodPic .foodEmoji{display:none}
 .tag{position:absolute;z-index:2;top:12px;left:12px;background:#0b0b11d9;border:1px solid #ffffff25;color:var(--gold);padding:5px 9px;border-radius:99px;font-size:.72rem;font-weight:900}
 .foodInfo{padding:15px;display:flex;flex-direction:column;gap:10px;flex:1}
 .foodInfo h3{margin:0;font-size:1.1rem}
@@ -72,7 +78,7 @@ button{cursor:pointer}
 .addrow{display:flex;gap:8px;margin-top:auto}
 .addrow select{min-width:0;flex:1;background:#0e0e15;color:var(--cream);border:1px solid #ffffff28;border-radius:10px;padding:9px}
 .addbtn{border:0;background:var(--orange);color:white;font-weight:900;border-radius:10px;padding:10px 13px}
-.pizzaCard .foodPic{background:radial-gradient(circle,#493048,#1b1723)}
+.pizzaCard .foodPic{background:#1b1723}
 .notice{border:1px dashed #ffd16665;background:#ffd1660b;color:#e9d7bd;padding:14px 16px;border-radius:14px;margin-top:18px;font-size:.9rem}
 .aboutGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .aboutBox{border:1px solid #ffffff16;background:linear-gradient(135deg,#1b1b26,#13131b);padding:25px;border-radius:22px}
@@ -82,7 +88,7 @@ button{cursor:pointer}
 .contactRow{display:flex;align-items:center;gap:11px;background:#ffffff08;padding:12px;border-radius:13px}
 .contactIcon{width:39px;height:39px;border-radius:12px;background:#ffd1661c;display:grid;place-items:center;font-size:1.25rem}
 .contactRow small{display:block;color:var(--muted)}
-.footer{padding:28px 0;border-top:1px solid #ffffff14;color:var(--muted);font-size:.9rem}
+.footer{background:linear-gradient(90deg,#09090d,#20140f);padding:28px 0;border-top:1px solid #ffffff14;color:var(--muted);font-size:.9rem}
 .footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .cartDrawer{position:fixed;inset:0;z-index:50;background:#0009;display:none;justify-content:flex-end}
 .cartDrawer.open{display:flex}
@@ -109,16 +115,16 @@ button{cursor:pointer}
 .heroGrid{grid-template-columns:1fr}.hero{padding-top:36px}.heroArt{min-height:310px}.menuGrid{grid-template-columns:repeat(2,1fr)}.navlinks{display:none}.aboutGrid{grid-template-columns:1fr}.trust{grid-template-columns:1fr 1fr 1fr}
 }
 @media(max-width:540px){
-.wrap{width:92%}.topbar .wrap{font-size:.75rem}.brandmark{width:40px;height:40px}.hero h1{letter-spacing:-1.6px}.heroArt{min-height:280px}.trust{gap:7px}.trust div{padding:10px 8px}.trust b{font-size:.9rem}.trust small{font-size:.72rem}.menuGrid{grid-template-columns:1fr 1fr;gap:10px}.foodPic{height:112px}.foodPic:before{width:118px;height:118px;border-width:6px}.foodPic .foodEmoji{font-size:3.7rem}.foodInfo{padding:11px;gap:8px}.foodInfo h3{font-size:.95rem;line-height:1.25}.foodInfo .en{font-size:.75rem}.priceOption{min-width:100%;padding:7px 8px}.addrow{flex-direction:column}.addrow select,.addbtn{width:100%;padding:9px}.tag{font-size:.65rem;top:7px;left:7px}.section{padding:28px 0 40px}.sectionHead h2{font-size:1.8rem}.hero p{font-size:.97rem}.primary,.secondary{padding:12px 14px}.mobileCart{display:block;position:fixed;bottom:12px;left:4%;right:4%;z-index:30}.mobileCart button{width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:0;border-radius:15px;background:var(--gold);color:#24150b;font-weight:950;box-shadow:0 12px 35px #0008}.footer{padding-bottom:82px}
+.wrap{width:92%}.topbar .wrap{font-size:.75rem}.brandmark{width:40px;height:40px}.hero h1{letter-spacing:-1.6px}.heroArt{min-height:280px}.trust{gap:7px}.trust div{padding:10px 8px}.trust b{font-size:.9rem}.trust small{font-size:.72rem}.menuGrid{grid-template-columns:1fr 1fr;gap:10px}.foodPic{height:112px}.foodInfo{padding:11px;gap:8px}.foodInfo h3{font-size:.95rem;line-height:1.25}.foodInfo .en{font-size:.75rem}.priceOption{min-width:100%;padding:7px 8px}.addrow{flex-direction:column}.addrow select,.addbtn{width:100%;padding:9px}.tag{font-size:.65rem;top:7px;left:7px}.section{padding:28px 0 40px}.sectionHead h2{font-size:1.8rem}.hero p{font-size:.97rem}.primary,.secondary{padding:12px 14px}.mobileCart{display:block;position:fixed;bottom:12px;left:4%;right:4%;z-index:30}.mobileCart button{width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:0;border-radius:15px;background:var(--gold);color:#24150b;font-weight:950;box-shadow:0 12px 35px #0008}.footer{padding-bottom:82px}
 }
 </style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span id="topTag">🍕 ताज़ा खाना • शानदार स्वाद • साफ़-सुथरी तैयारी</span><span>📞 <a href="tel:9918203207">9918203207</a> · <a href="tel:8604665305">8604665305</a></span></div></div>
-<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="navlinks"><a href="#menu" data-hi="मेन्यू" data-en="Menu">मेन्यू</a><a href="#about" data-hi="हमारे बारे में" data-en="About">हमारे बारे में</a><a href="#contact" data-hi="संपर्क" data-en="Contact">संपर्क</a></div><div style="display:flex;gap:8px"><button class="langbtn" id="langBtn" type="button">English</button><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button></div></div></nav>
+<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="navlinks"><a href="#home" data-hi="होम" data-en="Home">होम</a><a href="#menu" data-hi="मेन्यू" data-en="Menu">मेन्यू</a><a href="#about" data-hi="हमारे बारे में" data-en="About">हमारे बारे में</a><a href="#contact" data-hi="संपर्क" data-en="Contact">संपर्क</a></div><div style="display:flex;gap:8px"><button class="langbtn" id="langBtn" type="button">English</button><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button></div></div></nav>
 <main id="home">
-<section class="hero"><div class="wrap heroGrid"><div><span class="eyebrow" id="eyebrow">✨ GOOD FOOD • GOOD MOOD</span><h1 id="heroTitle">स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!</h1><p id="heroDesc">पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।</p><div class="actions"><a class="primary" href="#menu" id="exploreBtn">🍽️ मेन्यू देखें</a><button class="secondary" id="heroCart" type="button">🛒 ऑर्डर शुरू करें</button></div><div class="trust"><div><b>🍕 Pizza</b><small id="trust1">चीज़ी और स्वादिष्ट</small></div><div><b>🥡 Chinese</b><small id="trust2">हर बाइट में स्वाद</small></div><div><b>🥟 Snacks</b><small id="trust3">हर मौके के लिए</small></div></div></div><div class="heroArt"><div class="foodOrb"><span class="emoji">🍕</span></div><div class="artLabel"><div><strong id="artTitle">Quality का स्वाद</strong><br><span id="artSub">Fresh • Tasty • Hygienic</span></div><span>♥ Made with care</span></div></div></div></section>
-<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
+<section class="hero"><div class="wrap heroGrid"><div><span class="eyebrow" id="eyebrow">✨ GOOD FOOD • GOOD MOOD</span><h1 id="heroTitle">स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!</h1><p id="heroDesc">पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।</p><div class="actions"><a class="primary" href="#menu" id="exploreBtn">🍽️ मेन्यू देखें</a><button class="secondary" id="heroCart" type="button">🛒 ऑर्डर शुरू करें</button></div><div class="trust"><div><b>🍕 Pizza</b><small id="trust1">चीज़ी और स्वादिष्ट</small></div><div><b>🥡 Chinese</b><small id="trust2">हर बाइट में स्वाद</small></div><div><b>🥟 Snacks</b><small id="trust3">हर मौके के लिए</small></div></div></div><div class="heroArt"><div style="position:absolute;inset:0;background:linear-gradient(0deg,#100b0bd9,transparent 70%);z-index:1"></div><div style="position:absolute;z-index:2;top:18px;left:18px;background:#ffd166;color:#2b160b;padding:10px 14px;font-weight:900;transform:rotate(-3deg)"><span id="artTitle">Quality का स्वाद</span><br><small id="artSub">Fresh • Tasty • Hygienic</small></div><div class="heroBubbles" style="position:absolute;z-index:2;bottom:22px;left:12px;right:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><a href="#menu" onclick="selectCategory('starters')"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=220&q=80" alt="Burger" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Burger</b></a><a href="#menu" onclick="selectCategory('pizza')"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=220&q=80" alt="Pizza" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Pizza</b></a><a href="#menu" onclick="selectCategory('noodles')"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=220&q=80" alt="Chinese noodles" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Chinese</b></a><a href="#menu" onclick="selectCategory('snacks')"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=220&q=80" alt="Momos and dumplings" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Momos</b></a></div></div></div></section>
+<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
 <section class="section" id="about"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="aboutEyebrow">❤️ GOOD FOOD, GOOD MOOD</span><h2 id="aboutTitle">Quality Bakers क्यों?</h2></div></div><div class="aboutGrid"><div class="aboutBox"><h3 id="aboutBoxTitle">हर बाइट में स्वाद</h3><p id="aboutText">आपकी पसंद के पिज्जा, चाइनीज़, मोमोज़ और स्नैक्स। मेन्यू में दी गई कीमतें देखकर आइटम चुनें और अपना ऑर्डर WhatsApp पर भेजें।</p></div><div class="aboutBox" id="contact"><h3 id="contactTitle">संपर्क करें</h3><p id="contactDesc">ऑर्डर और जानकारी के लिए संपर्क करें।</p><div class="contactRows"><a class="contactRow" href="tel:9918203207"><span class="contactIcon">📞</span><span><small id="phoneLabel1">मोबाइल नंबर 1</small><strong>9918203207</strong></span></a><a class="contactRow" href="tel:8604665305"><span class="contactIcon">📞</span><span><small id="phoneLabel2">मोबाइल नंबर 2</small><strong>8604665305</strong></span></a><div class="contactRow"><span class="contactIcon">👨‍🍳</span><span><small id="ownerLabel">प्रोपराइटर</small><strong>शिवम अग्रहरि</strong></span></div></div></div></div></div></section>
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText">Good Food • Good Mood • Fresh Food</span></div></footer>
@@ -128,25 +134,25 @@ button{cursor:pointer}
 <script>
 const WHATSAPP_NUMBER="919918203207";
 const items=[
-{id:"veg-chowmein",cat:"noodles",hi:"वेज चाउमीन",en:"Veg Chowmein",emoji:"🍜",prices:[["Half",30],["Full",60]]},
-{id:"paneer-chowmein",cat:"noodles",hi:"पनीर चाउमीन",en:"Paneer Chowmein",emoji:"🍜",prices:[["Half",40],["Full",80]]},
-{id:"singapore-chowmein",cat:"noodles",hi:"सिंगापुरी चाउमीन",en:"Singapore Chowmein",emoji:"🥢",prices:[["Half",50],["Full",100]]},
-{id:"manchurian-rice",cat:"noodles",hi:"मंचूरियन राइस",en:"Manchurian Rice",emoji:"🍚",prices:[["Half",40],["Full",80]]},
-{id:"paneer-rice",cat:"noodles",hi:"पनीर राइस",en:"Paneer Rice",emoji:"🍚",prices:[["Half",50],["Full",100]]},
-{id:"paneer-manchurian-mix-rice",cat:"noodles",hi:"पनीर मंचूरियन मिक्स राइस",en:"Paneer Manchurian Mix Rice",emoji:"🍛",prices:[["Half",55],["Full",110]]},
-{id:"manchurian-gravy",cat:"starters",hi:"मंचूरियन ग्रेवी",en:"Manchurian Gravy",emoji:"🥘",prices:[["Half",40],["Full",80]]},
-{id:"manchurian-dry",cat:"starters",hi:"मंचूरियन ड्राई",en:"Manchurian Dry",emoji:"🥣",prices:[["Half",50],["Full",100]]},
-{id:"veg-spring-roll",cat:"starters",hi:"वेज स्प्रिंग रोल",en:"Veg Spring Roll",emoji:"🌯",prices:[["Half",30]]},
-{id:"paneer-spring-roll",cat:"starters",hi:"पनीर स्प्रिंग रोल",en:"Paneer Spring Roll",emoji:"🌯",prices:[["Half",40]]},
-{id:"paneer-chilli",cat:"starters",hi:"पनीर चिल्ली",en:"Paneer Chilli",emoji:"🌶️",prices:[["Half",70],["Full",140]]},
-{id:"paneer-manchurian-chilli",cat:"starters",hi:"पनीर मंचूरियन चिल्ली",en:"Paneer Manchurian Chilli",emoji:"🍲",prices:[["Half",90],["Full",160]]},
-{id:"steam-momos",cat:"snacks",hi:"मोमोज स्टीम वाला",en:"Steamed Momos",emoji:"🥟",prices:[["Half",20],["Full",40]]},
-{id:"fried-momos",cat:"snacks",hi:"मोमोज फ्राइड वाला",en:"Fried Momos",emoji:"🥟",prices:[["Half",30],["Full",60]]},
-{id:"finger-chips",cat:"snacks",hi:"फिंगर चिप्स",en:"Finger Chips",emoji:"🍟",prices:[["Half",30],["Full",60]]},
-{id:"chilli-potato",cat:"snacks",hi:"चिल्ली पोटैटो",en:"Chilli Potato",emoji:"🍟",prices:[["Half",50],["Full",100]]},
-{id:"plain-pizza",cat:"pizza",hi:"सादा पिज्जा",en:"Plain Pizza",emoji:"🍕",prices:[["Regular",150]]},
-{id:"single-cheese-paneer-pizza",cat:"pizza",hi:"सिंगल चीज़ पनीर पिज्जा",en:"Single Cheese Paneer Pizza",emoji:"🍕",prices:[["Regular",180]]},
-{id:"double-cheese-paneer-pizza",cat:"pizza",hi:"डबल चीज़ पनीर पिज्जा",en:"Double Cheese Paneer Pizza",emoji:"🍕",prices:[["Regular",200]]}
+{id:"veg-chowmein",cat:"noodles",hi:"वेज चाउमीन",en:"Veg Chowmein",emoji:"🍜",photo:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=900&q=82",prices:[["Half",30],["Full",60]]},
+{id:"paneer-chowmein",cat:"noodles",hi:"पनीर चाउमीन",en:"Paneer Chowmein",emoji:"🍜",photo:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=82",prices:[["Half",40],["Full",80]]},
+{id:"singapore-chowmein",cat:"noodles",hi:"सिंगापुरी चाउमीन",en:"Singapore Chowmein",emoji:"🥢",photo:"https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=900&q=82",prices:[["Half",50],["Full",100]]},
+{id:"manchurian-rice",cat:"noodles",hi:"मंचूरियन राइस",en:"Manchurian Rice",emoji:"🍚",photo:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=900&q=82",prices:[["Half",40],["Full",80]]},
+{id:"paneer-rice",cat:"noodles",hi:"पनीर राइस",en:"Paneer Rice",emoji:"🍚",photo:"https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=900&q=82",prices:[["Half",50],["Full",100]]},
+{id:"paneer-manchurian-mix-rice",cat:"noodles",hi:"पनीर मंचूरियन मिक्स राइस",en:"Paneer Manchurian Mix Rice",emoji:"🍛",photo:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=82",prices:[["Half",55],["Full",110]]},
+{id:"manchurian-gravy",cat:"starters",hi:"मंचूरियन ग्रेवी",en:"Manchurian Gravy",emoji:"🥘",photo:"https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=900&q=82",prices:[["Half",40],["Full",80]]},
+{id:"manchurian-dry",cat:"starters",hi:"मंचूरियन ड्राई",en:"Manchurian Dry",emoji:"🥣",photo:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=900&q=82",prices:[["Half",50],["Full",100]]},
+{id:"veg-spring-roll",cat:"starters",hi:"वेज स्प्रिंग रोल",en:"Veg Spring Roll",emoji:"🌯",photo:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=82",prices:[["Half",30]]},
+{id:"paneer-spring-roll",cat:"starters",hi:"पनीर स्प्रिंग रोल",en:"Paneer Spring Roll",emoji:"🌯",photo:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=82",prices:[["Half",40]]},
+{id:"paneer-chilli",cat:"starters",hi:"पनीर चिल्ली",en:"Paneer Chilli",emoji:"🌶️",photo:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=900&q=82",prices:[["Half",70],["Full",140]]},
+{id:"paneer-manchurian-chilli",cat:"starters",hi:"पनीर मंचूरियन चिल्ली",en:"Paneer Manchurian Chilli",emoji:"🍲",photo:"https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=82",prices:[["Half",90],["Full",160]]},
+{id:"steam-momos",cat:"snacks",hi:"मोमोज स्टीम वाला",en:"Steamed Momos",emoji:"🥟",photo:"https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=900&q=82",prices:[["Half",20],["Full",40]]},
+{id:"fried-momos",cat:"snacks",hi:"मोमोज फ्राइड वाला",en:"Fried Momos",emoji:"🥟",photo:"https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=900&q=82",prices:[["Half",30],["Full",60]]},
+{id:"finger-chips",cat:"snacks",hi:"फिंगर चिप्स",en:"Finger Chips",emoji:"🍟",photo:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=82",prices:[["Half",30],["Full",60]]},
+{id:"chilli-potato",cat:"snacks",hi:"चिल्ली पोटैटो",en:"Chilli Potato",emoji:"🍟",photo:"https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=900&q=82",prices:[["Half",50],["Full",100]]},
+{id:"plain-pizza",cat:"pizza",hi:"सादा पिज्जा",en:"Plain Pizza",emoji:"🍕",photo:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=82",prices:[["Regular",150]]},
+{id:"single-cheese-paneer-pizza",cat:"pizza",hi:"सिंगल चीज़ पनीर पिज्जा",en:"Single Cheese Paneer Pizza",emoji:"🍕",photo:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=82",prices:[["Regular",180]]},
+{id:"double-cheese-paneer-pizza",cat:"pizza",hi:"डबल चीज़ पनीर पिज्जा",en:"Double Cheese Paneer Pizza",emoji:"🍕",photo:"https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=900&q=82",prices:[["Regular",200]]}
 ];
 const categoryNames={all:{hi:"सभी आइटम",en:"All items"},noodles:{hi:"Noodles & Rice",en:"Noodles & Rice"},starters:{hi:"Starters & Rolls",en:"Starters & Rolls"},snacks:{hi:"Momos & Snacks",en:"Momos & Snacks"},pizza:{hi:"Pizza",en:"Pizza"}};
 let lang="hi",activeCat="all",cart=[];
@@ -156,10 +162,11 @@ function textFor(item){return lang==="hi"?item.hi:item.en}
 function renderFilters(){
 $("filters").innerHTML=Object.entries(categoryNames).map(([key,n])=>`<button type="button" class="filter ${activeCat===key?"active":""}" data-cat="${key}">${n[lang]}</button>`).join("");
 }
+function selectCategory(cat){activeCat=cat;renderFilters();renderMenu();document.getElementById("menu").scrollIntoView({behavior:"smooth"})}
 function renderMenu(){
 const shown=items.filter(i=>activeCat==="all"||i.cat===activeCat);
 $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"?"pizzaCard":""}">
-<div class="foodPic"><span class="tag">${categoryNames[i.cat][lang]}</span><span class="foodEmoji" aria-hidden="true">${i.emoji}</span></div>
+<div class="foodPic"><img src="${i.photo}" alt="${textFor(i)} — ${i.en}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80';"><span class="tag">${categoryNames[i.cat][lang]}</span></div>
 <div class="foodInfo"><h3>${textFor(i)}</h3><div class="en">${lang==="hi"?i.en:i.hi}</div>
 <div class="priceOptions">${i.prices.map(p=>`<div class="priceOption"><span>${p[0]==="Regular"?(lang==="hi"?"कीमत":"Price"):p[0]}</span><strong>${money(p[1])}</strong></div>`).join("")}</div>
 <div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select><button class="addbtn" data-add="${i.id}" type="button">${lang==="hi"?"＋ जोड़ें":"＋ Add"}</button></div>
