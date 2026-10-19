@@ -1,3 +1,80 @@
-Quality Bakers photo source notes
-Several dish photos have been changed to dish-labelled Wikimedia Commons image files, including paneer fried rice, veg manchurian rice, dry manchurian, veg spring roll, paneer chilli, paneer manchurian, steamed momos, fried momos, and paneer pizza. Commons file pages describe the relevant dish and may require attribution/share-alike as specified on their pages.
-Note: Chowmein and mixed-rice photos can vary by recipe and garnish. Shop-specific photographs are the only way to guarantee they exactly match the food customers will receive.
+QUALITY BAKERS — MENU PHOTO SOURCES
+
+Each menu item has its own image URL selected from an image result whose title/preview matches the dish. These are example photos from other food/menu sites, not photos of the actual Quality Bakers kitchen. Remote image links require internet access and may change or become unavailable.
+If any source has an applicable license or terms, those terms still apply. This file records the source for each visible dish image.
+
+Veg Chow Mein (veg-chowmein)
+  Source: Chef Al Arab; visual checked: vegetable chow mein noodles
+  Image URL: https://chefalarab.com/uploads/chinese-vegetable-chow-mein.webp
+
+Paneer Chowmein (paneer-chowmein)
+  Source: Desi Wayy; visual checked: noodles with visible paneer cubes
+  Image URL: https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg
+
+Singapuri Chowmein (singapore-chowmein)
+  Source: Swiggy listing; visual checked: Singapuri-style noodles
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto%2Cw_300%2Ch_300%2Cc_fit/FOOD_CATALOG/IMAGES/CMS/2024/9/18/b9c86aa4-924c-4300-a7e5-bddee6dfbe27_3d4f7c69-5278-4350-9132-153fedd7234f.jpeg
+
+Manchurian Rice (manchurian-rice)
+  Source: Swiggy listing; visual checked: fried rice served with Manchurian
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto/FOOD_CATALOG/IMAGES/CMS/2025/12/24/ffef0c22-75a4-44d3-97b5-72ac897db053_e108c8c0-480a-48ef-9093-d0d8cd879b48.jpg
+
+Paneer Rice (paneer-rice)
+  Source: Kanha Bhog menu; visual checked: rice with paneer cubes
+  Image URL: https://kanhabhog.com/uploads/custom-images/paneer-fried-rice-2025-09-15-12-24-04-2821.jpg
+
+Paneer Manchurian Mix Rice (paneer-manchurian-mix-rice)
+  Source: Swiggy listing; visual checked: paneer Manchurian with fried rice
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto/FOOD_CATALOG/IMAGES/CMS/2024/9/27/8adaea3f-a756-4043-818a-2faca54e31b4_e1e3e469-48d5-4653-8218-8357c9db004c.jpg
+
+Manchurian Gravy (manchurian-gravy)
+  Source: Swiggy listing; visual checked: vegetable Manchurian balls in gravy
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto/FOOD_CATALOG/IMAGES/CMS/2025/5/27/8b0ad77b-3c55-477b-875d-815253e47847_4a10e8df-0109-4c1c-9030-c3781bc53461.jpg
+
+Manchurian Dry (manchurian-dry)
+  Source: Swiggy listing; visual checked: dry vegetable Manchurian
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto/FOOD_CATALOG/IMAGES/CMS/2024/9/23/92415fe0-2290-4c59-b50c-bef0ccba3e34_aab7529e-2805-47e5-9cbe-a66fde453900.png
+
+Veg Spring Roll (veg-spring-roll)
+  Source: SnapCalorie; visual checked: vegetable spring rolls with vegetable filling
+  Image URL: https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/groente_loempia.jpg
+
+Paneer Spring Roll (paneer-spring-roll)
+  Source: Swiggy Instamart recipe; visual checked: paneer spring rolls
+  Image URL: https://instamart-media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto%2Ch_960%2Cw_960/InstamartAssets/Receipes/paneer_spring_roll.webp
+
+Paneer Chilli (paneer-chilli)
+  Source: Restaurant menu image; visual checked: chilli paneer cubes with capsicum and onion
+  Image URL: https://betterresto.s3.us-west-1.wasabisys.com/production/13265/Chilli_Paneer_7f7a4122ca.png
+
+Paneer Manchurian Chilli (paneer-manchurian-chilli)
+  Source: Ioana Cooks; visual checked: spicy paneer Manchurian cubes
+  Image URL: https://ioanacooks.com/assets/images/1751991142649-ejxk3kcz.webp
+
+Steamed Momos (steam-momos)
+  Source: You n Mine Recipes; visual checked: steamed vegetable momos
+  Image URL: https://4.bp.blogspot.com/-BD6z0rLHgCQ/VBlZyMzRbdI/AAAAAAAAAL4/oAc_IiFGUyM/s1600/Veg-momos.jpg
+
+Fried Momos (fried-momos)
+  Source: Swiggy listing; visual checked: fried momos
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto/85ad1f2bdd389a6653e5e878b6899da1
+
+Finger Chips (finger-chips)
+  Source: FruitTreat; visual checked: straight-cut potato fingers
+  Image URL: https://fruittreat.com/cdn/shop/files/Fruit_Treat_Potato.jpg?v=1761221898&width=1946
+
+Chilli Potato (chilli-potato)
+  Source: Swad Safari menu; visual checked: potato sticks coated in chilli sauce
+  Image URL: https://image.cdn.shpy.in/360704/chillipotato-1745310500663.jpeg?format=webp
+
+Plain Pizza (plain-pizza)
+  Source: M&S Pizza menu; visual checked: plain cheese pizza
+  Image URL: https://slice-menu-assets-prod.imgix.net/16633/1591698031_b2a23a1e28?fit=crop&h=480&w=480
+
+Single Cheese Paneer Pizza (single-cheese-paneer-pizza)
+  Source: Swiggy listing; visual checked: paneer cubes on a cheese pizza
+  Image URL: https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto%2Cw_300%2Ch_300%2Cc_fit/FOOD_CATALOG/IMAGES/CMS/2025/7/31/1827afbd-d03b-40e9-b94d-3e6ace81214f_8bdd19cc-ae92-43c5-a7fe-3380d15bd526.jpg
+
+Double Cheese Paneer Pizza (double-cheese-paneer-pizza)
+  Source: Wowkeet menu; visual checked: extra-cheese paneer pizza
+  Image URL: https://storage.googleapis.com/shy-pub/468423/SKU-0121_0-1762683875109.jpg
