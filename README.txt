@@ -1,19 +1,7 @@
-QUALITY BAKERS DEMO — FREE STATIC WEBSITE
+QUALITY BAKERS WEBSITE
 
-Files:
-- index.html: main website
+1. Upload index.html to the GitHub repository quality-bakers and replace the existing index.html.
+2. Commit changes.
+3. Open https://anshmaurya5619.github.io/quality-bakers/ after GitHub Pages rebuilds.
 
-To preview:
-- Open index.html in a modern browser.
-
-To publish free:
-- Create a NEW GitHub repository for Quality Bakers (do not use the Maurya Jan Seva Kendra repository).
-- Upload index.html to the repository root.
-- In Settings > Pages, choose Deploy from a branch, branch main, folder /(root), then Save.
-- GitHub will show the public website URL when publishing is ready.
-
-Before the client uses this as a live ordering site:
-- Confirm both phone numbers and all prices with the shop.
-- Confirm the WhatsApp order number.
-- Replace demo emoji artwork with approved real food photos if the client wants them.
-- Confirm pickup/delivery arrangements; the demo does not collect online payments.
+Dish images are loaded from Unsplash URLs and require an internet connection. The URLs are distinct, but review the live image-to-dish match before publishing. Spring-roll full prices were not provided, so only the listed Half option is available.
