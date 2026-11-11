@@ -571,6 +571,7 @@ function showView(view){
  cartView.classList.toggle("view-active",view==="cart");
  document.querySelectorAll(".navlinks a").forEach(a=>a.removeAttribute("aria-current"));
  const active=document.querySelector('.navlinks a[href="#'+view+'"]');if(active)active.setAttribute("aria-current","page");
+ const accountLink=document.querySelector('.headerActions a[href="#account"]');if(accountLink){if(view==="account")accountLink.setAttribute("aria-current","page");else accountLink.removeAttribute("aria-current");}
  if(view==="account"||view==="cart")document.getElementById(view).scrollIntoView({behavior:"smooth",block:"start"});
 }
 function openCart(){showView("cart")}
@@ -586,7 +587,7 @@ if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 $("cartOpen").addEventListener("click",openCart);
 $("heroCart").addEventListener("click",openCart);
 document.querySelector(".brand").addEventListener("click",()=>showView("home"));
-document.querySelectorAll('.navlinks a[href="#account"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openAccount()}));
+document.querySelectorAll('.headerActions a[href="#account"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openAccount()}));
 document.querySelectorAll('.navlinks a[href="#cart"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openCart()}));
 document.querySelectorAll('.navlinks a[href="#home"],.navlinks a[href="#menu"],.navlinks a[href="#about"],.navlinks a[href="#contact"]').forEach(a=>a.addEventListener("click",()=>showView("home")));
 $("emptyCartMenuLink").addEventListener("click",()=>showView("home"));
