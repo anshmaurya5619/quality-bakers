@@ -24,8 +24,16 @@ The owner reports that Email/Password and Google providers are enabled in Fireba
 The default database is already present. Publish `firestore.rules` in Firestore > Rules after replacing the owner UID.
 Collections/documents:
 - `publicMenu/current`: published menu item array.
-- `orders/{autoId}`: authenticated customer order.
+- `orders/{autoId}`: authenticated customer order, including a GPS capture or manually entered delivery address.
 - `customers/{uid}`: customer profile.
+
+The customer must sign in before adding menu items to the cart. If a guest taps Add, the site opens Login and adds the selected item after successful sign-in.
+
+At checkout, the customer must choose one delivery location method:
+- Live GPS: browser requests location permission only after the customer taps the location button. Latitude, longitude, accuracy and capture time are saved. The owner dashboard provides a Google Maps link.
+- Manual: customer enters the full delivery address.
+
+Publish the updated `firestore.rules` after adding the `deliveryLocation` field. Do not make the entire `orders` collection public; only the published menu should be publicly readable. Customers may read only their own orders, and the owner may read all orders.
 
 The customer order total is a submitted estimate and the shop must confirm it. Do not treat a browser-supplied total as payment or final billing; payment gateway and server-side price validation are not implemented.
 
