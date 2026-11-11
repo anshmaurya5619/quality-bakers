@@ -4,13 +4,17 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101018">
 <title>Quality Bakers — Private Menu Demo</title>
 <style>
+#authPanel{max-width:520px;margin:22px auto;background:#191923;border:1px solid #ffffff25;border-radius:16px;padding:20px}#authPanel input{width:100%;padding:12px;margin:7px 0 12px;border-radius:9px;border:1px solid #ffffff30;background:#0e0e15;color:#fff;font:inherit}#authPanel label{display:block;color:#e7d8bd;font-size:.9rem}#authStatus{color:#ffd166;min-height:1.4em}.authbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}.layout.locked{display:none}
+
 :root{--bg:#0c0c12;--panel:#191923;--gold:#ffd166;--orange:#ff6b35;--text:#fff4df;--muted:#b9b6c7}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#48251f 0,transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}.wrap{width:min(1100px,94%);margin:auto}.top{padding:20px 0;border-bottom:1px solid #ffffff20}.top h1{margin:0;font-size:1.45rem}.top p{color:var(--muted);margin:5px 0 0}.warning{margin:18px 0;background:#5c3c12;border:1px solid #ffd16677;padding:14px;border-radius:12px;line-height:1.55}.layout{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);gap:18px;padding:18px 0 40px}.panel{background:var(--panel);border:1px solid #ffffff1b;border-radius:16px;padding:18px;min-width:0}.panel h2{font-size:1.15rem;margin:0 0 14px}.field{display:grid;gap:6px;margin:11px 0}.field label{font-size:.88rem;color:#e7d8bd}.field input,.field select,.field textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #ffffff30;background:#0e0e15;color:var(--text);font:inherit}.prices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--gold);color:#211008}.secondary{background:#ffffff12;border:1px solid #ffffff25;color:var(--text)}.danger{background:#6e2525;color:white}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.muted{color:var(--muted);font-size:.84rem;line-height:1.5}.itemlist{display:grid;gap:8px;margin-top:12px}.itemrow{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px;background:#ffffff08;border:1px solid #ffffff14;border-radius:11px}.thumb{width:52px;height:52px;object-fit:cover;border-radius:8px;background:#333}.itemrow strong{display:block;overflow-wrap:anywhere}.itemrow small{color:var(--muted)}.smallbtn{padding:7px 9px;font-size:.8rem}.previewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{border:1px solid #ffffff1c;background:#101018;border-radius:12px;overflow:hidden}.card img{width:100%;height:125px;object-fit:cover;background:#29232a;display:block}.cardbody{padding:10px}.card h3{font-size:.95rem;margin:0 0 4px}.card p{margin:0 0 7px;color:var(--muted);font-size:.78rem}.price{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px solid #ffffff12;font-size:.85rem}.price b{color:var(--gold)}.empty{padding:25px;color:var(--muted);text-align:center}.status{margin-top:10px;color:var(--gold);font-size:.88rem;min-height:1.3em}.hidden{display:none!important}@media(max-width:760px){.layout{grid-template-columns:1fr}.previewGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:100px}}@media(max-width:390px){.previewGrid{grid-template-columns:1fr}.prices{grid-template-columns:1fr}}
 </style>
 </head>
 <body><header class="top"><div class="wrap"><h1>🍕 Quality Bakers — Private Menu Editor</h1><p>डेमो एडिटर · कीमतें, फोटो और आइटम बदलें</p></div></header>
 <main class="wrap">
-<div class="warning"><strong>डेमो की जरूरी जानकारी:</strong> इस लिंक में बदलाव इसी ब्राउज़र/डिवाइस पर सेव होते हैं। अभी ये सार्वजनिक वेबसाइट के मेन्यू को अपडेट नहीं करते और दूसरे मोबाइल पर अपने-आप नहीं दिखेंगे। ग्राहक को असली लाइव बदलाव देने के लिए बाद में साझा डेटाबेस जोड़ना होगा।</div>
-<div class="layout">
+<div class="warning"><strong>Firebase Admin Panel:</strong> Login के बाद मेन्यू Firebase Firestore से लोड होगा। Publish करने पर सार्वजनिक वेबसाइट पर अपडेट जाएगा। फोटो Firebase Storage में अपलोड होगी।</div>
+<section id="authPanel"><h2>🔐 Owner Login</h2><form id="loginForm"><label for="loginEmail">Owner Email</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="owner@example.com"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Firebase Auth password"><button class="btn primary" type="submit">Login</button></form><div id="authStatus" role="status"></div><p class="muted">Owner account Firebase Console → Authentication → Users से बनाएं। इस पेज पर public signup नहीं है।</p></section>
+<div class="authbar hidden" id="authBar"><span id="signedInAs"></span><button class="btn secondary" id="logoutBtn" type="button">Logout</button></div>
+<div class="layout locked" id="editorLayout">
 <section class="panel"><h2 id="formTitle">नया आइटम जोड़ें</h2><form id="itemForm">
 <input id="editId" type="hidden">
 <div class="field"><label for="nameHi">आइटम का नाम (हिंदी)</label><input id="nameHi" required maxlength="80" placeholder="जैसे चीज़ बर्गर"></div>
@@ -19,9 +23,9 @@
 <div class="field"><label for="photoUrl">फोटो का लिंक (वैकल्पिक)</label><input id="photoUrl" type="url" placeholder="https://..."></div>
 <div class="field"><label for="photoFile">या मोबाइल से फोटो अपलोड करें</label><input id="photoFile" type="file" accept="image/*"><small class="muted">फोटो इस डिवाइस पर सेव होगी। बहुत बड़ी फोटो हो तो छोटी इमेज चुनें।</small></div>
 <div class="prices"><div class="field"><label for="size1">साइज़ 1</label><input id="size1" value="Half" maxlength="30"></div><div class="field"><label for="price1">कीमत 1 (₹)</label><input id="price1" type="number" min="0" max="100000" required value="40"></div><div class="field"><label for="size2">साइज़ 2 (न हो तो खाली)</label><input id="size2" value="Full" maxlength="30"></div><div class="field"><label for="price2">कीमत 2 (₹)</label><input id="price2" type="number" min="0" max="100000" value="60"></div></div>
-<div class="buttons"><button class="btn primary" type="submit">💾 डेमो में सेव करें</button><button class="btn secondary" type="button" id="clearForm">नया / साफ़ करें</button></div><div class="status" id="status" role="status"></div></form>
+<div class="buttons"><button class="btn primary" type="submit">💾 बदलाव सेव करें</button><button class="btn secondary" type="button" id="clearForm">नया / साफ़ करें</button></div><div class="status" id="status" role="status"></div></form>
 <hr style="border:0;border-top:1px solid #ffffff20;margin:20px 0"><h2>मेन्यू आइटम</h2><p class="muted">एडिट दबाकर आइटम की जानकारी फॉर्म में लाएँ। हटाने से यह केवल इस डिवाइस के डेमो से हटेगा।</p><div class="itemlist" id="itemList"></div>
-<div class="buttons"><button class="btn secondary" id="exportBtn" type="button">JSON बैकअप डाउनलोड</button><button class="btn secondary" id="importBtn" type="button">JSON बैकअप इम्पोर्ट</button><input id="importFile" class="hidden" type="file" accept="application/json"></div><div class="buttons"><button class="btn danger" id="resetBtn" type="button">डेमो मूल मेन्यू पर रीसेट करें</button></div></section>
+<div class="buttons"><button class="btn primary" id="publishBtn" type="button">🚀 Firebase पर Publish करें</button><button class="btn secondary" id="exportBtn" type="button">JSON बैकअप डाउनलोड</button><button class="btn secondary" id="importBtn" type="button">JSON बैकअप इम्पोर्ट</button><input id="importFile" class="hidden" type="file" accept="application/json"></div><div class="buttons"><button class="btn danger" id="resetBtn" type="button">डेमो मूल मेन्यू पर रीसेट करें</button></div></section>
 <section class="panel"><h2>👀 मेन्यू प्रीव्यू</h2><p class="muted">यह प्रीव्यू इस डेमो की सेव की गई कीमतें, नाम और फोटो दिखाता है।</p><div class="previewGrid" id="preview"></div></section>
 </div></main>
 <script>
@@ -52,7 +56,9 @@ const defaults=[
 let menu=loadMenu();let pendingPhoto="";
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function loadMenu(){try{const x=JSON.parse(localStorage.getItem(KEY));return Array.isArray(x)&&x.length?x:clone(defaults)}catch{return clone(defaults)}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(menu));$("status").textContent="सेव हो गया — इस डिवाइस के डेमो में बदलाव सुरक्षित हैं।";render()}catch(e){$("status").textContent="सेव नहीं हुआ। फोटो छोटी करें या फोटो का URL इस्तेमाल करें।"}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(menu));$("status").textContent="इस ब्राउज़र में ड्राफ्ट सेव हो गया। सार्वजनिक वेबसाइट के लिए Publish करें।";render()}catch(e){$("status").textContent="सेव नहीं हुआ। फोटो छोटी करें या फोटो का URL इस्तेमाल करें।"}}
+window.QB_GET_MENU=()=>menu;
+window.QB_LOAD_MENU=data=>{if(Array.isArray(data)&&data.length){menu=data;localStorage.setItem(KEY,JSON.stringify(menu));render();$("status").textContent="Firebase से प्रकाशित मेन्यू लोड हुआ।"}};
 const $=id=>document.getElementById(id);
 const catNames={noodles:"Noodles & Rice",starters:"Starters & Rolls",snacks:"Momos & Snacks",pizza:"Pizza",cakes:"Designer Cakes"};
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
@@ -68,4 +74,40 @@ $("importBtn").addEventListener("click",()=>$("importFile").click());
 $("importFile").addEventListener("change",async()=>{const f=$("importFile").files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data)||!data.every(i=>i.id&&i.hi&&i.en&&Array.isArray(i.prices)))throw Error();menu=data;persist()}catch{alert("यह सही Quality Bakers JSON बैकअप नहीं है।")} $("importFile").value=""});
 $("resetBtn").addEventListener("click",()=>{if(confirm("इस डिवाइस के डेमो में किए गए सभी बदलाव हटाकर मूल मेन्यू वापस लाएँ?")){menu=clone(defaults);persist();clearForm()}});
 render();
+</script>
+<script type="module">
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-storage.js";
+import { auth, db, storage } from "./firebase-client.js";
+const $=id=>document.getElementById(id);
+const menuRef=doc(db,"publicMenu","current");
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("authStatus").textContent="Login हो रहा है…";
+ try{await signInWithEmailAndPassword(auth,$("loginEmail").value.trim(),$("loginPassword").value);}
+ catch(err){$("authStatus").textContent="Login असफल: "+(err.code||err.message);}
+});
+$("logoutBtn").addEventListener("click",()=>signOut(auth));
+onAuthStateChanged(auth,async user=>{
+ if(!user){$("authPanel").classList.remove("hidden");$("authBar").classList.add("hidden");$("editorLayout").classList.add("locked");$("authStatus").textContent="Owner account से login करें।";return;}
+ $("authPanel").classList.add("hidden");$("authBar").classList.remove("hidden");$("editorLayout").classList.remove("locked");$("signedInAs").textContent="Login: "+user.email+" · UID: "+user.uid;
+ try{const snap=await getDoc(menuRef);if(snap.exists()&&Array.isArray(snap.data().items))window.QB_LOAD_MENU(snap.data().items);else $("status").textContent="Firestore में अभी मेन्यू नहीं है। मौजूदा मेन्यू को Publish करें।";}
+ catch(err){$("status").textContent="Firestore पढ़ने में समस्या: "+(err.code||err.message);}
+});
+$("publishBtn").addEventListener("click",async()=>{
+ const user=auth.currentUser;if(!user){$("status").textContent="पहले Owner Login करें।";return;}
+ const btn=$("publishBtn");btn.disabled=true;btn.textContent="Publishing…";
+ try{
+  const items=window.QB_GET_MENU().map(x=>({...x,prices:x.prices.map(p=>[String(p[0]),Number(p[1])]),available:x.available!==false}));
+  for(const item of items){
+   if(typeof item.photo==="string"&&item.photo.startsWith("data:image/")){
+    const path="menu/"+item.id+"/"+Date.now()+"-photo.jpg";const imageRef=ref(storage,path);
+    await uploadString(imageRef,item.photo,"data_url");item.photo=await getDownloadURL(imageRef);
+   }
+  }
+  await setDoc(menuRef,{items,updatedAt:serverTimestamp(),updatedBy:user.uid},{merge:true});
+  window.QB_LOAD_MENU(items);$("status").textContent="सफलता: Firebase पर Publish हो गया। अब वेबसाइट पर मेन्यू अपडेट दिखना चाहिए।";
+ }catch(err){$("status").textContent="Publish असफल: "+(err.code||err.message)+" — Firebase Rules और Owner UID जाँचें।";}
+ finally{btn.disabled=false;btn.textContent="🚀 Firebase पर Publish करें";}
+});
 </script></body></html>
