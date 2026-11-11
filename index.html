@@ -91,8 +91,6 @@ button{cursor:pointer}
 .contactRow small{display:block;color:var(--muted)}
 .footer{background:linear-gradient(90deg,#09090d,#20140f);padding:28px 0;border-top:1px solid #ffffff14;color:var(--muted);font-size:.9rem}
 .footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.cartDrawer{position:fixed;inset:0;z-index:50;background:#0009;display:none;justify-content:flex-end}
-.cartDrawer.open{display:flex}
 .cartPanel{width:min(460px,100%);height:100%;background:#15151e;border-left:1px solid #ffffff20;padding:22px;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:auto}
 .cartHeader{display:flex;justify-content:space-between;align-items:center}
 .cartHeader h2{margin:0}
@@ -109,8 +107,6 @@ button{cursor:pointer}
 .checkoutFields input,.checkoutFields textarea{width:100%;background:#0c0c12;color:white;border:1px solid #ffffff25;border-radius:10px;padding:12px;font:inherit}
 .checkout{width:100%;background:var(--green);color:#06210e;border:0;border-radius:12px;padding:14px;font-weight:950}
 .empty{text-align:center;color:var(--muted);padding:28px 8px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:80;background:#f9d879;color:#21150b;font-weight:850;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);display:none}
-.toast.show{display:block}
 .mobileCart{display:none}
 @media(max-width:850px){
 .heroGrid{grid-template-columns:1fr}.hero{padding-top:36px}.heroArt{min-height:310px}.menuGrid{grid-template-columns:repeat(2,1fr)}.navlinks{display:none}.aboutGrid{grid-template-columns:1fr}.trust{grid-template-columns:1fr 1fr 1fr}
@@ -129,7 +125,7 @@ button{cursor:pointer}
 .cartHeader{display:flex;justify-content:space-between;align-items:center}
 .cartDrawer{display:none!important}
 .closebtn{display:none!important}
-.mobileCart{display:none!important}
+
 @media(max-width:850px){.navinner{align-items:flex-start;flex-wrap:wrap}.navlinks{display:flex;order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;padding:7px 0 3px;gap:18px}.navlinks a{font-size:.86rem}.cartPanel{padding:16px}}
 @media(max-width:540px){.navinner{gap:8px}.navlinks{display:flex}.cartPanel{padding:13px}.checkoutFields{gap:10px}.cartSection{padding-top:25px}}
 </style>
@@ -143,7 +139,6 @@ button{cursor:pointer}
 <section class="section" id="about"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="aboutEyebrow">❤️ GOOD FOOD, GOOD MOOD</span><h2 id="aboutTitle">Quality Bakers क्यों?</h2></div></div><div class="aboutGrid"><div class="aboutBox"><h3 id="aboutBoxTitle">हर बाइट में स्वाद</h3><p id="aboutText">आपकी पसंद के पिज्जा, चाइनीज़, मोमोज़ और स्नैक्स। मेन्यू में दी गई कीमतें देखकर आइटम चुनें और अपना ऑर्डर WhatsApp पर भेजें।</p></div><div class="aboutBox" id="contact"><h3 id="contactTitle">संपर्क करें</h3><p id="contactDesc">ऑर्डर और जानकारी के लिए संपर्क करें।</p><div class="contactRows"><a class="contactRow" href="tel:9918203207"><span class="contactIcon">📞</span><span><small id="phoneLabel1">मोबाइल नंबर 1</small><strong>9918203207</strong></span></a><a class="contactRow" href="tel:8604665305"><span class="contactIcon">📞</span><span><small id="phoneLabel2">मोबाइल नंबर 2</small><strong>8604665305</strong></span></a><div class="contactRow"><span class="contactIcon">👨‍🍳</span><span><small id="ownerLabel">प्रोपराइटर</small><strong>शिवम अग्रहरि</strong></span></div></div></div></div></div></section>
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText">Good Food • Good Mood • Fresh Food</span></div></footer>
-<div class="mobileCart"><button id="mobileCartOpen" type="button"><span>🛒 <span id="mobileCartLabel">कार्ट देखें</span> · <span id="mobileCartCount">0</span> आइटम</span><span id="mobileCartTotal">₹0</span></button></div>
 <section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="3" placeholder="पता / खास निर्देश (वैकल्पिक)"></textarea></div><button class="checkout" id="checkoutBtn" type="button">WhatsApp पर ऑर्डर भेजें ↗</button><p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p></div></div></section>
 
 <script>
@@ -233,8 +228,7 @@ updateCart();showToast(lang==="hi"?"कार्ट में जोड़ द�
 }
 function updateCart(){
 const count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+x.qty*x.price,0);
-$("cartCount").textContent=count;$("mobileCartCount").textContent=count;
-$("mobileCartTotal").textContent=money(total);$("cartTotal").textContent=money(total);
+$("cartCount").textContent=count;$("cartTotal").textContent=money(total);
 if(!cart.length){
 $("cartItems").innerHTML=`<div class="empty">${lang==="hi"?"आपका कार्ट अभी खाली है। मेन्यू से आइटम जोड़ें।":"Your cart is empty. Add items from the menu."}</div>`;
 }else{
@@ -253,7 +247,6 @@ if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 });
 $("cartOpen").addEventListener("click",openCart);
 $("heroCart").addEventListener("click",openCart);
-$("mobileCartOpen").addEventListener("click",openCart);
 $("langBtn").addEventListener("click",()=>{lang=lang==="hi"?"en":"hi";renderAll()});
 $("checkoutBtn").addEventListener("click",()=>{
 if(!cart.length){showToast(lang==="hi"?"पहले कार्ट में आइटम जोड़ें":"Please add items to cart first");return}
