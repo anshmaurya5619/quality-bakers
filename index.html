@@ -807,7 +807,7 @@ $("checkoutBtn").addEventListener("click",async()=>{
   if(note)lines.push("Special instructions: "+note);
   lines.push("Please confirm my order.");
   window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n")),"_blank","noopener,noreferrer");
-  cart=[];updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
+  cart=[];deliveryLocation=null;$("customerAddress").value="";$("manualAddressWrap").hidden=true;$("useLiveLocationBtn").classList.remove("active");$("useManualLocationBtn").classList.remove("active");setLocationStatus("ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।");updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
   openAccount();
  }catch(err){showToast(lang==="hi"?"ऑर्डर सेव नहीं हुआ: "+(err.message||err.code):"Order could not be saved: "+(err.message||err.code));}
  finally{btn.disabled=false;btn.textContent=lang==="hi"?"WhatsApp पर ऑर्डर भेजें ↗":"Send Order on WhatsApp ↗";}
