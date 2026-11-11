@@ -1,37 +1,56 @@
-# Quality Bakers — Firebase setup and deployment
+# Quality Bakers — Firebase and production setup
 
 Firebase project: `quality-bakers-6db0b`
+Existing Firestore database: `(default)` — it already exists. Do not create another database.
 
-## Implemented in this repository
-- Firebase Web SDK 13.2.0 modular initialization (`firebase-client.js`).
-- Project config supplied by the owner (`firebase-config.js`).
-- Owner-only menu editing rules and customer order/profile rule templates.
-- Admin panel login uses Firebase Email/Password Authentication.
-- Menu document: `publicMenu/current`.
-- Menu photo Storage path: `menu/<item-id>/<timestamp>-<filename>`.
-- Customer orders collection planned at `orders`; customer profile collection at `customers`.
+## Current implementation in GitHub
+- Customer website: `index.html`
+- Owner order dashboard: `admin.html`
+- Owner menu editor: `private-menu-demo.html`
+- Firebase SDK initialization: `firebase-client.js`
+- Firebase web configuration and owner UID placeholder: `firebase-config.js`
+- Firestore security rules: `firestore.rules`
+- Image upload config template: `cloudinary-config.js`
 
-## Firebase Console actions required
-1. Authentication > Sign-in method > enable Email/Password.
-2. Authentication > Users > Add user: create the owner's account. Do not enable public admin sign-up.
-3. Copy the owner's UID into the exact placeholder in `firestore.rules` and `storage.rules`, then publish both rules.
-4. Create Firestore database (production mode).
-5. Create Storage bucket.
-6. In Authentication > Settings > Authorized domains, ensure `anshmaurya5619.github.io` is listed.
-7. Deploy the updated GitHub Pages site and test owner login, upload, publish, and public read in a signed-out browser.
+## Authentication
+The owner reports that Email/Password and Google providers are enabled in Firebase Authentication.
+- Customer website supports Email/Password signup/login, Google login, password reset and order history.
+- Owner pages accept Email/Password or Google, then compare the signed-in UID against `QB_ADMIN_UID`.
+- Create the owner's account under Authentication > Users. Copy that account's UID.
+- Replace `PASTE_OWNER_AUTH_UID` in `firebase-config.js` and `firestore.rules` with the exact owner UID. Do not use a customer UID.
+- In Authentication > Settings > Authorized domains, ensure `anshmaurya5619.github.io` is listed.
 
-## Menu document shape
-`publicMenu/current`:
-- `items`: array of menu item objects: `id, hi, en, cat, photo, prices, available`
-- `updatedAt`: server timestamp
-- `updatedBy`: owner UID
+## Firestore
+The default database is already present. Publish `firestore.rules` in Firestore > Rules after replacing the owner UID.
+Collections/documents:
+- `publicMenu/current`: published menu item array.
+- `orders/{autoId}`: authenticated customer order.
+- `customers/{uid}`: customer profile.
 
-## Customer ordering
-The public menu remains readable without login. Customer authentication and order placement/history UI are a separate next implementation step. The rules are prepared for customer-owned order records; do not treat ordering as live until that UI is implemented and tested.
+The customer order total is a submitted estimate and the shop must confirm it. Do not treat a browser-supplied total as payment or final billing; payment gateway and server-side price validation are not implemented.
 
-## Security and billing
-- No password is stored in source code.
-- Do not commit service-account JSON or private keys.
-- Owner UID must be filled in before publishing rules; until then owner writes are denied.
-- Keep project on Firebase Spark/free plan. Do not upgrade or enable billing without explicit owner approval.
-- Firebase web config/API key is public client configuration; access is protected by Firebase Auth, Firestore Rules, Storage Rules and optional API-key restrictions.
+## Product photos — no URL entry
+The menu editor accepts image files only. It center-crops and compresses them to WebP 1200×900 (4:3), previews the result, then uploads on Publish.
+Firebase Storage is intentionally not used because the project is staying on Spark/free.
+For image hosting, create a Cloudinary Free account and an unsigned upload preset:
+- Allowed formats: jpg, jpeg, png, webp
+- Max file size: 5 MB
+- Folder: `quality-bakers/menu`
+- Keep transformations limited to image upload.
+Then put the Cloudinary cloud name and upload preset name into `cloudinary-config.js`.
+Unsigned presets are public client-side upload endpoints; restrict formats/size/folder in Cloudinary and monitor usage. Never put an API secret in this repository.
+
+## Owner pages
+- `/admin.html`: order dashboard; owner can see orders and update status.
+- `/private-menu-demo.html`: menu editor; owner can change names, categories, prices, availability, and upload photos.
+- Public menu reads the latest `publicMenu/current` document.
+
+## Final checks before announcing live
+1. Publish Firestore rules with the real owner UID.
+2. Fill Cloudinary config and create the restricted upload preset.
+3. Confirm Firebase Authentication authorized domain.
+4. Test customer signup/login/Google login and password reset.
+5. Place a test order and confirm it appears in `admin.html`.
+6. Update status and confirm it appears in the customer's order history.
+7. Upload a real image and verify the crop on desktop and mobile.
+8. Keep Firebase on Spark. Do not upgrade or enable billing without explicit owner approval.
