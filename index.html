@@ -167,15 +167,16 @@ $("filters").innerHTML=Object.entries(categoryNames).map(([key,n])=>`<button typ
 }
 function selectCategory(cat){activeCat=cat;renderFilters();renderMenu();document.getElementById("menu").scrollIntoView({behavior:"smooth"})}
 function renderMenu(){
-const shown=items.filter(i=>activeCat==="all"||i.cat===activeCat);
+const shown=items.filter(i=>(activeCat==="all"||i.cat===activeCat));
 $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"?"pizzaCard":""}">
 <div class="foodPic"><img src="${i.photo}" alt="${textFor(i)} — ${i.en}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.closest('.foodPic').classList.add('photoUnavailable');this.remove();"><span class="tag">${categoryNames[i.cat][lang]}</span></div>
 <div class="foodInfo"><h3>${textFor(i)}</h3><div class="en">${lang==="hi"?i.en:i.hi}</div>
 <div class="priceOptions">${i.prices.map(p=>`<div class="priceOption"><span>${p[0]==="Regular"?(lang==="hi"?"कीमत":"Price"):p[0]}</span><strong>${money(p[1])}</strong></div>`).join("")}</div>
-<div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select><button class="addbtn" data-add="${i.id}" type="button">${lang==="hi"?"＋ जोड़ें":"＋ Add"}</button></div>
+<div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select><button class="addbtn" data-add="${i.id}" type="button" ${i.available===false?"disabled":""}>${i.available===false?(lang==="hi"?"अभी उपलब्ध नहीं":"Out of stock"):(lang==="hi"?"＋ जोड़ें":"＋ Add")}</button></div>
 </div></article>`).join("");
 }
 function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText()}
+window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...data);renderAll()};
 function setLanguageText(){
 const hi=lang==="hi";
 $("langBtn").textContent=hi?"English":"हिंदी";
@@ -259,6 +260,14 @@ window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+message,"_blank");
 });
 $("year").textContent=new Date().getFullYear();
 renderAll();
+</script>
+<script type="module">
+import { doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { db } from "./firebase-client.js";
+const menuRef=doc(db,"publicMenu","current");
+onSnapshot(menuRef,snap=>{
+ if(snap.exists()&&Array.isArray(snap.data().items))window.QB_APPLY_MENU(snap.data().items);
+},err=>console.warn("Firebase menu sync unavailable; showing built-in menu.",err.code||err.message));
 </script>
 </body>
 </html>
