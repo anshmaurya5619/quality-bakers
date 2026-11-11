@@ -1,11 +1,12 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Public menu photos can be viewed by customers.
-    match /menu/{fileName} {
+    // Publicly viewable menu photos; upload/delete restricted to owner UID.
+    match /menu/{allPaths=**} {
       allow read: if true;
       allow write: if request.auth != null
         && request.auth.uid == "PASTE_OWNER_AUTH_UID"
+        && request.resource != null
         && request.resource.size < 5 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
     }
