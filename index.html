@@ -259,6 +259,50 @@ body{background:#f4efe6;color:#29231d}
 .textAction{color:#805b2d}
 @media(max-width:850px){.navinner{align-items:center}.navlinks{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;gap:18px;padding:8px 0}.navlinks a{font-size:.82rem}.foodPic{aspect-ratio:4/3;height:auto}}
 @media(max-width:540px){.section{padding:25px 0 34px}.foodPic{aspect-ratio:4/3;height:auto}.foodInfo{padding:10px}.hero{padding-top:30px}.trust div{background:#fffdf8}}
+/* Balanced warm-neutral contrast: softer than ivory-white, brighter than the old black theme */
+:root{--bg:#e5ded2;--panel:#eee8dd;--cream:#30291f;--muted:#6e6253;--gold:#9b713d;--orange:#98563d;--green:#315b48;--shadow:0 10px 28px #382b1b16}
+body{background:#e5ded2;color:#30291f}
+.topbar{background:#30291f;color:#e9dfcf}
+.nav{background:#eee8ddf5;border-bottom:1px solid #c9bdab;box-shadow:0 3px 14px #382b1b12}
+.navlinks{color:#40362b}
+.navlinks a{padding:7px 2px}
+.navlinks .accountNavLink{background:#30291f;color:#f5ecdf;padding:8px 12px;border-radius:6px;font-weight:800;border:1px solid #30291f}
+.navlinks .accountNavLink:hover,.navlinks .accountNavLink[aria-current="page"]{background:#9b713d;color:#fff;border-color:#9b713d}
+.langbtn{background:#e5ded2;color:#30291f;border-color:#c6b9a6}
+.cartbtn{background:#9b713d;color:#fff;border:1px solid #9b713d}
+.hero h1,.sectionHead h2{color:#30291f}
+.hero p,.sectionHead p{color:#6e6253}
+.eyebrow{background:#d8c9b2;border-color:#bca27c;color:#614824}
+.primary{background:#9b713d;color:#fff;border:1px solid #9b713d}
+.secondary{background:#eee8dd;color:#40362b;border-color:#c8bba8}
+.heroArt{border-color:#a98b60;box-shadow:0 14px 30px #382b1b20}
+.trust div{background:#eee8dd;border-color:#d0c5b5}
+.categoryTile.noodles{background:#e9ddcb;border-color:#cdb99a}
+.categoryTile.starters{background:#ead9cf;border-color:#cfb4a5}
+.categoryTile.snacks{background:#dce2d5;border-color:#bac6b0}
+.categoryTile.pizza{background:#e2dce7;border-color:#c3b5ce}
+.filter{background:#eee8dd;color:#40362b;border-color:#c9bdad}
+.filter.active{background:#30291f;color:#fff;border-color:#30291f}
+.foodCard{background:#f0eadd;border-color:#cfc3b1;box-shadow:0 4px 14px #382b1b12}
+.foodPic{background:#d8cdbd}
+.foodInfo h3{color:#30291f}.foodInfo .en{color:#756958}
+.priceOption{background:#e6ded1;border-color:#d0c3af;color:#4c4032}
+.priceOption strong{color:#78552c}
+.addrow select{background:#f0eadd;color:#40362b;border-color:#c8bba8}
+.addbtn{background:#30291f;color:#fff}
+.notice{background:#e1d7c8;border-color:#c5b397;color:#5e4b34}
+.aboutBox,.cartPanel,.accountCard{background:#eee8dd;border-color:#c9bdad;box-shadow:0 6px 20px #382b1b12}
+.cartSection,.accountSection{background:#e5ded2;border-color:#d0c5b5}
+.cartItem,.orderCard{background:#e7dfd2;border-color:#cfc2af;color:#30291f}
+.totalLine{border-color:#c9bdad;color:#30291f}
+.checkoutFields input,.checkoutFields textarea,.accountCard input{background:#f3eee5;color:#30291f;border-color:#c5b8a5}
+.authTab{background:#e5ded2;color:#40362b;border-color:#c5b8a5}
+.authTab.active{background:#30291f;color:#fff;border-color:#30291f}
+.profileAvatar{border-color:#a98b60;color:#78552c}
+.accountMessage,.textAction,.orderStatus{color:#78552c}
+.cartEmptyAction p,.empty{color:#6e6253}
+@media(max-width:850px){.navlinks .accountNavLink{padding:7px 10px}.navlinks{gap:13px}}
+@media(max-width:540px){.navlinks a{font-size:.8rem}.navlinks .accountNavLink{font-size:.8rem}}
 /* Account and cart are dedicated views, not permanent empty blocks */
 .accountSection,.cartSection{display:none}
 .accountSection.view-active,.cartSection.view-active{display:block}
@@ -272,7 +316,7 @@ body{background:#f4efe6;color:#29231d}
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span id="topTag">🍕 ताज़ा खाना • शानदार स्वाद • साफ़-सुथरी तैयारी</span><span>📞 <a href="tel:9918203207">9918203207</a> · <a href="tel:8604665305">8604665305</a></span></div></div>
-<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="navlinks"><a href="#home" data-hi="होम" data-en="Home">होम</a><a href="#menu" data-hi="मेन्यू" data-en="Menu">मेन्यू</a><a href="#cart" data-hi="कार्ट / ऑर्डर" data-en="Cart / Order">कार्ट / ऑर्डर</a><a href="#account" data-hi="मेरा अकाउंट" data-en="My Account">मेरा अकाउंट</a><a href="#about" data-hi="हमारे बारे में" data-en="About">हमारे बारे में</a><a href="#contact" data-hi="संपर्क" data-en="Contact">संपर्क</a></div><div style="display:flex;gap:8px"><button class="langbtn" id="langBtn" type="button">English</button><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button></div></div></nav>
+<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="navlinks"><a href="#home" data-hi="होम" data-en="Home">होम</a><a href="#menu" data-hi="मेन्यू" data-en="Menu">मेन्यू</a><a href="#cart" data-hi="कार्ट / ऑर्डर" data-en="Cart / Order">कार्ट / ऑर्डर</a><a class="accountNavLink" href="#account" data-hi="लॉगिन / अकाउंट" data-en="Login / Account">लॉगिन / अकाउंट</a><a href="#about" data-hi="हमारे बारे में" data-en="About">हमारे बारे में</a><a href="#contact" data-hi="संपर्क" data-en="Contact">संपर्क</a></div><div style="display:flex;gap:8px"><button class="langbtn" id="langBtn" type="button">English</button><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button></div></div></nav>
 <main id="home">
 <section class="hero"><div class="wrap heroGrid"><div><span class="eyebrow" id="eyebrow">✨ GOOD FOOD • GOOD MOOD</span><h1 id="heroTitle">स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!</h1><p id="heroDesc">पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।</p><div class="actions"><a class="primary" href="#menu" id="exploreBtn">🍽️ मेन्यू देखें</a><button class="secondary" id="heroCart" type="button">🛒 ऑर्डर शुरू करें</button></div><div class="trust"><div><b>🍕 Pizza</b><small id="trust1">चीज़ी और स्वादिष्ट</small></div><div><b>🥡 Chinese</b><small id="trust2">हर बाइट में स्वाद</small></div><div><b>🥟 Snacks</b><small id="trust3">हर मौके के लिए</small></div></div></div><div class="heroArt"><div style="position:absolute;inset:0;background:linear-gradient(0deg,#100b0bd9,transparent 70%);z-index:1"></div><div style="position:absolute;z-index:2;top:18px;left:18px;background:#ffd166;color:#2b160b;padding:10px 14px;font-weight:900;transform:rotate(-3deg)"><span id="artTitle">Quality का स्वाद</span><br><small id="artSub">Fresh • Tasty • Hygienic</small></div><div class="heroBubbles" style="position:absolute;z-index:2;bottom:22px;left:12px;right:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><a href="#menu" onclick="selectCategory('starters')"><img src="https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/groente_loempia.jpg" alt="Veg Spring Roll" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Spring Roll</b></a><a href="#menu" onclick="selectCategory('pizza')"><img src="https://slice-menu-assets-prod.imgix.net/16633/1591698031_b2a23a1e28?fit=crop&h=480&w=480" alt="Pizza" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Pizza</b></a><a href="#menu" onclick="selectCategory('noodles')"><img src="https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg" alt="Chinese noodles" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Chinese</b></a><a href="#menu" onclick="selectCategory('snacks')"><img src="https://4.bp.blogspot.com/-BD6z0rLHgCQ/VBlZyMzRbdI/AAAAAAAAAL4/oAc_IiFGUyM/s1600/Veg-momos.jpg" alt="Momos and dumplings" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Momos</b></a></div></div></div></section>
 <section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
