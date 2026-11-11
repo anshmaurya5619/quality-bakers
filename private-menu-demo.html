@@ -11,7 +11,7 @@
 </head>
 <body><header class="top"><div class="wrap"><h1>🍕 Quality Bakers — Menu Studio</h1><p>Owner workspace · मेन्यू, फोटो, कीमत और उपलब्धता</p><p><a href="./admin.html" style="color:#d8b77a">← Owner Orders Dashboard</a></p></div></header>
 <main class="wrap">
-<div class="warning"><strong>Firebase Admin Panel:</strong> Login के बाद मेन्यू Firebase Firestore से लोड होगा। Publish करने पर सार्वजनिक वेबसाइट पर अपडेट जाएगा। फोटो Firebase Storage में अपलोड होगी।</div>
+<div class="warning"><strong>Firebase Admin Panel:</strong> Login के बाद मेन्यू Firebase Firestore से लोड होगा। Publish करने पर सार्वजनिक वेबसाइट पर अपडेट जाएगा। फोटो सुरक्षित image hosting पर अपलोड होगी।</div>
 <section id="authPanel"><h2>🔐 Owner Login</h2><form id="loginForm"><label for="loginEmail">Owner Email</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="owner@example.com"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Firebase Auth password"><button class="btn primary" type="submit">Login</button></form><button class="btn secondary" id="googleOwnerLogin" type="button" style="margin-top:10px">Google से Owner Login</button><div id="authStatus" role="status"></div><p class="muted">Owner account Firebase Console → Authentication → Users से बनाएं। इस पेज पर public signup नहीं है।</p></section>
 <div class="authbar hidden" id="authBar"><span id="signedInAs"></span><button class="btn secondary" id="logoutBtn" type="button">Logout</button></div>
 <div class="layout locked" id="editorLayout">
