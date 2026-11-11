@@ -6,25 +6,42 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == "PASTE_OWNER_AUTH_UID";
     }
 
-    // Published menu: customers can read; only owner can publish/edit.
+    // Publicly readable published menu; only the owner may publish.
     match /publicMenu/{document} {
       allow read: if true;
       allow write: if isOwner();
     }
 
-    // Customer orders: customer creates and reads only their own orders.
-    // Owner can read all orders and update order status.
+    // A customer can create an order only for their own authenticated UID.
+    // Owner can read every order and update its status from admin.html.
     match /orders/{orderId} {
       allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'customerUid','customerName','customerEmail','customerPhone',
+          'note','items','total','status','createdAt'
+        ])
         && request.resource.data.customerUid == request.auth.uid
-        && request.resource.data.status == "placed";
+        && request.resource.data.status == 'placed'
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() > 0
+        && request.resource.data.customerName.size() <= 70
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 30
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0;
       allow read: if isOwner()
         || (signedIn() && resource.data.customerUid == request.auth.uid);
-      allow update: if isOwner();
+      allow update: if isOwner()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status','updatedAt'])
+        && request.resource.data.status in [
+          'placed','confirmed','preparing','ready','completed','cancelled'
+        ];
       allow delete: if isOwner();
     }
 
-    // Customer profile: user can access only their own profile.
+    // Customer can access only their own profile.
     match /customers/{uid} {
       allow read, create, update: if signedIn() && request.auth.uid == uid;
       allow delete: if isOwner();
