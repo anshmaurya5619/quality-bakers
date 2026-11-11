@@ -587,6 +587,15 @@ body.page-account.customer-signed-in .accountMessage{overflow-wrap:anywhere}
  body.page-account.customer-signed-in .orderCard{padding:14px}
  body.page-account.customer-signed-in .historyTitle{margin-top:18px}
 }
+
+.deliveryLocationBox{display:grid;gap:9px;padding:13px;border:1px solid #d4c5b1;border-radius:8px;background:#e9e1d5}
+.deliveryLocationBox>strong{font-size:.92rem;color:#30291f}
+.locationChoices{display:flex;gap:8px;flex-wrap:wrap}
+.locationChoice{flex:1;min-width:145px;padding:10px;font-size:.88rem}
+.locationChoice.active{background:#315b48;color:#fff;border-color:#315b48}
+.locationStatus{font-size:.82rem;color:#6e6253;margin:0;line-height:1.5}
+#manualAddressWrap label{display:block;font-size:.85rem;font-weight:700;margin:5px 0}
+#customerAddress{width:100%;background:#f3eee5;color:#30291f;border:1px solid #c5b8a5;border-radius:6px;padding:11px;font:inherit}
 </style>
 </head>
 <body>
@@ -596,7 +605,16 @@ body.page-account.customer-signed-in .accountMessage{overflow-wrap:anywhere}
 <section class="hero"><div class="wrap heroGrid"><div><span class="eyebrow" id="eyebrow">✨ GOOD FOOD • GOOD MOOD</span><h1 id="heroTitle">स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!</h1><p id="heroDesc">पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।</p><div class="actions"><a class="primary" href="#menu" id="exploreBtn">🍽️ मेन्यू देखें</a><button class="secondary" id="heroCart" type="button">🛒 ऑर्डर शुरू करें</button></div><div class="trust"><div><b>🍕 Pizza</b><small id="trust1">चीज़ी और स्वादिष्ट</small></div><div><b>🥡 Chinese</b><small id="trust2">हर बाइट में स्वाद</small></div><div><b>🥟 Snacks</b><small id="trust3">हर मौके के लिए</small></div></div></div><div class="heroArt"><div style="position:absolute;inset:0;background:linear-gradient(0deg,#100b0bd9,transparent 70%);z-index:1"></div><div style="position:absolute;z-index:2;top:18px;left:18px;background:#ffd166;color:#2b160b;padding:10px 14px;font-weight:900;transform:rotate(-3deg)"><span id="artTitle">Quality का स्वाद</span><br><small id="artSub">Fresh • Tasty • Hygienic</small></div><div class="heroBubbles" style="position:absolute;z-index:2;bottom:22px;left:12px;right:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center"><a href="#menu" onclick="selectCategory('starters')"><img src="https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/groente_loempia.jpg" alt="Veg Spring Roll" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Spring Roll</b></a><a href="#menu" onclick="selectCategory('pizza')"><img src="https://slice-menu-assets-prod.imgix.net/16633/1591698031_b2a23a1e28?fit=crop&h=480&w=480" alt="Pizza" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Pizza</b></a><a href="#menu" onclick="selectCategory('noodles')"><img src="https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg" alt="Chinese noodles" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Chinese</b></a><a href="#menu" onclick="selectCategory('snacks')"><img src="https://4.bp.blogspot.com/-BD6z0rLHgCQ/VBlZyMzRbdI/AAAAAAAAAL4/oAc_IiFGUyM/s1600/Veg-momos.jpg" alt="Momos and dumplings" style="width:100%;aspect-ratio:1;border:3px solid white;border-radius:50%;object-fit:cover"><b>Momos</b></a></div></div></div></section>
 <section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
 <section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">MEMBER ACCOUNT</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम"><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><input id="accountPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="कम से कम 6 अक्षर"><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit" id="googleAuthBtn" type="button">Google से जारी रखें</button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow">MY QUALITY ACCOUNT</span><h3 id="profileName">Guest</h3><p id="profileEmail">लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।</p></div></div><div class="profileActions"><button class="secondary" type="button" id="signOutBtn">लॉगआउट</button></div><h3 class="historyTitle">आपके ऑर्डर</h3><div id="orderHistory" class="orderHistory"><p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p></div></div></div></div></section>
-<section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields" id="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="3" placeholder="पता / खास निर्देश (वैकल्पिक)"></textarea></div><button class="checkout" id="checkoutBtn" type="button">WhatsApp पर ऑर्डर भेजें ↗</button><p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p></div></div></section>
+<section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields" id="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="2" placeholder="खास निर्देश (वैकल्पिक)"></textarea>
+<div class="deliveryLocationBox">
+<strong data-hi="डिलीवरी लोकेशन चुनें" data-en="Choose delivery location">डिलीवरी लोकेशन चुनें</strong>
+<div class="locationChoices">
+<button class="secondary locationChoice" id="useLiveLocationBtn" type="button">📍 मेरी Live Location लें</button>
+<button class="secondary locationChoice" id="useManualLocationBtn" type="button">✍️ पता खुद लिखें</button>
+</div>
+<p id="locationStatus" class="locationStatus" role="status" aria-live="polite">ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।</p>
+<div id="manualAddressWrap" hidden><label for="customerAddress">पूरा डिलीवरी पता</label><textarea id="customerAddress" rows="3" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड"></textarea></div>
+</div></div><button class="checkout" id="checkoutBtn" type="button">WhatsApp पर ऑर्डर भेजें ↗</button><p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p></div></div></section>
 <section class="section" id="about"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="aboutEyebrow">❤️ GOOD FOOD, GOOD MOOD</span><h2 id="aboutTitle">Quality Bakers क्यों?</h2></div></div><div class="aboutGrid"><div class="aboutBox"><h3 id="aboutBoxTitle">हर बाइट में स्वाद</h3><p id="aboutText">आपकी पसंद के पिज्जा, चाइनीज़, मोमोज़ और स्नैक्स। मेन्यू में दी गई कीमतें देखकर आइटम चुनें और अपना ऑर्डर WhatsApp पर भेजें।</p></div><div class="aboutBox" id="contact"><h3 id="contactTitle">संपर्क करें</h3><p id="contactDesc">ऑर्डर और जानकारी के लिए संपर्क करें।</p><div class="contactRows"><a class="contactRow" href="tel:9918203207"><span class="contactIcon">📞</span><span><small id="phoneLabel1">मोबाइल नंबर 1</small><strong>9918203207</strong></span></a><a class="contactRow" href="tel:8604665305"><span class="contactIcon">📞</span><span><small id="phoneLabel2">मोबाइल नंबर 2</small><strong>8604665305</strong></span></a><div class="contactRow"><span class="contactIcon">👨‍🍳</span><span><small id="ownerLabel">प्रोपराइटर</small><strong>शिवम अग्रहरि</strong></span></div></div></div></div></div></section>
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText">Good Food • Good Mood • Fresh Food</span></div></footer>
@@ -642,7 +660,7 @@ $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"
 <div class="foodPic"><img src="${i.photo}" alt="${textFor(i)} — ${i.en}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.closest('.foodPic').classList.add('photoUnavailable');this.remove();"><span class="tag">${categoryNames[i.cat][lang]}</span></div>
 <div class="foodInfo"><h3>${textFor(i)}</h3><div class="en">${lang==="hi"?i.en:i.hi}</div>
 <div class="priceOptions">${i.prices.map(p=>`<div class="priceOption"><span>${p[0]==="Regular"?(lang==="hi"?"कीमत":"Price"):p[0]}</span><strong>${money(p[1])}</strong></div>`).join("")}</div>
-<div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select><button class="addbtn" data-add="${i.id}" type="button" ${i.available===false?"disabled":""}>${i.available===false?(lang==="hi"?"अभी उपलब्ध नहीं":"Out of stock"):(lang==="hi"?"＋ जोड़ें":"＋ Add")}</button></div>
+<div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select><button class="addbtn" data-add="${i.id}" type="button" ${i.available===false?"disabled":""}>${i.available===false?(lang==="hi"?"अभी उपलब्ध नहीं":"Out of stock"):(!window.QB_AUTH_USER?(lang==="hi"?"लॉगिन करके जोड़ें":"Login to add"):(lang==="hi"?"＋ जोड़ें":"＋ Add"))}</button></div>
 </div></article>`).join("");
 }
 function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText()}
@@ -682,7 +700,39 @@ $("customerNote").placeholder=hi?"पता / खास निर्देश (�
 
 $("footerText").textContent="Good Food • Good Mood • Fresh Food";
 }
+let pendingAdd=null;
+let deliveryLocation=null;
+window.QB_AUTH_USER=null;
+function setLocationStatus(message){$("locationStatus").textContent=message}
+$("useLiveLocationBtn").addEventListener("click",()=>{
+ if(!navigator.geolocation){setLocationStatus("इस ब्राउज़र में Live Location उपलब्ध नहीं है। पता खुद लिखें।");return}
+ setLocationStatus("आपकी अनुमति से Live Location ली जा रही है…");
+ navigator.geolocation.getCurrentPosition(pos=>{
+  deliveryLocation={mode:"gps",latitude:Number(pos.coords.latitude),longitude:Number(pos.coords.longitude),accuracyMeters:Math.round(pos.coords.accuracy),capturedAt:new Date().toISOString()};
+  $("manualAddressWrap").hidden=false;
+  $("useLiveLocationBtn").classList.add("active");
+  $("useManualLocationBtn").classList.remove("active");
+  setLocationStatus("Live Location मिल गई (लगभग "+Math.round(pos.coords.accuracy)+" मीटर की सटीकता)। चाहें तो मकान/लैंडमार्क भी लिखें।");
+ },err=>{
+  deliveryLocation=null;
+  setLocationStatus(err.code===1?"Location permission नहीं मिली। पता खुद लिखें।":"Live Location नहीं मिल सकी। पता खुद लिखें।");
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+});
+$("useManualLocationBtn").addEventListener("click",()=>{
+ deliveryLocation=null;
+ $("manualAddressWrap").hidden=false;
+ $("customerAddress").focus();
+ $("useManualLocationBtn").classList.add("active");
+ $("useLiveLocationBtn").classList.remove("active");
+ setLocationStatus("अपना पूरा डिलीवरी पता लिखें।");
+});
 function addToCart(id){
+if(!window.QB_AUTH_USER){
+ const sel=$("size-"+id);
+ pendingAdd={id,priceIndex:sel?Number(sel.value):0};
+ showToast(lang==="hi"?"कार्ट में जोड़ने के लिए पहले लॉगिन करें।":"Please log in to add items.");
+ openAccount();return;
+}
 const item=items.find(x=>x.id===id),sel=$("size-"+id),price=item.prices[Number(sel.value)],key=id+"-"+price[0];
 const existing=cart.find(x=>x.key===key);
 if(existing)existing.qty++;else cart.push({key,id,size:price[0],price:price[1],qty:1});
@@ -738,17 +788,22 @@ $("checkoutBtn").addEventListener("click",async()=>{
  if(!user){showToast(lang==="hi"?"ऑर्डर सेव करने के लिए पहले लॉगिन करें।":"Please sign in before placing an order.");openAccount();return}
  const name=$("customerName").value.trim()||user.displayName||"Customer";
  const phone=$("customerPhone").value.trim(),note=$("customerNote").value.trim();
+ const manualAddress=$("customerAddress").value.trim();
+ if(!deliveryLocation && !manualAddress){showToast(lang==="hi"?"कृपया Live Location लें या पूरा पता लिखें।":"Please capture live location or enter a delivery address.");return}
+ const orderLocation=deliveryLocation?{...deliveryLocation,manualAddress:manualAddress||""}:{mode:"manual",address:manualAddress};
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
  const orderItems=cart.map(x=>{const i=items.find(z=>z.id===x.id);return {id:x.id,nameHi:i.hi,nameEn:i.en,size:x.size,price:Number(x.price),quantity:x.qty,lineTotal:Number(x.price*x.qty)}});
  const btn=$("checkoutBtn");btn.disabled=true;btn.textContent=lang==="hi"?"ऑर्डर सेव हो रहा है…":"Saving order…";
  try{
   if(typeof window.QB_CREATE_ORDER!=="function")throw new Error("Order service is not ready. Refresh and try again.");
-  const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,items:orderItems,total});
+  const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,deliveryLocation:orderLocation,items:orderItems,total});
   let lines=["QUALITY BAKERS - ORDER","Order ID: "+orderId,"Name: "+name];
   if(phone)lines.push("Phone: "+phone);
   lines.push("Items:");
   orderItems.forEach(x=>lines.push(x.nameHi+" ("+x.size+") x "+x.quantity+" = "+money(x.lineTotal)));
-  lines.push("Total: "+money(total));if(note)lines.push("Address / note: "+note);
+  lines.push("Total: "+money(total));if(orderLocation.mode==="gps")lines.push("Live location: https://www.google.com/maps?q="+orderLocation.latitude+","+orderLocation.longitude);
+  if(orderLocation.manualAddress||orderLocation.address)lines.push("Delivery address: "+(orderLocation.manualAddress||orderLocation.address));
+  if(note)lines.push("Special instructions: "+note);
   lines.push("Please confirm my order.");
   window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n")),"_blank","noopener,noreferrer");
   cart=[];updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
@@ -846,18 +901,21 @@ onAuthStateChanged(auth,async user=>{
   el("profileEmail").textContent=user.email||"";
   el("customerName").value=user.displayName||"";
   await loadOrders(user);
+  renderMenu();
+  if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   document.body.classList.remove("customer-signed-in");
   el("authCard").classList.remove("hidden");el("profileCard").classList.add("hidden");
   el("profileName").textContent="Guest";el("profileEmail").textContent="लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।";
   el("orderHistory").innerHTML='<p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p>';
   window.QB_AUTH_USER=null;
+  renderMenu();
  }
 });
-window.QB_CREATE_ORDER=async({customerName,customerPhone,note,items,total})=>{
+window.QB_CREATE_ORDER=async({customerName,customerPhone,note,deliveryLocation,items,total})=>{
  const user=auth.currentUser;if(!user)throw new Error("पहले लॉगिन करें।");
  const cleanItems=items.map(i=>({id:String(i.id),nameHi:String(i.nameHi),nameEn:String(i.nameEn),size:String(i.size),price:Number(i.price),quantity:Number(i.quantity),lineTotal:Number(i.lineTotal)}));
- const payload={customerUid:user.uid,customerName:String(customerName).slice(0,70),customerEmail:user.email||"",customerPhone:String(customerPhone||"").slice(0,20),note:String(note||"").slice(0,500),items:cleanItems,total:Number(total),status:"placed",createdAt:serverTimestamp()};
+ const payload={customerUid:user.uid,customerName:String(customerName).slice(0,70),customerEmail:user.email||"",customerPhone:String(customerPhone||"").slice(0,20),note:String(note||"").slice(0,500),deliveryLocation,items:cleanItems,total:Number(total),status:"placed",createdAt:serverTimestamp()};
  const result=await addDoc(collection(db,"orders"),payload);
  await setDoc(doc(db,"customers",user.uid),{uid:user.uid,name:payload.customerName,email:payload.customerEmail,phone:payload.customerPhone,updatedAt:serverTimestamp()},{merge:true});
  await loadOrders(user);
