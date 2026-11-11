@@ -304,22 +304,29 @@ if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 $("cartOpen").addEventListener("click",openCart);
 $("heroCart").addEventListener("click",openCart);
 $("langBtn").addEventListener("click",()=>{lang=lang==="hi"?"en":"hi";renderAll()});
-$("checkoutBtn").addEventListener("click",()=>{
-if(!cart.length){showToast(lang==="hi"?"पहले कार्ट में आइटम जोड़ें":"Please add items to cart first");return}
-const name=$("customerName").value.trim();
-if(!name){$("customerName").focus();showToast(lang==="hi"?"कृपया अपना नाम लिखें":"Please enter your name");return}
-const phone=$("customerPhone").value.trim(),note=$("customerNote").value.trim();
-const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
-let lines=["QUALITY BAKERS - ORDER","Name: "+name];
-if(phone)lines.push("Phone: "+phone);
-lines.push("Items:");
-cart.forEach(x=>{const i=items.find(z=>z.id===x.id);lines.push(textFor(i)+" ("+x.size+") x "+x.qty+" = "+money(x.qty*x.price))});
-lines.push("Total: "+money(total));
-if(note)lines.push("Address / note: "+note);
-lines.push("Please confirm my order.");
-const message=encodeURIComponent(lines.join("\n"));
-window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+message,"_blank","noopener,noreferrer");
-showToast(lang==="hi"?"WhatsApp में ऑर्डर तैयार है। भेजने से पहले विवरण जाँच लें।":"Your order is ready in WhatsApp. Review details before sending.");
+$("checkoutBtn").addEventListener("click",async()=>{
+ if(!cart.length){showToast(lang==="hi"?"पहले कार्ट में आइटम जोड़ें":"Please add items to cart first");return}
+ const user=window.QB_AUTH_USER;
+ if(!user){showToast(lang==="hi"?"ऑर्डर सेव करने के लिए पहले लॉगिन करें।":"Please sign in before placing an order.");document.getElementById("account").scrollIntoView({behavior:"smooth"});return}
+ const name=$("customerName").value.trim()||user.displayName||"Customer";
+ const phone=$("customerPhone").value.trim(),note=$("customerNote").value.trim();
+ const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const orderItems=cart.map(x=>{const i=items.find(z=>z.id===x.id);return {id:x.id,nameHi:i.hi,nameEn:i.en,size:x.size,price:Number(x.price),quantity:x.qty,lineTotal:Number(x.price*x.qty)}});
+ const btn=$("checkoutBtn");btn.disabled=true;btn.textContent=lang==="hi"?"ऑर्डर सेव हो रहा है…":"Saving order…";
+ try{
+  if(typeof window.QB_CREATE_ORDER!=="function")throw new Error("Order service is not ready. Refresh and try again.");
+  const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,items:orderItems,total});
+  let lines=["QUALITY BAKERS - ORDER","Order ID: "+orderId,"Name: "+name];
+  if(phone)lines.push("Phone: "+phone);
+  lines.push("Items:");
+  orderItems.forEach(x=>lines.push(x.nameHi+" ("+x.size+") x "+x.quantity+" = "+money(x.lineTotal)));
+  lines.push("Total: "+money(total));if(note)lines.push("Address / note: "+note);
+  lines.push("Please confirm my order.");
+  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n")),"_blank","noopener,noreferrer");
+  cart=[];updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
+  document.getElementById("account").scrollIntoView({behavior:"smooth"});
+ }catch(err){showToast(lang==="hi"?"ऑर्डर सेव नहीं हुआ: "+(err.message||err.code):"Order could not be saved: "+(err.message||err.code));}
+ finally{btn.disabled=false;btn.textContent=lang==="hi"?"WhatsApp पर ऑर्डर भेजें ↗":"Send Order on WhatsApp ↗";}
 });
 $("year").textContent=new Date().getFullYear();
 renderAll();
@@ -331,6 +338,93 @@ const menuRef=doc(db,"publicMenu","current");
 onSnapshot(menuRef,snap=>{
  if(snap.exists()&&Array.isArray(snap.data().items))window.QB_APPLY_MENU(snap.data().items);
 },err=>console.warn("Firebase menu sync unavailable; showing built-in menu.",err.code||err.message));
+</script>
+<script type="module">
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { doc, setDoc, addDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { auth, db } from "./firebase-client.js";
+
+let authMode="login";
+const el=id=>document.getElementById(id);
+const say=(msg)=>{el("authMessage").textContent=msg};
+function setMode(mode){
+ authMode=mode;
+ el("showLogin").classList.toggle("active",mode==="login");
+ el("showRegister").classList.toggle("active",mode==="register");
+ el("customerNameLabel").style.display=mode==="register"?"block":"none";
+ el("accountName").style.display=mode==="register"?"block":"none";
+ el("accountName").required=mode==="register";
+ el("authSubmit").textContent=mode==="login"?"लॉगिन करें":"अकाउंट बनाएँ";
+ el("accountPassword").autocomplete=mode==="login"?"current-password":"new-password";
+ say("");
+}
+el("showLogin").addEventListener("click",()=>setMode("login"));
+el("showRegister").addEventListener("click",()=>setMode("register"));
+el("customerAuthForm").addEventListener("submit",async e=>{
+ e.preventDefault();const email=el("accountEmail").value.trim(),password=el("accountPassword").value;
+ const name=el("accountName").value.trim();
+ el("authSubmit").disabled=true;say("कृपया प्रतीक्षा करें…");
+ try{
+  let credential;
+  if(authMode==="register"){
+   if(!name)throw new Error("कृपया अपना नाम लिखें।");
+   credential=await createUserWithEmailAndPassword(auth,email,password);
+   await updateProfile(credential.user,{displayName:name});
+   await setDoc(doc(db,"customers",credential.user.uid),{uid:credential.user.uid,name,email,createdAt:serverTimestamp()},{merge:true});
+   say("अकाउंट बन गया। आपका स्वागत है!");
+  }else{
+   credential=await signInWithEmailAndPassword(auth,email,password);
+   say("लॉगिन सफल।");
+  }
+  el("customerAuthForm").reset();
+ }catch(err){
+  const messages={"auth/email-already-in-use":"यह ईमेल पहले से रजिस्टर है। लॉगिन करें।","auth/invalid-credential":"ईमेल या पासवर्ड सही नहीं है।","auth/weak-password":"पासवर्ड कम से कम 6 अक्षर का रखें。","auth/invalid-email":"ईमेल पता सही नहीं है。","auth/too-many-requests":"बहुत प्रयास हुए हैं। थोड़ी देर बाद कोशिश करें。"};
+  say(messages[err.code]||err.message||"अभी अकाउंट प्रक्रिया पूरी नहीं हुई।");
+ }finally{el("authSubmit").disabled=false}
+});
+el("signOutBtn").addEventListener("click",async()=>{try{await signOut(auth);say("आप लॉगआउट हो गए।")}catch(err){say(err.message)}});
+function renderHistory(rows){
+ const host=el("orderHistory");
+ if(!rows.length){host.innerHTML='<p class="muted">अभी कोई ऑर्डर नहीं है। मेन्यू से अपना पहला ऑर्डर करें।</p>';return}
+ rows.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+ host.innerHTML=rows.map(o=>{
+  const date=o.createdAt?.toDate?o.createdAt.toDate().toLocaleString("en-IN"):"अभी-अभी";
+  const lines=(o.items||[]).map(i=>'<li>'+String(i.nameHi||i.nameEn||"Item").replace(/[<>]/g,"")+' · '+Number(i.quantity||0)+' × ₹'+Number(i.price||0)+'</li>').join("");
+  return '<article class="orderCard"><div class="orderCardTop"><strong>Order #'+String(o.id).slice(-7)+'</strong><span class="orderStatus">'+String(o.status||"placed")+'</span></div><small>'+date+'</small><ul class="orderLines">'+lines+'</ul><div class="totalLine"><span>कुल</span><strong>₹'+Number(o.total||0)+'</strong></div></article>';
+ }).join("");
+}
+async function loadOrders(user){
+ el("orderHistory").innerHTML='<p class="muted">ऑर्डर लोड हो रहे हैं…</p>';
+ try{
+  const snap=await getDocs(query(collection(db,"orders"),where("customerUid","==",user.uid)));
+  renderHistory(snap.docs.map(d=>({id:d.id,...d.data()})));
+ }catch(err){el("orderHistory").innerHTML='<p class="muted">ऑर्डर लोड नहीं हुए: '+String(err.code||err.message)+'</p>'}
+}
+onAuthStateChanged(auth,async user=>{
+ window.QB_AUTH_USER=user||null;
+ if(user){
+  el("authCard").classList.add("hidden");el("profileCard").classList.remove("hidden");
+  el("profileName").textContent=user.displayName||"Quality Bakers Customer";
+  el("profileEmail").textContent=user.email||"";
+  el("customerName").value=user.displayName||"";
+  await loadOrders(user);
+ }else{
+  el("authCard").classList.remove("hidden");el("profileCard").classList.add("hidden");
+  el("profileName").textContent="Guest";el("profileEmail").textContent="लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।";
+  el("orderHistory").innerHTML='<p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p>';
+  window.QB_AUTH_USER=null;
+ }
+});
+window.QB_CREATE_ORDER=async({customerName,customerPhone,note,items,total})=>{
+ const user=auth.currentUser;if(!user)throw new Error("पहले लॉगिन करें।");
+ const cleanItems=items.map(i=>({id:String(i.id),nameHi:String(i.nameHi),nameEn:String(i.nameEn),size:String(i.size),price:Number(i.price),quantity:Number(i.quantity),lineTotal:Number(i.lineTotal)}));
+ const payload={customerUid:user.uid,customerName:String(customerName).slice(0,70),customerEmail:user.email||"",customerPhone:String(customerPhone||"").slice(0,20),note:String(note||"").slice(0,500),items:cleanItems,total:Number(total),status:"placed",createdAt:serverTimestamp()};
+ const result=await addDoc(collection(db,"orders"),payload);
+ await setDoc(doc(db,"customers",user.uid),{uid:user.uid,name:payload.customerName,email:payload.customerEmail,phone:payload.customerPhone,updatedAt:serverTimestamp()},{merge:true});
+ await loadOrders(user);
+ return result.id;
+};
+setMode("login");
 </script>
 </body>
 </html>
