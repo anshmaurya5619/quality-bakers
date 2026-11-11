@@ -9,3 +9,7 @@ export const firebaseConfig = {
   appId: "1:841246021570:web:c1d3c4fe57ab435af3e85b",
   measurementId: "G-0EQFY89LTR"
 };
+
+// Replace with the owner Firebase Authentication UID before publishing rules.
+export const QB_ADMIN_UID = "PASTE_OWNER_AUTH_UID";
+
