@@ -714,7 +714,7 @@ async function loadOrders(user){
  try{
   const snap=await getDocs(query(collection(db,"orders"),where("customerUid","==",user.uid)));
   renderHistory(snap.docs.map(d=>({id:d.id,...d.data()})));
- }catch(err){el("orderHistory").innerHTML='<p class="muted">ऑर्डर लोड नहीं हुए: '+String(err.code||err.message)+'</p>'}
+ }catch(err){console.error("Customer order history could not be loaded:",err.code||err.message);el("orderHistory").innerHTML='<p class="muted">आपके ऑर्डर अभी उपलब्ध नहीं हैं। कृपया थोड़ी देर बाद फिर देखें या दुकान से संपर्क करें।</p>'}
 }
 onAuthStateChanged(auth,async user=>{
  window.QB_AUTH_USER=user||null;
