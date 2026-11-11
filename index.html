@@ -341,6 +341,52 @@ body.page-account #accountTitle{font-size:clamp(1.8rem,4vw,2.5rem)}
  .navlinks .accountNavLink{font-size:.74rem}
  body.page-account main#home>.accountSection,body.page-cart main#home>.cartSection{padding:28px 0 50px}
 }
+
+/* Account is a focused sign-in screen, not the storefront squeezed above a form */
+body.page-account .topbar{display:none}
+body.page-account .nav{position:sticky;top:0}
+body.page-account .navinner{display:flex;flex-wrap:nowrap;align-items:center;gap:14px;min-height:66px}
+body.page-account .navlinks{display:flex;order:0;flex:1;width:auto;min-width:0;overflow:visible;flex-wrap:nowrap;justify-content:center;gap:10px;padding:0}
+body.page-account .navlinks a{display:none}
+body.page-account .navlinks a[href="#home"]{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;background:#30291f;color:#fff;border-radius:7px;font-weight:800}
+body.page-account .navinner>div:last-child{order:0;display:flex;flex:0 0 auto;align-items:center;gap:8px!important}
+body.page-account .brand{flex:0 0 auto}
+body.page-account .brand small{font-size:.66rem}
+body.page-account main#home>.accountSection{min-height:calc(100svh - 68px);padding:30px 0 42px;display:flex!important;align-items:center}
+body.page-account #account .wrap{width:min(100% - 32px,680px);margin-inline:auto}
+body.page-account #account .sectionHead{text-align:center;justify-content:center;margin:0 0 22px}
+body.page-account #account .sectionHead>div{width:100%}
+body.page-account #account .sectionHead .eyebrow{margin-bottom:10px}
+body.page-account #accountTitle{font-size:clamp(2rem,5vw,2.6rem);letter-spacing:-.035em}
+body.page-account #accountDesc{font-size:1rem;margin-top:9px}
+body.page-account .accountGrid{display:block;width:100%}
+body.page-account #authCard{width:min(100%,480px);max-width:480px;margin:0 auto;padding:clamp(22px,5vw,34px);background:#f1eadf;border:1px solid #cfc1ad;border-radius:12px;box-shadow:0 18px 45px #3b2c1c18}
+body.page-account #profileCard{width:min(100%,620px);max-width:620px;margin:0 auto;padding:clamp(22px,5vw,34px)}
+body.page-account .authTabs{justify-content:center;gap:10px;margin-bottom:22px}
+body.page-account .accountCard label{font-size:.92rem;font-weight:700;margin-top:15px}
+body.page-account .accountCard input{min-height:48px;font-size:1rem;padding:12px 14px}
+body.page-account .accountSubmit{min-height:48px;font-size:1rem}
+body.page-account .textAction{font-size:.95rem;margin-top:16px}
+body.page-account #profileCard{background:#f1eadf}
+@media(max-width:600px){
+ body.page-account .navinner{gap:7px;padding:9px 0}
+ body.page-account .brand{gap:7px;font-size:.76rem}
+ body.page-account .brandmark{width:36px;height:36px;font-size:1.15rem}
+ body.page-account .brand small{font-size:.55rem;letter-spacing:.7px}
+ body.page-account .navlinks{flex:0 0 auto}
+ body.page-account .navlinks a[href="#home"]{font-size:.75rem;padding:8px}
+ body.page-account .navinner>div:last-child{gap:5px!important}
+ body.page-account .languageSwitch{padding:2px}
+ body.page-account .languageOption{font-size:.68rem;padding:7px 6px;gap:3px}
+ body.page-account .cartbtn{display:none}
+ body.page-account main#home>.accountSection{min-height:calc(100svh - 62px);padding:22px 0 30px}
+ body.page-account #account .wrap{width:calc(100% - 28px)}
+ body.page-account #account .sectionHead{margin-bottom:18px}
+ body.page-account #accountTitle{font-size:1.9rem}
+ body.page-account #accountDesc{font-size:.9rem}
+ body.page-account #authCard{padding:20px 17px;border-radius:10px}
+ body.page-account .authTabs{margin-bottom:16px}
+}
 </style>
 </head>
 <body>
