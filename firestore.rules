@@ -1,11 +1,33 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Public menu is readable by customers. Only the configured owner UID can write.
+    function signedIn() { return request.auth != null; }
+    function isOwner() {
+      return signedIn() && request.auth.uid == "PASTE_OWNER_AUTH_UID";
+    }
+
+    // Published menu: customers can read; only owner can publish/edit.
     match /publicMenu/{document} {
       allow read: if true;
-      allow write: if request.auth != null
-        && request.auth.uid == "PASTE_OWNER_AUTH_UID";
+      allow write: if isOwner();
+    }
+
+    // Customer orders: customer creates and reads only their own orders.
+    // Owner can read all orders and update order status.
+    match /orders/{orderId} {
+      allow create: if signedIn()
+        && request.resource.data.customerUid == request.auth.uid
+        && request.resource.data.status == "placed";
+      allow read: if isOwner()
+        || (signedIn() && resource.data.customerUid == request.auth.uid);
+      allow update: if isOwner();
+      allow delete: if isOwner();
+    }
+
+    // Customer profile: user can access only their own profile.
+    match /customers/{uid} {
+      allow read, create, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if isOwner();
     }
   }
 }
