@@ -402,6 +402,7 @@ if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 });
 $("cartOpen").addEventListener("click",openCart);
 $("heroCart").addEventListener("click",openCart);
+document.querySelector(".brand").addEventListener("click",()=>showView("home"));
 document.querySelectorAll('.navlinks a[href="#account"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openAccount()}));
 document.querySelectorAll('.navlinks a[href="#cart"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openCart()}));
 document.querySelectorAll('.navlinks a[href="#home"],.navlinks a[href="#menu"],.navlinks a[href="#about"],.navlinks a[href="#contact"]').forEach(a=>a.addEventListener("click",()=>showView("home")));
