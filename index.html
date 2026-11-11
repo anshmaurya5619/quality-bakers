@@ -798,6 +798,7 @@ $("checkoutBtn").addEventListener("click",async()=>{
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
  const orderItems=cart.map(x=>{const i=items.find(z=>z.id===x.id);return {id:x.id,nameHi:i.hi,nameEn:i.en,size:x.size,price:Number(x.price),quantity:x.qty,lineTotal:Number(x.price*x.qty)}});
  const btn=$("checkoutBtn");btn.disabled=true;btn.textContent=lang==="hi"?"ऑर्डर सेव हो रहा है…":"Saving order…";
+ const waWindow=window.open("about:blank","_blank");
  try{
   if(typeof window.QB_CREATE_ORDER!=="function")throw new Error("Order service is not ready. Refresh and try again.");
   const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,deliveryLocation:orderLocation,items:orderItems,total});
@@ -809,10 +810,10 @@ $("checkoutBtn").addEventListener("click",async()=>{
   if(orderLocation.manualAddress||orderLocation.address)lines.push("Delivery address: "+(orderLocation.manualAddress||orderLocation.address));
   if(note)lines.push("Special instructions: "+note);
   lines.push("Please confirm my order.");
-  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n")),"_blank","noopener,noreferrer");
+  const waUrl="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n"));if(waWindow){waWindow.location.href=waUrl}else{$("cartStatus").innerHTML='<a href="'+waUrl+'" target="_blank" rel="noopener">WhatsApp संदेश तैयार है — भेजने के लिए यहाँ दबाएँ</a>'}
   cart=[];deliveryLocation=null;$("customerAddress").value="";$("manualAddressWrap").hidden=true;$("useLiveLocationBtn").classList.remove("active");$("useManualLocationBtn").classList.remove("active");setLocationStatus("ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।");updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
   openAccount();
- }catch(err){showToast(lang==="hi"?"ऑर्डर सेव नहीं हुआ: "+(err.message||err.code):"Order could not be saved: "+(err.message||err.code));}
+ }catch(err){if(waWindow)waWindow.close();showToast(lang==="hi"?"ऑर्डर सेव नहीं हुआ: "+(err.message||err.code):"Order could not be saved: "+(err.message||err.code));}
  finally{btn.disabled=false;btn.textContent=lang==="hi"?"WhatsApp पर ऑर्डर भेजें ↗":"Send Order on WhatsApp ↗";}
 });
 $("year").textContent=new Date().getFullYear();
