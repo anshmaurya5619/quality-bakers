@@ -715,6 +715,7 @@ $("useLiveLocationBtn").addEventListener("click",()=>{
   setLocationStatus("Live Location मिल गई (लगभग "+Math.round(pos.coords.accuracy)+" मीटर की सटीकता)। चाहें तो मकान/लैंडमार्क भी लिखें।");
  },err=>{
   deliveryLocation=null;
+  $("manualAddressWrap").hidden=false;
   setLocationStatus(err.code===1?"Location permission नहीं मिली। पता खुद लिखें।":"Live Location नहीं मिल सकी। पता खुद लिखें।");
  },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
 });
