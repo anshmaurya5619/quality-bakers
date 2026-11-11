@@ -5,32 +5,72 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ivory);font:15px/1.5 system-ui,Arial,sans-serif}a{color:var(--brass);text-decoration:none}.wrap{width:min(1180px,94%);margin:auto}.top{border-bottom:1px solid #8e795b44;background:#15130f}.topin{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0;flex-wrap:wrap}.brand{font-weight:900;letter-spacing:.08em}.brand small{display:block;color:var(--muted);font-weight:500;letter-spacing:.12em;font-size:.7rem}.btn,select,input{font:inherit}.btn{border:1px solid #8e795b77;border-radius:7px;padding:10px 14px;background:#242019;color:var(--ivory);cursor:pointer;font-weight:750}.btn.primary{background:var(--brass);border-color:var(--brass);color:#21190e}.btn.green{background:var(--green);border-color:var(--green)}.btn:disabled{opacity:.55;cursor:not-allowed}.main{padding:26px 0 60px}.hero{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px;flex-wrap:wrap}.eyebrow{color:var(--brass);font-size:.75rem;letter-spacing:.14em;font-weight:800}.hero h1{margin:4px 0;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.04em}.muted{color:var(--muted)}.login,.panel,.stat{background:var(--panel);border:1px solid #8e795b44;border-radius:10px}.login{max-width:470px;padding:22px;margin:32px auto}.login h2{margin:0 0 14px}.field{display:grid;gap:6px;margin:12px 0}.field input{width:100%;padding:12px;background:#11100e;border:1px solid #8e795b77;border-radius:7px;color:var(--ivory)}.status{min-height:1.4em;color:var(--brass);font-size:.9rem}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat{padding:16px}.stat small{display:block;color:var(--muted)}.stat strong{font-size:1.7rem}.panel{padding:18px;margin-top:18px}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel h2{margin:0;font-size:1.2rem}.orders{display:grid;gap:12px;margin-top:15px}.order{background:#15130f;border:1px solid #6b583d66;border-radius:8px;padding:15px}.orderhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.orderid{font-weight:900}.order ul{margin:10px 0;padding-left:20px;color:#ded3c2}.orderfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #6b583d55;padding-top:12px;margin-top:12px}.order select{background:#11100e;color:var(--ivory);border:1px solid #8e795b77;border-radius:7px;padding:9px}.pill{font-size:.75rem;color:var(--brass);text-transform:uppercase;letter-spacing:.06em}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap}.note{border-left:3px solid var(--brass);padding:10px 13px;background:#d8b77a10;color:#d7c8b2;margin-top:15px}@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:13px}.order{padding:12px}}
 </style></head><body>
 <header class="top"><div class="wrap topin"><a class="brand" href="./index.html">QUALITY BAKERS<small>OWNER DESK · PRIVATE MANAGEMENT</small></a><div class="actions"><a class="btn" href="./index.html">Customer Website</a><a class="btn" href="./private-menu-demo.html">Menu Editor</a><button class="btn hidden" id="logout" type="button">Logout</button></div></div></header>
-<main class="wrap main"><section class="hero"><div><span class="eyebrow">OWNER CONTROL CENTRE</span><h1>Orders & Store Desk</h1><p class="muted">ग्राहकों के ऑर्डर देखें, पुष्टि करें और उनकी स्थिति अपडेट करें।</p></div><button class="btn" id="refresh" type="button">↻ Refresh Orders</button></section>
+<main class="wrap main"><section class="hero"><div><span class="eyebrow">OWNER CONTROL CENTRE</span><h1>Orders & Store Desk</h1><p class="muted">ग्राहकों के ऑर्डर देखें, पुष्टि करें और उनकी स्थिति अपडेट करें।</p></div><div class="actions"><button class="btn" id="enableAlerts" type="button">🔔 Enable order alerts</button><button class="btn" id="refresh" type="button">↻ Refresh Orders</button></div></section>
 <section class="login" id="loginBox"><h2>Owner Login</h2><form id="loginForm"><div class="field"><label for="email">Owner Email</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn primary" type="submit">Login</button></form><button class="btn" id="google" type="button" style="width:100%;margin-top:10px">Continue with Google</button><p class="status" id="loginStatus" role="status"></p><p class="muted">केवल UID allowlist में मौजूद मालिक ही Dashboard खोल सकता है।</p></section>
 <section id="dashboard" class="hidden"><div class="stats"><div class="stat"><small>Total orders</small><strong id="totalOrders">0</strong></div><div class="stat"><small>New / Placed</small><strong id="newOrders">0</strong></div><div class="stat"><small>Preparing</small><strong id="preparingOrders">0</strong></div><div class="stat"><small>Completed</small><strong id="completedOrders">0</strong></div></div>
 <div class="panel"><div class="panelhead"><div><span class="eyebrow">CUSTOMER ORDERS</span><h2>Order Management</h2></div><select id="filter"><option value="all">All orders</option><option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="orders" id="orders"><p class="muted">Orders load honge…</p></div></div>
-<div class="note">Order status बदलने पर वह Customer के Order History में दिखाई देगा। अभी ग्राहक को automatic SMS/WhatsApp notification नहीं भेजा जाता; WhatsApp पर पुष्टि अलग से करें।</div><p class="status" id="dashStatus" role="status"></p></section></main>
+<div class="note">नया ऑर्डर आने पर यह Dashboard तुरंत अपडेट होगा। 🔔 Enable order alerts दबाने पर ब्राउज़र Notification और आवाज़ भी मिलेगी (Dashboard खुला होना चाहिए)। ग्राहक के Checkout पर दुकान के WhatsApp के लिए ऑर्डर की पूरी जानकारी वाला संदेश तैयार होता है; ग्राहक को WhatsApp में Send दबाना होता है।</div><div class="panel" id="newOrderAlert" hidden aria-live="polite"></div><p class="status" id="dashStatus" role="status"></p></section></main>
 <script type="module">
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 import { QB_ADMIN_UID } from "./firebase-config.js";
-const $=id=>document.getElementById(id);let allOrders=[];
+const $=id=>document.getElementById(id);let allOrders=[],stopOrders=null,firstOrderSnapshot=true,alertsEnabled=false,audioContext=null;
+function orderSummary(o){
+ const names=(o.items||[]).map(i=>(i.nameHi||i.nameEn||"Item")+" × "+Number(i.quantity||0)).join(", ");
+ const where=o.deliveryLocation?.mode==="gps"?"GPS location captured":(o.deliveryLocation?.address||"Address not entered");
+ return {title:"New Quality Bakers order #"+String(o.id).slice(-8),body:(o.customerName||"Customer")+" · "+names+" · ₹"+Number(o.total||0)+" · "+where};
+}
+function notifyNewOrder(o){
+ const info=orderSummary(o);
+ $("newOrderAlert").hidden=false;
+ $("newOrderAlert").innerHTML='<strong>🔔 नया ऑर्डर आया!</strong><p>'+esc(info.body)+'</p><p><a href="#order-'+esc(o.id)+'">ऑर्डर देखें</a></p>';
+ $("dashStatus").textContent=info.title+" — "+info.body;
+ if(alertsEnabled&&"Notification" in window&&Notification.permission==="granted"){
+  const n=new Notification(info.title,{body:info.body,tag:"qb-order-"+o.id});
+  n.onclick=()=>{window.focus();document.getElementById("order-"+o.id)?.scrollIntoView({behavior:"smooth"});n.close()};
+ }
+ if(alertsEnabled&&audioContext){
+  try{const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.connect(gain);gain.connect(audioContext.destination);osc.frequency.value=880;gain.gain.value=.08;osc.start();osc.stop(audioContext.currentTime+.22)}catch(e){}
+ }
+}
+async function enableAlerts(){
+ if(!("Notification" in window)){ $("dashStatus").textContent="इस browser में Notifications supported नहीं हैं।";return}
+ const permission=await Notification.requestPermission();
+ if(permission!=="granted"){$("dashStatus").textContent="Browser notification permission नहीं मिली। Dashboard में live order updates फिर भी दिखेंगे।";return}
+ alertsEnabled=true;
+ try{const AudioCtx=window.AudioContext||window.webkitAudioContext;if(AudioCtx){audioContext=new AudioCtx();await audioContext.resume()}}catch(e){}
+ $("enableAlerts").textContent="✓ Order alerts enabled";
+ $("dashStatus").textContent="Order browser notifications और sound enabled हैं। Dashboard खुला रखें।";
+}
 const labels={placed:"Placed",confirmed:"Confirmed",preparing:"Preparing",ready:"Ready",completed:"Completed",cancelled:"Cancelled"};
 function showLogin(msg=""){ $("loginBox").classList.remove("hidden");$("dashboard").classList.add("hidden");$("logout").classList.add("hidden");$("loginStatus").textContent=msg;}
 function ownerCheck(user){return QB_ADMIN_UID!=="PASTE_OWNER_AUTH_UID"&&user&&user.uid===QB_ADMIN_UID;}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginStatus").textContent="Signing in…";try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(err){$("loginStatus").textContent=err.message}});
 $("google").addEventListener("click",async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(err){$("loginStatus").textContent=err.message}});
-$("logout").addEventListener("click",()=>signOut(auth));
+$("logout").addEventListener("click",async()=>{if(stopOrders){stopOrders();stopOrders=null}await signOut(auth)});
 onAuthStateChanged(auth,async user=>{
  if(!user){showLogin();return}
  if(!ownerCheck(user)){await signOut(auth);showLogin("इस Google/Email account को Owner access नहीं मिला।");return}
- $("loginBox").classList.add("hidden");$("dashboard").classList.remove("hidden");$("logout").classList.remove("hidden");await loadOrders();
+ $("loginBox").classList.add("hidden");$("dashboard").classList.remove("hidden");$("logout").classList.remove("hidden");await loadOrders();watchOrders();
 });
 async function loadOrders(){
  $("dashStatus").textContent="Orders refresh हो रहे हैं…";
  try{const snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")));allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));render();$("dashStatus").textContent="अभी तक "+allOrders.length+" orders मिले।"}
  catch(err){$("dashStatus").textContent="Orders load नहीं हुए: "+(err.code||err.message)}
+}
+function watchOrders(){
+ if(stopOrders)stopOrders();
+ firstOrderSnapshot=true;
+ stopOrders=onSnapshot(query(collection(db,"orders"),orderBy("createdAt","desc")),snap=>{
+  allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+  if(firstOrderSnapshot){firstOrderSnapshot=false;$("dashStatus").textContent="Live order updates चालू हैं। कुल "+allOrders.length+" orders.";return}
+  snap.docChanges().filter(change=>change.type==="added").forEach(change=>{
+   const order={id:change.doc.id,...change.doc.data()};
+   notifyNewOrder(order);
+  });
+ },err=>{$("dashStatus").textContent="Live order updates नहीं चल सके: "+(err.code||err.message)});
 }
 function render(){
  const count=s=>allOrders.filter(o=>o.status===s).length;
@@ -39,10 +79,10 @@ function render(){
  $("orders").innerHTML=rows.map(o=>{
  const lines=(o.items||[]).map(i=>'<li>'+esc(i.nameHi||i.nameEn||"Item")+' · '+Number(i.quantity||0)+' × ₹'+Number(i.price||0)+'</li>').join("");
  const date=o.createdAt?.toDate?o.createdAt.toDate().toLocaleString("en-IN"):"Recently";
- return '<article class="order"><div class="orderhead"><div><div class="orderid">Order #'+esc(o.id.slice(-8))+'</div><span class="muted">'+date+'</span></div><span class="pill">'+esc(o.status||"placed")+'</span></div><p><b>'+esc(o.customerName||"Customer")+'</b> · '+esc(o.customerPhone||"No phone")+'<br><span class="muted">'+esc(o.customerEmail||"")+'</span></p><ul>'+lines+'</ul><p class="muted">Note: '+esc(o.note||"—")+'</p>'+(o.deliveryLocation?(o.deliveryLocation.mode==="gps"?'<p><b>Delivery location:</b> <a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+encodeURIComponent(o.deliveryLocation.latitude+","+o.deliveryLocation.longitude)+'">Open live location in Maps</a>'+(o.deliveryLocation.manualAddress?'<br><span class="muted">'+esc(o.deliveryLocation.manualAddress)+'</span>':"")+'</p>':'<p><b>Delivery address:</b> '+esc(o.deliveryLocation.address||"—")+'</p>'):'<p class="muted">Delivery location not supplied</p>')+'<div class="orderfoot"><strong>Total ₹'+Number(o.total||0)+'</strong><div class="actions"><select data-status="'+o.id+'">'+Object.entries(labels).map(([k,v])=>'<option value="'+k+'" '+((o.status||"placed")===k?"selected":"")+'>'+v+'</option>').join("")+'</select><button class="btn green" data-save="'+o.id+'">Save status</button></div></div></article>'
+ return '<article class="order" id="order-'+esc(o.id)+'"><div class="orderhead"><div><div class="orderid">Order #'+esc(o.id.slice(-8))+'</div><span class="muted">'+date+'</span></div><span class="pill">'+esc(o.status||"placed")+'</span></div><p><b>'+esc(o.customerName||"Customer")+'</b> · '+esc(o.customerPhone||"No phone")+'<br><span class="muted">'+esc(o.customerEmail||"")+'</span></p><ul>'+lines+'</ul><p class="muted">Note: '+esc(o.note||"—")+'</p>'+(o.deliveryLocation?(o.deliveryLocation.mode==="gps"?'<p><b>Delivery location:</b> <a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+encodeURIComponent(o.deliveryLocation.latitude+","+o.deliveryLocation.longitude)+'">Open live location in Maps</a>'+(o.deliveryLocation.manualAddress?'<br><span class="muted">'+esc(o.deliveryLocation.manualAddress)+'</span>':"")+'</p>':'<p><b>Delivery address:</b> '+esc(o.deliveryLocation.address||"—")+'</p>'):'<p class="muted">Delivery location not supplied</p>')+'<div class="orderfoot"><strong>Total ₹'+Number(o.total||0)+'</strong><div class="actions"><select data-status="'+o.id+'">'+Object.entries(labels).map(([k,v])=>'<option value="'+k+'" '+((o.status||"placed")===k?"selected":"")+'>'+v+'</option>').join("")+'</select><button class="btn green" data-save="'+o.id+'">Save status</button></div></div></article>'
  }).join("")||'<p class="muted">इस फ़िल्टर में कोई ऑर्डर नहीं है।</p>';
 }
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);
+$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);$("enableAlerts").addEventListener("click",enableAlerts);
 $("orders").addEventListener("click",async e=>{const b=e.target.closest("[data-save]");if(!b)return;const id=b.dataset.save,s=$("orders").querySelector('[data-status="'+CSS.escape(id)+'"]');if(!s)return;b.disabled=true;try{await updateDoc(doc(db,"orders",id),{status:s.value,updatedAt:serverTimestamp()});const row=allOrders.find(x=>x.id===id);if(row)row.status=s.value;render();$("dashStatus").textContent="Order status updated."}catch(err){$("dashStatus").textContent="Status update failed: "+(err.code||err.message);b.disabled=false}});
 </script></body></html>
