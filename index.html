@@ -1298,6 +1298,46 @@ body.page-account #authCard .textAction{margin-top:18px}
   body.page-account #authCard input{min-height:52px}
 }
 
+
+/* Final account-page sizing and clear navigation state */
+body.page-account main#home>.accountSection{
+  min-height:calc(100svh - 110px)!important;
+  display:flex!important;align-items:stretch!important;
+  padding:clamp(22px,4vh,42px) 0!important;
+}
+body.page-account #account .wrap{width:calc(100% - 40px);max-width:1200px;margin:auto}
+body.page-account #account .sectionHead{display:block!important;text-align:left;margin:0 auto 18px;max-width:1100px}
+body.page-account #account .sectionHead>div{width:100%}
+body.page-account #accountTitle{font-size:clamp(2rem,4vw,2.7rem);margin:8px 0}
+body.page-account #accountDesc{font-size:1rem}
+body.page-account .accountGrid{display:block;width:100%}
+body.page-account #authCard{
+ width:100%;max-width:none;min-height:clamp(440px,64svh,720px);
+ margin:0 auto;padding:clamp(24px,5vw,58px);
+ display:flex;flex-direction:column;justify-content:center;
+ background:#f1eadf;border:1px solid #cfc1ad;border-radius:14px;
+ box-shadow:0 18px 45px #3b2c1c18;
+}
+body.page-account #authCard form{width:100%;max-width:760px;margin:0 auto}
+body.page-account #authCard .authTabs{width:100%;max-width:760px;margin:0 auto 24px}
+body.page-account #authCard label{font-size:1rem;font-weight:750;margin-top:18px}
+body.page-account #authCard input{min-height:56px;font-size:1rem}
+body.page-account #authCard .accountSubmit{min-height:54px;font-size:1rem}
+body.page-account #authCard .textAction{margin-top:18px}
+body:not(.customer-signed-in) #cartOpen{display:none!important}
+body.customer-signed-in #cartOpen{display:inline-flex!important}
+.drawerLinks a[aria-current="page"]{background:#30291f!important;color:#fff!important;box-shadow:inset 3px 0 #c49a5b}
+.drawerLinks a[aria-current="page"] span{color:#fff}
+@media(max-width:600px){
+ body.page-account main#home>.accountSection{min-height:calc(100svh - 104px)!important;padding:18px 0 26px!important}
+ body.page-account #account .wrap{width:calc(100% - 24px)}
+ body.page-account #account .sectionHead{margin-bottom:14px}
+ body.page-account #accountTitle{font-size:1.85rem}
+ body.page-account #accountDesc{font-size:.9rem}
+ body.page-account #authCard{min-height:64svh;padding:24px 18px;border-radius:12px}
+ body.page-account #authCard input{min-height:52px}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1557,8 +1597,12 @@ function showView(view){
  const account=document.getElementById("account"),cartView=document.getElementById("cart");
  account.classList.toggle("view-active",view==="account");
  cartView.classList.toggle("view-active",view==="cart");
- document.querySelectorAll(".navlinks a").forEach(a=>a.removeAttribute("aria-current"));
- const active=document.querySelector('.navlinks a[href="#'+view+'"]');if(active)active.setAttribute("aria-current","page");
+ document.querySelectorAll(".navlinks a,.drawerLinks a").forEach(a=>a.removeAttribute("aria-current"));
+ document.querySelectorAll('.drawerLinks a[data-view],.drawerLinks a[data-account-tab]').forEach(a=>{
+  const tab=a.dataset.accountTab;
+  const target=a.dataset.view;
+  if((view==="account"&&(target==="account"||!!tab))||(view==="cart"&&target==="cart")||(view==="home"&&target==="home"))a.setAttribute("aria-current","page");
+ });
  const accountLink=document.querySelector('.headerActions a[href="#account"]');if(accountLink){if(view==="account")accountLink.setAttribute("aria-current","page");else accountLink.removeAttribute("aria-current");}
  if(view==="account"||view==="cart")document.getElementById(view).scrollIntoView({behavior:"smooth",block:"start"});
 }
