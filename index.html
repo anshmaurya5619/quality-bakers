@@ -1227,12 +1227,13 @@ body.page-account.customer-signed-in .orderHistory{display:grid;gap:10px}
  .profileLogout{margin-left:auto}
 }
 
+body.customer-signed-in .drawerLogout{display:flex!important;align-items:center;gap:12px;width:100%;padding:12px 11px;border:1px solid #d9c6aa;border-radius:8px;background:#f1e4d3;color:#754326;font:inherit;font-weight:750;text-align:left;cursor:pointer}body:not(.customer-signed-in) .drawerLogout{display:none!important}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><span id="topTag">🍕 ताज़ा खाना • शानदार स्वाद • साफ़-सुथरी तैयारी</span><span>📞 <a href="tel:9918203207">9918203207</a> · <a href="tel:8604665305">8604665305</a></span></div></div>
-<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="headerActions"><a class="accountNavLink" href="#account" id="accountNavLink"><span aria-hidden="true">👤</span> <span data-hi="लॉगिन / अकाउंट" data-en="Login / Account">लॉगिन / अकाउंट</span></a><div class="languageSwitch" role="group" aria-label="Choose language"><button class="languageOption active" id="langHi" type="button" aria-pressed="true"><span aria-hidden="true">🇮🇳</span> हिंदी</button><button class="languageOption" id="langEn" type="button" aria-pressed="false"><span aria-hidden="true">🇬🇧</span> English</button></div><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button><button class="menuToggle" id="menuToggle" type="button" aria-label="मेन्यू खोलें" aria-expanded="false"><span></span><span></span><span></span></button></div></div></nav><div class="menuScrim" id="menuScrim"></div><aside class="siteDrawer" id="siteDrawer" aria-label="मुख्य मेन्यू"><div class="drawerHead"><strong>QUALITY BAKERS</strong><button id="drawerClose" type="button" aria-label="मेन्यू बंद करें">×</button></div><nav class="drawerLinks"><a href="#home" data-view="home">⌂ <span data-hi="होम" data-en="Home">होम</span></a><a href="#menu" data-view="home">🍽 <span data-hi="मेन्यू" data-en="Menu">मेन्यू</span></a><a href="#cart" data-view="cart">🛒 <span data-hi="कार्ट / ऑर्डर" data-en="Cart / Order">कार्ट / ऑर्डर</span></a><a href="#about" data-view="home">✦ <span data-hi="हमारे बारे में" data-en="About">हमारे बारे में</span></a><a href="#contact" data-view="home">☎ <span data-hi="संपर्क" data-en="Contact">संपर्क</span></a><div class="drawerDivider"></div><a href="#account" data-view="account" id="drawerAccountLink">👤 <span data-hi="लॉगिन / मेरा अकाउंट" data-en="Login / My Account">लॉगिन / मेरा अकाउंट</span></a><a href="#account" data-account-tab="orders">▤ <span data-hi="मेरे ऑर्डर" data-en="My Orders">मेरे ऑर्डर</span></a><a href="#account" data-account-tab="addresses">⌖ <span data-hi="मेरे पते" data-en="My Addresses">मेरे पते</span></a><a href="#account" data-account-tab="profile">⚙ <span data-hi="प्रोफाइल" data-en="Profile">प्रोफाइल</span></a><a href="#account" data-account-tab="support">♡ <span data-hi="सहायता" data-en="Support">सहायता</span></a></nav></aside>
+<nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="headerActions"><a class="accountNavLink" href="#account" id="accountNavLink"><span aria-hidden="true">👤</span> <span data-hi="लॉगिन / अकाउंट" data-en="Login / Account">लॉगिन / अकाउंट</span></a><div class="languageSwitch" role="group" aria-label="Choose language"><button class="languageOption active" id="langHi" type="button" aria-pressed="true"><span aria-hidden="true">🇮🇳</span> हिंदी</button><button class="languageOption" id="langEn" type="button" aria-pressed="false"><span aria-hidden="true">🇬🇧</span> English</button></div><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button><button class="menuToggle" id="menuToggle" type="button" aria-label="मेन्यू खोलें" aria-expanded="false"><span></span><span></span><span></span></button></div></div></nav><div class="menuScrim" id="menuScrim"></div><aside class="siteDrawer" id="siteDrawer" aria-label="मुख्य मेन्यू"><div class="drawerHead"><strong>QUALITY BAKERS</strong><button id="drawerClose" type="button" aria-label="मेन्यू बंद करें">×</button></div><nav class="drawerLinks"><a href="#home" data-view="home">⌂ <span data-hi="होम" data-en="Home">होम</span></a><a href="#menu" data-view="home">🍽 <span data-hi="मेन्यू" data-en="Menu">मेन्यू</span></a><a href="#cart" data-view="cart">🛒 <span data-hi="कार्ट / ऑर्डर" data-en="Cart / Order">कार्ट / ऑर्डर</span></a><a href="#about" data-view="home">✦ <span data-hi="हमारे बारे में" data-en="About">हमारे बारे में</span></a><a href="#contact" data-view="home">☎ <span data-hi="संपर्क" data-en="Contact">संपर्क</span></a><div class="drawerDivider"></div><a href="#account" data-view="account" id="drawerAccountLink">👤 <span data-hi="लॉगिन / मेरा अकाउंट" data-en="Login / My Account">लॉगिन / मेरा अकाउंट</span></a><a href="#account" data-account-tab="orders">▤ <span data-hi="मेरे ऑर्डर" data-en="My Orders">मेरे ऑर्डर</span></a><a href="#account" data-account-tab="addresses">⌖ <span data-hi="मेरे पते" data-en="My Addresses">मेरे पते</span></a><a href="#account" data-account-tab="profile">⚙ <span data-hi="प्रोफाइल" data-en="Profile">प्रोफाइल</span></a><a href="#account" data-account-tab="support">♡ <span data-hi="सहायता" data-en="Support">सहायता</span></a><button type="button" class="drawerLogout" id="drawerLogoutBtn" hidden>↪ <span data-hi="लॉगआउट" data-en="Log out">लॉगआउट</span></button></nav></aside>
 <main id="home">
 <section class="hero"><div class="wrap heroGrid">
 <div class="heroArt"><div class="heroFoodCarousel" id="heroFoodCarousel" aria-label="मेन्यू में उपलब्ध खाने की तस्वीरें">
@@ -1671,7 +1672,9 @@ el("customerAuthForm").addEventListener("submit",async e=>{
   say(messages[err.code]||err.message||"अभी अकाउंट प्रक्रिया पूरी नहीं हुई।");
  }finally{el("authSubmit").disabled=false}
 });
-el("signOutBtn").addEventListener("click",async()=>{try{await signOut(auth);say("आप लॉगआउट हो गए।");openAccount()}catch(err){say(err.message)}});
+async function customerLogout(){try{closeSiteDrawer();await signOut(auth);say("आप लॉगआउट हो गए।");openAccount()}catch(err){say(err.message)}}
+el("signOutBtn").addEventListener("click",customerLogout);
+el("drawerLogoutBtn").addEventListener("click",customerLogout);
 async function loadCustomerDetails(user){
  try{
   const snap=await getDoc(doc(db,"customers",user.uid));
@@ -1732,6 +1735,7 @@ onAuthStateChanged(auth,async user=>{
  window.QB_AUTH_USER=user||null;
  if(user){
   document.body.classList.add("customer-signed-in");
+  el("drawerLogoutBtn").hidden=false;
   el("authCard").classList.add("hidden");el("profileCard").classList.remove("hidden");
   el("profileName").textContent=user.displayName||"आपका अकाउंट";
   el("profileEmail").textContent=user.email||"";
@@ -1743,6 +1747,7 @@ onAuthStateChanged(auth,async user=>{
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   document.body.classList.remove("customer-signed-in");
+  el("drawerLogoutBtn").hidden=true;
   el("accountNavLink").classList.remove("hidden");
   el("drawerAccountLink").querySelector("span").textContent="लॉगिन / मेरा अकाउंट";
   el("authCard").classList.remove("hidden");el("profileCard").classList.add("hidden");
