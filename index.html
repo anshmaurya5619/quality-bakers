@@ -920,7 +920,56 @@ $("checkoutBtn").addEventListener("click",async()=>{
 });
 $("year").textContent=new Date().getFullYear();
 renderAll();
-startHeroFoodCarousel();
+// Independent slideshow runs in the next script, even if another page feature fails.
+</script>
+<script>
+(function(){
+ const hero=document.getElementById("heroFoodCarousel"),img=document.getElementById("heroFoodImage");
+ const caption=document.getElementById("heroFoodName"),category=document.getElementById("heroFoodCategory"),dots=document.getElementById("heroFoodDots");
+ if(!hero||!img||!caption||!category)return;
+ const fallback=[
+  {name:"पनीर चाउमीन",en:"Paneer Chowmein",cat:"Noodles & Rice",url:"https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg"},
+  {name:"बर्गर",en:"Burger",cat:"Momos & Snacks",url:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=85"},
+  {name:"डिज़ाइनर केक",en:"Designer Cake",cat:"Designer Cakes",url:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1000&q=85"}
+ ];
+ let index=0,seq=0;
+ function slides(){
+  const cards=Array.from(document.querySelectorAll("#menuGrid .foodCard"));
+  const fromMenu=cards.map(card=>{
+   const photo=card.querySelector(".foodPic img");
+   const title=card.querySelector(".foodInfo h3");
+   const en=card.querySelector(".foodInfo .en");
+   const cat=card.querySelector(".tag");
+   return photo&&title&&/^https?:/.test(photo.src)?{name:title.textContent,en:en?en.textContent:title.textContent,cat:cat?cat.textContent:"Quality Bakers",url:photo.src}:null;
+  }).filter(Boolean);
+  return fromMenu.length?fromMenu:fallback;
+ }
+ function show(){
+  const options=slides();
+  if(!options.length)return;
+  index%=options.length;
+  const selected=options[index],mySeq=++seq;
+  const test=new Image();
+  test.onload=()=>{
+   if(mySeq!==seq)return;
+   img.src=selected.url;
+   img.alt=selected.en+" — Quality Bakers";
+   img.style.opacity="1";
+   caption.textContent=document.getElementById("langEn")?.classList.contains("active")?selected.en:selected.name;
+   category.textContent=selected.cat.toUpperCase();
+   if(dots)dots.innerHTML=options.slice(0,12).map((_,i)=>'<i class="'+(i===index?'active':'')+'"></i>').join("");
+  };
+  test.onerror=()=>{
+   if(mySeq!==seq)return;
+   index=(index+1)%options.length;
+   if(index!==0)show();
+   else{img.removeAttribute("src");caption.textContent="Quality Bakers";}
+  };
+  test.src=selected.url;
+ }
+ show();
+ setInterval(()=>{index++;show()},4200);
+})();
 </script>
 <script type="module">
 import { doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
