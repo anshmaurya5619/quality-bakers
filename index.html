@@ -665,6 +665,21 @@ const items=[
 {id:"single-cheese-paneer-pizza",cat:"pizza",hi:"सिंगल चीज़ पनीर पिज्जा",en:"Single Cheese Paneer Pizza",emoji:"🍕",photo:"https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto%2Cw_300%2Ch_300%2Cc_fit/FOOD_CATALOG/IMAGES/CMS/2025/7/31/1827afbd-d03b-40e9-b94d-3e6ace81214f_8bdd19cc-ae92-43c5-a7fe-3380d15bd526.jpg",prices:[["Regular",180]]},
 {id:"double-cheese-paneer-pizza",cat:"pizza",hi:"डबल चीज़ पनीर पिज्जा",en:"Double Cheese Paneer Pizza",emoji:"🍕",photo:"https://storage.googleapis.com/shy-pub/468423/SKU-0121_0-1762683875109.jpg",prices:[["Regular",200]]}
 ];
+// Keep trusted built-in dish photos as fallback if Firestore contains invalid photo values.
+const builtInMenuById=new Map(items.map(item=>[item.id,{...item}]));
+function validFoodPhoto(value){
+ return typeof value==="string" && /^(https?:\\/\\/|data:image\\/)/i.test(value.trim());
+}
+function normalizeMenuItems(data){
+ return data.map(remote=>{
+  if(!remote||typeof remote!=="object")return null;
+  const base=builtInMenuById.get(String(remote.id||""))||{};
+  const candidate=validFoodPhoto(remote.photo)?remote.photo.trim():
+   (validFoodPhoto(remote.imageUrl)?remote.imageUrl.trim():
+   (validFoodPhoto(remote.photoURL)?remote.photoURL.trim():base.photo));
+  return {...base,...remote,photo:candidate||""};
+ }).filter(Boolean);
+}
 /* Hero carousel: rotate only real, available dishes from the same menu data. */
 let heroFoodIndex=0, heroFoodTimer=null;
 const heroFailedPhotos=new Set();
@@ -672,7 +687,7 @@ function renderHeroFood(){
  const host=document.getElementById("heroFoodCarousel");
  const image=document.getElementById("heroFoodImage");
  if(!host||!image)return;
- const featured=items.filter(item=>item&&item.photo&&item.available!==false&&!heroFailedPhotos.has(item.photo));
+ const featured=items.filter(item=>item&&validFoodPhoto(item.photo)&&item.available!==false&&!heroFailedPhotos.has(item.photo));
  if(!featured.length){
   host.classList.remove("hidden");
   image.removeAttribute("src");
@@ -700,7 +715,7 @@ function renderHeroFood(){
   heroFoodIndex=0;
   renderHeroFood();
  };
- image.src=item.photo;
+ image.src=item.photo.trim();
  dotsNode.innerHTML=featured.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
 }
 function startHeroFoodCarousel(){
@@ -730,7 +745,7 @@ $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"
 </div></article>`).join("");
 }
 function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText();renderHeroFood()}
-window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...data);renderAll()};
+window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...normalizeMenuItems(data));heroFoodIndex=0;heroFailedPhotos.clear();renderAll()};
 function setLanguageText(){
 const hi=lang==="hi";
 $("langHi").classList.toggle("active",hi);$("langHi").setAttribute("aria-pressed",String(hi));
