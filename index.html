@@ -1338,6 +1338,65 @@ body.customer-signed-in #cartOpen{display:inline-flex!important}
  body.page-account #authCard input{min-height:52px}
 }
 
+
+/* Account screen: use the available viewport instead of floating a small card */
+body.page-account main#home>.accountSection{
+  box-sizing:border-box!important;
+  min-height:calc(100svh - 112px)!important;
+  padding:14px 0!important;
+  display:flex!important;
+  align-items:stretch!important;
+}
+body.page-account #account .wrap{
+  box-sizing:border-box;
+  width:calc(100% - 32px)!important;
+  max-width:1180px!important;
+  min-height:calc(100svh - 140px);
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+body.page-account #account .sectionHead{
+  flex:0 0 auto;
+  margin:0 0 12px!important;
+  text-align:left!important;
+}
+body.page-account .accountGrid{
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+}
+body.page-account #authCard{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:0!important;
+  height:100%!important;
+  margin:0!important;
+  padding:clamp(22px,4vw,48px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:#f1eadf!important;
+  border:1px solid #cfc1ad!important;
+  border-radius:14px!important;
+  box-shadow:0 12px 30px #3b2c1c12!important;
+}
+body.page-account #authCard form{width:100%;max-width:760px;margin:0 auto}
+body.page-account #authCard .authTabs{width:100%;max-width:760px;margin:0 auto 20px}
+@media(max-width:600px){
+ body.page-account main#home>.accountSection{min-height:calc(100svh - 104px)!important;padding:10px 0!important}
+ body.page-account #account .wrap{width:calc(100% - 24px)!important;min-height:calc(100svh - 124px)}
+ body.page-account #account .sectionHead{margin-bottom:10px!important}
+ body.page-account #accountTitle{font-size:1.75rem!important}
+ body.page-account #accountDesc{font-size:.86rem!important}
+ body.page-account #authCard{padding:20px 16px!important;border-radius:12px!important}
+ body.page-account #authCard input{min-height:48px!important}
+ body.page-account #authCard .accountSubmit{min-height:48px!important}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
