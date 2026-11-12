@@ -673,6 +673,76 @@ body.page-account.customer-signed-in .accountMessage{overflow-wrap:anywhere}
  .heroCopy .trust b{font-size:.88rem!important}
  .heroCopy .trust small{font-size:.69rem!important}
 }
+
+/* Focused home hero fit: framed food carousel + balanced copy and menu controls */
+.hero{padding:30px 0 28px!important}
+.heroGrid{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:20px!important}
+.hero .wrap{width:min(1160px,92%)!important;max-width:1160px!important;margin-inline:auto!important}
+.heroArt{
+ position:relative!important;display:block!important;width:100%!important;
+ height:clamp(210px,34vw,330px)!important;min-height:0!important;
+ margin:0 auto!important;padding:0!important;overflow:hidden!important;
+ border:1px solid #c8ad83!important;border-radius:16px!important;
+ background:#e8dfd1!important;box-shadow:0 10px 28px #49351f20!important;
+}
+.heroArt:before,.heroArt:after{display:none!important}
+.heroFoodCarousel{
+ position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+ overflow:hidden!important;border-radius:inherit!important;background:#e8dfd1!important;
+}
+.heroFoodCarousel>img{
+ position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+ display:block!important;object-fit:contain!important;object-position:center!important;
+ padding:5px!important;background:#e8dfd1!important;
+}
+.heroFoodShade{background:linear-gradient(0deg,#17110bd9 0%,#17110b30 28%,transparent 58%)!important}
+.heroFoodCaption{left:22px!important;right:22px!important;bottom:34px!important;gap:5px!important}
+.heroFoodCaption strong{font-size:clamp(1.15rem,2.4vw,1.8rem)!important}
+.heroFoodDots{right:20px!important;bottom:16px!important}
+.heroCopy{width:100%!important;max-width:900px!important;margin:0 auto!important;padding:4px 2px 0!important}
+.heroCopy .eyebrow{font-size:.76rem!important;padding:6px 10px!important}
+.heroCopy h1{font-size:clamp(1.85rem,4.2vw,3.25rem)!important;line-height:1.12!important;letter-spacing:-.7px!important;margin:10px 0!important}
+.heroCopy p{max-width:760px!important;font-size:clamp(.9rem,1.4vw,1rem)!important;line-height:1.65!important;margin:8px 0 0!important}
+.heroCopy .actions{gap:10px!important;margin-top:16px!important}
+.heroCopy .actions a,.heroCopy .actions button{min-height:44px!important;padding:11px 17px!important;font-size:.92rem!important}
+.heroCopy .trust{margin-top:16px!important;gap:10px!important}
+.heroCopy .trust>div{min-width:0!important;padding:10px 12px!important;border-radius:8px!important}
+.heroCopy .trust b{font-size:.95rem!important}
+.heroCopy .trust small{font-size:.78rem!important;line-height:1.35!important}
+#menu .sectionHead{margin-bottom:18px!important}
+#menu .sectionHead h2{font-size:clamp(1.55rem,3vw,2.25rem)!important;line-height:1.2!important}
+#menu .sectionHead p{font-size:.9rem!important;line-height:1.5!important}
+#menu .categoryShowcase{gap:10px!important;margin-bottom:16px!important}
+#menu .categoryTile{min-height:104px!important;padding:13px!important;border-radius:9px!important}
+#menu .filters{gap:7px!important;margin-bottom:16px!important}
+#menu .filter{padding:8px 12px!important;font-size:.82rem!important;line-height:1.2!important}
+@media(max-width:600px){
+ .hero{padding:18px 0 22px!important}
+ .hero .wrap{width:92%!important}
+ .heroArt{height:clamp(170px,54vw,225px)!important;border-radius:12px!important}
+ .heroFoodCarousel>img{padding:3px!important}
+ .heroFoodCaption{left:13px!important;right:13px!important;bottom:29px!important}
+ .heroFoodCaption span{font-size:.62rem!important;letter-spacing:.1em!important}
+ .heroFoodCaption strong{font-size:1.15rem!important}
+ .heroCopy h1{font-size:clamp(1.75rem,7vw,2.35rem)!important;line-height:1.13!important;margin:9px 0!important}
+ .heroCopy p{font-size:.86rem!important;line-height:1.55!important}
+ .heroCopy .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:13px!important}
+ .heroCopy .actions a,.heroCopy .actions button{min-width:0!important;padding:10px 7px!important;font-size:.8rem!important;white-space:normal!important}
+ .heroCopy .trust{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;margin-top:12px!important}
+ .heroCopy .trust>div{padding:8px 6px!important}
+ .heroCopy .trust b{font-size:.78rem!important}
+ .heroCopy .trust small{font-size:.65rem!important}
+ #menu .section{padding-top:24px!important}
+ #menu .sectionHead h2{font-size:1.55rem!important}
+ #menu .sectionHead p{font-size:.8rem!important}
+ #menu .categoryTile{min-height:94px!important;padding:10px!important}
+ #menu .categoryTile .tileIcon{font-size:1.55rem!important}
+ #menu .categoryTile strong{font-size:.82rem!important}
+ #menu .categoryTile small{font-size:.68rem!important;line-height:1.3!important}
+ #menu .filters{gap:5px!important}
+ #menu .filter{padding:7px 9px!important;font-size:.73rem!important}
+}
+
 </style>
 </head>
 <body>
