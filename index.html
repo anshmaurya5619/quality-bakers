@@ -600,7 +600,7 @@ body.page-account.customer-signed-in .accountMessage{overflow-wrap:anywhere}
 /* Home hero: automatic food carousel, sourced only from the live menu */
 .heroArt{background:#211e19!important;padding:0;min-height:390px}
 .heroFoodCarousel{position:absolute;inset:0;z-index:2;overflow:hidden;background:#211e19}
-.heroFoodCarousel>img{width:100%;height:100%;display:block;object-fit:cover;opacity:1;transition:opacity .45s ease,transform 4s ease;transform:scale(1.02)}
+.heroFoodCarousel>img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;opacity:1;transition:opacity .45s ease,transform 4s ease;transform:scale(1.02)}
 .heroFoodCarousel.is-changing>img{opacity:.25;transform:scale(1.06)}
 .heroFoodShade{position:absolute;inset:0;background:linear-gradient(0deg,#100d0be8 0%,#100d0b22 52%,#100d0b08 100%)}
 .heroFoodCaption{position:absolute;left:24px;right:24px;bottom:38px;display:grid;gap:7px;color:#fff;z-index:2;text-shadow:0 2px 12px #0009}
@@ -698,47 +698,53 @@ function normalizeMenuItems(data){
 /* Hero carousel: rotate only real, available dishes from the same menu data. */
 let heroFoodIndex=0, heroFoodTimer=null;
 const heroFailedPhotos=new Set();
+let heroLoadToken=0;
+// Use the same built-in dish photographs shown on menu cards; Firestore updates
+// must never replace the homepage slideshow with malformed or missing URLs.
+const heroSlides=builtInMenuList.filter(item=>validFoodPhoto(item.photo));
 function renderHeroFood(){
  const host=document.getElementById("heroFoodCarousel");
  const image=document.getElementById("heroFoodImage");
- if(!host||!image)return;
- const featured=items.filter(item=>item&&validFoodPhoto(item.photo)&&item.available!==false&&!heroFailedPhotos.has(item.photo));
- if(!featured.length){
-  host.classList.remove("hidden");
-  image.removeAttribute("src");
-  image.alt="Quality Bakers food menu";
-  document.getElementById("heroFoodName").textContent=lang==="hi"?"मेन्यू की खास डिश":"Menu favorite";
-  document.getElementById("heroFoodCategory").textContent="QUALITY BAKERS";
-  return;
- }
- host.classList.remove("hidden");
- heroFoodIndex=((heroFoodIndex%featured.length)+featured.length)%featured.length;
- const item=featured[heroFoodIndex];
- const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
- const category=(categoryNames[item.cat]&&categoryNames[item.cat][lang])||"Quality Bakers";
  const nameNode=document.getElementById("heroFoodName");
  const categoryNode=document.getElementById("heroFoodCategory");
  const dotsNode=document.getElementById("heroFoodDots");
- nameNode.textContent=title;
- categoryNode.textContent=String(category).toUpperCase();
- image.alt=title+" — Quality Bakers";
- host.classList.add("is-changing");
- image.onload=()=>host.classList.remove("is-changing");
- image.onerror=()=>{
-  image.onerror=null;
+ if(!host||!image||!nameNode||!categoryNode||!dotsNode)return;
+ const slides=heroSlides.filter(item=>!heroFailedPhotos.has(item.photo));
+ if(!slides.length){
+  host.style.background="linear-gradient(135deg,#422b1c,#201713)";
+  image.removeAttribute("src");
+  nameNode.textContent=lang==="hi"?"हमारे स्वादिष्ट व्यंजन":"Our delicious menu";
+  categoryNode.textContent="QUALITY BAKERS";
+  dotsNode.replaceChildren();
+  host.classList.remove("is-changing");
+  return;
+ }
+ heroFoodIndex=((heroFoodIndex%slides.length)+slides.length)%slides.length;
+ const item=slides[heroFoodIndex];
+ const token=++heroLoadToken;
+ const preload=new Image();
+ preload.onload=()=>{
+  if(token!==heroLoadToken)return;
+  const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
+  image.src=item.photo;
+  image.alt=title+" — Quality Bakers";
+  nameNode.textContent=title;
+  categoryNode.textContent=((categoryNames[item.cat]||{} )[lang]||"QUALITY BAKERS").toUpperCase();
+  dotsNode.innerHTML=slides.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
+  host.classList.remove("is-changing");
+ };
+ preload.onerror=()=>{
+  if(token!==heroLoadToken)return;
   heroFailedPhotos.add(item.photo);
   heroFoodIndex=0;
   renderHeroFood();
  };
- image.src=item.photo.trim();
- dotsNode.innerHTML=featured.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
+ preload.src=item.photo;
 }
 function startHeroFoodCarousel(){
  renderHeroFood();
  if(heroFoodTimer)clearInterval(heroFoodTimer);
- if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-  heroFoodTimer=setInterval(()=>{heroFoodIndex++;renderHeroFood()},4200);
- }
+ heroFoodTimer=setInterval(()=>{heroFoodIndex++;renderHeroFood()},4200);
 }
 
 const categoryNames={all:{hi:"सभी आइटम",en:"All items"},noodles:{hi:"Noodles & Rice",en:"Noodles & Rice"},starters:{hi:"Starters & Rolls",en:"Starters & Rolls"},snacks:{hi:"Momos & Snacks",en:"Momos & Snacks"},pizza:{hi:"Pizza",en:"Pizza"},cakes:{hi:"डिज़ाइनर केक",en:"Designer Cakes"}};
@@ -760,7 +766,7 @@ $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"
 </div></article>`).join("");
 }
 function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText();renderHeroFood()}
-window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...normalizeMenuItems(data));heroFoodIndex=0;heroFailedPhotos.clear();renderAll()};
+window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...normalizeMenuItems(data));renderAll()};
 function setLanguageText(){
 const hi=lang==="hi";
 $("langHi").classList.toggle("active",hi);$("langHi").setAttribute("aria-pressed",String(hi));
