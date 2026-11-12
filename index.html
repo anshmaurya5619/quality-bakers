@@ -670,7 +670,9 @@ const builtInMenuList=items.map(item=>({...item}));
 const builtInMenuById=new Map(builtInMenuList.map(item=>[String(item.id),item]));
 const allowedMenuCategories=new Set(["noodles","starters","snacks","pizza","cakes"]);
 function validFoodPhoto(value){
- return typeof value==="string" && /^(https?:\\/\\/|data:image\\/)/i.test(value.trim());
+ if(typeof value!=="string")return false;
+ const url=value.trim().toLowerCase();
+ return url.startsWith("https://")||url.startsWith("http://")||url.startsWith("data:image/");
 }
 function normalizeMenuItems(data){
  return data.map((remote,index)=>{
