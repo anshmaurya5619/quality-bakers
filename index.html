@@ -1424,6 +1424,24 @@ function showView(view){
 function openCart(){showView("cart")}
 function openAccount(){showView("account")}
 function closeCart(){showView("home")}
+function closeSiteDrawer(){document.body.classList.remove("drawer-open");$("menuToggle").setAttribute("aria-expanded","false")}
+$("menuToggle").addEventListener("click",()=>{document.body.classList.add("drawer-open");$("menuToggle").setAttribute("aria-expanded","true")});
+$("drawerClose").addEventListener("click",closeSiteDrawer);
+$("menuScrim").addEventListener("click",closeSiteDrawer);
+document.querySelectorAll(".drawerLinks a").forEach(a=>a.addEventListener("click",e=>{
+ closeSiteDrawer();
+ const tab=a.dataset.accountTab;
+ if(tab){e.preventDefault();openAccount();setTimeout(()=>activateCustomerTab(tab),0);return}
+ if(a.dataset.view==="cart"){e.preventDefault();openCart();return}
+ if(a.dataset.view==="account"){e.preventDefault();openAccount();return}
+ showView("home");
+}));
+function activateCustomerTab(tab){
+ document.querySelectorAll("[data-customer-tab]").forEach(b=>b.classList.toggle("active",b.dataset.customerTab===tab));
+ document.querySelectorAll("[data-customer-panel]").forEach(p=>p.classList.toggle("active",p.dataset.customerPanel===tab));
+}
+document.querySelectorAll("[data-customer-tab]").forEach(b=>b.addEventListener("click",()=>activateCustomerTab(b.dataset.customerTab)));
+$("orderAgainLink").addEventListener("click",()=>showView("home"));
 $("filters").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;activeCat=b.dataset.cat;renderFilters();renderMenu()});
 $("menuGrid").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(b)addToCart(b.dataset.add)});
 $("cartItems").addEventListener("click",e=>{
@@ -1533,7 +1551,7 @@ onSnapshot(menuRef,snap=>{
 </script>
 <script type="module">
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { doc, setDoc, addDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 
 let authMode="login";
@@ -1583,7 +1601,44 @@ el("customerAuthForm").addEventListener("submit",async e=>{
   say(messages[err.code]||err.message||"अभी अकाउंट प्रक्रिया पूरी नहीं हुई।");
  }finally{el("authSubmit").disabled=false}
 });
-el("signOutBtn").addEventListener("click",async()=>{try{await signOut(auth);say("आप लॉगआउट हो गए।")}catch(err){say(err.message)}});
+el("signOutBtn").addEventListener("click",async()=>{try{await signOut(auth);say("आप लॉगआउट हो गए।");openAccount()}catch(err){say(err.message)}});
+async function loadCustomerDetails(user){
+ try{
+  const snap=await getDoc(doc(db,"customers",user.uid));
+  const data=snap.exists()?snap.data():{};
+  el("profileEditName").value=user.displayName||data.name||"";
+  el("profileEditPhone").value=data.phone||"";
+  el("profileEditEmail").value=user.email||"";
+  const addresses=Array.isArray(data.addresses)?data.addresses:[];
+  renderSavedAddresses(addresses);
+ }catch(err){console.warn("Customer profile details unavailable:",err.code||err.message);renderSavedAddresses([])}
+}
+function renderSavedAddresses(rows){
+ const host=el("savedAddressList");
+ if(!rows.length){host.innerHTML='<p class="muted">अभी कोई पता सेव नहीं है।</p>';return}
+ host.innerHTML=rows.map((a,i)=>'<article class="savedAddressCard"><div><strong>'+String(a.label||"पता").replace(/[<>]/g,"")+'</strong><p>'+String(a.address||"").replace(/[<>]/g,"")+'</p></div><button type="button" class="secondary" data-delete-address="'+i+'">हटाएँ</button></article>').join("");
+}
+el("savedAddressList").addEventListener("click",async e=>{
+ const b=e.target.closest("[data-delete-address]");if(!b||!auth.currentUser)return;
+ try{const ref=doc(db,"customers",auth.currentUser.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];rows.splice(Number(b.dataset.deleteAddress),1);await setDoc(ref,{addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows)}
+ catch(err){el("savedAddressMessage").textContent="पता हटाया नहीं जा सका। कृपया फिर कोशिश करें।"}
+});
+el("savedAddressForm").addEventListener("submit",async e=>{
+ e.preventDefault();const user=auth.currentUser;if(!user)return;
+ const label=el("savedAddressName").value.trim(),address=el("savedAddressText").value.trim();
+ if(!label||!address)return;
+ const msg=el("savedAddressMessage");msg.textContent="पता सेव हो रहा है…";
+ try{const ref=doc(db,"customers",user.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];rows.push({label:label.slice(0,35),address:address.slice(0,500),createdAt:new Date().toISOString()});await setDoc(ref,{addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows);el("savedAddressForm").reset();msg.textContent="पता सेव हो गया।"}
+ catch(err){console.error("Address save failed",err.code||err.message);msg.textContent="पता सेव नहीं हुआ। Firestore customer rules जाँचें।"}
+});
+el("customerProfileForm").addEventListener("submit",async e=>{
+ e.preventDefault();const user=auth.currentUser;if(!user)return;
+ const name=el("profileEditName").value.trim(),phone=el("profileEditPhone").value.trim(),msg=el("profileEditMessage");
+ if(!name){msg.textContent="कृपया नाम लिखें।";return}
+ msg.textContent="जानकारी अपडेट हो रही है…";
+ try{await updateProfile(user,{displayName:name});await setDoc(doc(db,"customers",user.uid),{uid:user.uid,name,email:user.email||"",phone,updatedAt:serverTimestamp()},{merge:true});el("profileName").textContent=name;el("customerName").value=name;msg.textContent="प्रोफाइल अपडेट हो गई।"}
+ catch(err){console.error("Profile update failed",err.code||err.message);msg.textContent="अपडेट नहीं हुआ। Firestore customer rules जाँचें।"}
+});
 function renderHistory(rows){
  const host=el("orderHistory");
  if(!rows.length){host.innerHTML='<p class="muted">अभी कोई ऑर्डर नहीं है। मेन्यू से अपना पहला ऑर्डर करें।</p>';return}
@@ -1609,11 +1664,15 @@ onAuthStateChanged(auth,async user=>{
   el("profileName").textContent=user.displayName||"आपका अकाउंट";
   el("profileEmail").textContent=user.email||"";
   el("customerName").value=user.displayName||"";
-  await loadOrders(user);
+  el("accountNavLink").classList.add("hidden");
+  el("drawerAccountLink").querySelector("span").textContent="मेरा अकाउंट";
+  await Promise.all([loadOrders(user),loadCustomerDetails(user)]);
   renderMenu();
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   document.body.classList.remove("customer-signed-in");
+  el("accountNavLink").classList.remove("hidden");
+  el("drawerAccountLink").querySelector("span").textContent="लॉगिन / मेरा अकाउंट";
   el("authCard").classList.remove("hidden");el("profileCard").classList.add("hidden");
   el("profileName").textContent="Guest";el("profileEmail").textContent="लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।";
   el("orderHistory").innerHTML='<p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p>';
