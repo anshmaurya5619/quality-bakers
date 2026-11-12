@@ -665,30 +665,49 @@ const items=[
 {id:"single-cheese-paneer-pizza",cat:"pizza",hi:"सिंगल चीज़ पनीर पिज्जा",en:"Single Cheese Paneer Pizza",emoji:"🍕",photo:"https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy%2Cf_auto%2Cq_auto%2Cw_300%2Ch_300%2Cc_fit/FOOD_CATALOG/IMAGES/CMS/2025/7/31/1827afbd-d03b-40e9-b94d-3e6ace81214f_8bdd19cc-ae92-43c5-a7fe-3380d15bd526.jpg",prices:[["Regular",180]]},
 {id:"double-cheese-paneer-pizza",cat:"pizza",hi:"डबल चीज़ पनीर पिज्जा",en:"Double Cheese Paneer Pizza",emoji:"🍕",photo:"https://storage.googleapis.com/shy-pub/468423/SKU-0121_0-1762683875109.jpg",prices:[["Regular",200]]}
 ];
-/* Hero carousel uses the exact same menu data as the product cards. */
+/* Hero carousel: rotate only real, available dishes from the same menu data. */
 let heroFoodIndex=0, heroFoodTimer=null;
+const heroFailedPhotos=new Set();
 function renderHeroFood(){
  const host=document.getElementById("heroFoodCarousel");
  const image=document.getElementById("heroFoodImage");
  if(!host||!image)return;
- const featured=items.filter(item=>item&&item.photo&&item.available!==false);
- if(!featured.length){host.classList.add("hidden");return}
+ const featured=items.filter(item=>item&&item.photo&&item.available!==false&&!heroFailedPhotos.has(item.photo));
+ if(!featured.length){
+  host.classList.add("hidden");
+  image.removeAttribute("src");
+  return;
+ }
  host.classList.remove("hidden");
  heroFoodIndex=((heroFoodIndex%featured.length)+featured.length)%featured.length;
  const item=featured[heroFoodIndex];
  const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
  const category=(categoryNames[item.cat]&&categoryNames[item.cat][lang])||"Quality Bakers";
+ const nameNode=document.getElementById("heroFoodName");
+ const categoryNode=document.getElementById("heroFoodCategory");
+ const dotsNode=document.getElementById("heroFoodDots");
  host.classList.add("is-changing");
- const nextSrc=item.photo;
- const show=()=>{image.src=nextSrc;image.alt=title+" food";document.getElementById("heroFoodName").textContent=title;document.getElementById("heroFoodCategory").textContent=String(category).toUpperCase();host.classList.remove("is-changing")};
- const probe=new Image();probe.onload=show;probe.onerror=()=>{heroFoodIndex=(heroFoodIndex+1)%featured.length;renderHeroFood()};probe.src=nextSrc;
- document.getElementById("heroFoodDots").innerHTML=featured.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
+ const probe=new Image();
+ probe.onload=()=>{
+  image.src=item.photo;
+  image.alt=title+" — Quality Bakers";
+  nameNode.textContent=title;
+  categoryNode.textContent=String(category).toUpperCase();
+  host.classList.remove("is-changing");
+ };
+ probe.onerror=()=>{
+  heroFailedPhotos.add(item.photo);
+  heroFoodIndex=0;
+  renderHeroFood();
+ };
+ probe.src=item.photo;
+ dotsNode.innerHTML=featured.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
 }
 function startHeroFoodCarousel(){
  renderHeroFood();
  if(heroFoodTimer)clearInterval(heroFoodTimer);
  if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-  heroFoodTimer=setInterval(()=>{heroFoodIndex++;renderHeroFood()},3600);
+  heroFoodTimer=setInterval(()=>{heroFoodIndex++;renderHeroFood()},4200);
  }
 }
 
