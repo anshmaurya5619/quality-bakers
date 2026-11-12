@@ -809,7 +809,7 @@ html.qb-compact-device #menu .sectionHead h2{font-size:1.55rem!important}
 <div class="heroFoodCaption"><span id="heroFoodCategory">QUALITY BAKERS MENU</span><strong id="heroFoodName">हमारे मेन्यू से</strong></div>
 <div class="heroFoodDots" id="heroFoodDots" aria-hidden="true"></div>
 </div></div>
-<div class="heroCopy"><span class="eyebrow" id="eyebrow">✨ GOOD FOOD • GOOD MOOD</span><h1 id="heroTitle">स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!</h1><p id="heroDesc">पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।</p><div class="actions"><a class="primary" href="#menu" id="exploreBtn">🍽️ मेन्यू देखें</a><button class="secondary" id="heroCart" type="button">🛒 ऑर्डर शुरू करें</button></div><div class="trust"><div><b>🍕 Pizza</b><small id="trust1">चीज़ी और स्वादिष्ट</small></div><div><b>🥡 Chinese</b><small id="trust2">हर बाइट में स्वाद</small></div><div><b>🥟 Snacks</b><small id="trust3">हर मौके के लिए</small></div></div></div>
+<div class="heroCopy"><h1 id="heroTitle">स्वाद ऐसा है कि<br><span>बार-बार आने का</span><br>मन करे!</h1></div>
 </div></section>
 <section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
 <section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">MEMBER ACCOUNT</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम"><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><input id="accountPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="कम से कम 6 अक्षर"><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit" id="googleAuthBtn" type="button">Google से जारी रखें</button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow">MY QUALITY ACCOUNT</span><h3 id="profileName">Guest</h3><p id="profileEmail">लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।</p></div></div><div class="profileActions"><button class="secondary" type="button" id="signOutBtn">लॉगआउट</button></div><h3 class="historyTitle">आपके ऑर्डर</h3><div id="orderHistory" class="orderHistory"><p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p></div></div></div></div></section>
@@ -960,13 +960,13 @@ const hi=lang==="hi";
 $("langHi").classList.toggle("active",hi);$("langHi").setAttribute("aria-pressed",String(hi));
 $("langEn").classList.toggle("active",!hi);$("langEn").setAttribute("aria-pressed",String(!hi));
 $("topTag").textContent=hi?"🍕 ताज़ा खाना • शानदार स्वाद • साफ़-सुथरी तैयारी":"🍕 Fresh Food • Tasty Food • Hygienic Food";
-$("heroTitle").innerHTML=hi?"स्वाद ऐसा,<br><span>कि बार-बार</span><br>आने का मन करे!":"So tasty,<br><span>you’ll want to</span><br>come back again!";
-$("heroDesc").textContent=hi?"पिज्जा, चाइनीज़, मोमोज़ और आपके पसंदीदा स्नैक्स — सब एक ही जगह। अपना पसंदीदा खाना चुनें और WhatsApp पर ऑर्डर भेजें।":"Pizza, Chinese, Momos and your favourite snacks—all in one place. Choose your food and send your order on WhatsApp.";
-$("exploreBtn").textContent=hi?"🍽️ मेन्यू देखें":"🍽️ Explore Menu";
-$("heroCart").textContent=hi?"🛒 ऑर्डर शुरू करें":"🛒 Start Order";
-$("trust1").textContent=hi?"चीज़ी और स्वादिष्ट":"Cheesy & tasty";
-$("trust2").textContent=hi?"हर बाइट में स्वाद":"Flavour in every bite";
-$("trust3").textContent=hi?"हर मौके के लिए":"For every craving";
+$("heroTitle").innerHTML=hi?"स्वाद ऐसा है कि<br><span>बार-बार आने का</span><br>मन करे!":"So tasty that<br><span>you’ll want to</span><br>come back again!";
+
+
+
+
+
+
 $("artTitle").textContent=hi?"Quality का स्वाद":"The Quality Taste";
 $("artSub").textContent="Fresh • Tasty • Hygienic";
 $("menuTitle").textContent=hi?"हमारा मेन्यू":"Our Menu";
@@ -1068,7 +1068,7 @@ if(q){const item=cart.find(x=>x.key===q.dataset.qty);if(item){item.qty+=Number(q
 if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 });
 $("cartOpen").addEventListener("click",openCart);
-$("heroCart").addEventListener("click",openCart);
+
 document.querySelector(".brand").addEventListener("click",()=>showView("home"));
 document.querySelectorAll('.headerActions a[href="#account"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openAccount()}));
 document.querySelectorAll('.navlinks a[href="#cart"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openCart()}));
