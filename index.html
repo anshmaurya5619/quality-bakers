@@ -599,7 +599,7 @@ body.page-account.customer-signed-in .accountMessage{overflow-wrap:anywhere}
 
 /* Home hero: automatic food carousel, sourced only from the live menu */
 .heroArt{background:#211e19!important;padding:0;min-height:390px}
-.heroFoodCarousel{position:absolute;inset:0;overflow:hidden;background:#211e19}
+.heroFoodCarousel{position:absolute;inset:0;z-index:2;overflow:hidden;background:#211e19}
 .heroFoodCarousel>img{width:100%;height:100%;display:block;object-fit:cover;opacity:1;transition:opacity .45s ease,transform 4s ease;transform:scale(1.02)}
 .heroFoodCarousel.is-changing>img{opacity:.25;transform:scale(1.06)}
 .heroFoodShade{position:absolute;inset:0;background:linear-gradient(0deg,#100d0be8 0%,#100d0b22 52%,#100d0b08 100%)}
@@ -674,8 +674,11 @@ function renderHeroFood(){
  if(!host||!image)return;
  const featured=items.filter(item=>item&&item.photo&&item.available!==false&&!heroFailedPhotos.has(item.photo));
  if(!featured.length){
-  host.classList.add("hidden");
+  host.classList.remove("hidden");
   image.removeAttribute("src");
+  image.alt="Quality Bakers food menu";
+  document.getElementById("heroFoodName").textContent=lang==="hi"?"मेन्यू की खास डिश":"Menu favorite";
+  document.getElementById("heroFoodCategory").textContent="QUALITY BAKERS";
   return;
  }
  host.classList.remove("hidden");
@@ -686,21 +689,18 @@ function renderHeroFood(){
  const nameNode=document.getElementById("heroFoodName");
  const categoryNode=document.getElementById("heroFoodCategory");
  const dotsNode=document.getElementById("heroFoodDots");
+ nameNode.textContent=title;
+ categoryNode.textContent=String(category).toUpperCase();
+ image.alt=title+" — Quality Bakers";
  host.classList.add("is-changing");
- const probe=new Image();
- probe.onload=()=>{
-  image.src=item.photo;
-  image.alt=title+" — Quality Bakers";
-  nameNode.textContent=title;
-  categoryNode.textContent=String(category).toUpperCase();
-  host.classList.remove("is-changing");
- };
- probe.onerror=()=>{
+ image.onload=()=>host.classList.remove("is-changing");
+ image.onerror=()=>{
+  image.onerror=null;
   heroFailedPhotos.add(item.photo);
   heroFoodIndex=0;
   renderHeroFood();
  };
- probe.src=item.photo;
+ image.src=item.photo;
  dotsNode.innerHTML=featured.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
 }
 function startHeroFoodCarousel(){
