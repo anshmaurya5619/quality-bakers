@@ -1232,6 +1232,72 @@ body.page-account.customer-signed-in .orderHistory{display:grid;gap:10px}
 }
 
 body.customer-signed-in .drawerLogout{display:flex!important;align-items:center;gap:12px;width:100%;padding:12px 11px;border:1px solid #d9c6aa;border-radius:8px;background:#f1e4d3;color:#754326;font:inherit;font-weight:750;text-align:left;cursor:pointer}body:not(.customer-signed-in) .drawerLogout{display:none!important}
+
+/* Dedicated full-page customer login: expand the form area, keep the screen focused */
+body.page-account main#home>.accountSection{
+  min-height:calc(100svh - 112px);
+  padding:clamp(28px,5vh,58px) 0 clamp(34px,6vh,70px);
+  display:flex!important;
+  align-items:center;
+}
+body.page-account #account .wrap{
+  width:min(calc(100% - 48px),1040px);
+  margin-inline:auto;
+}
+body.page-account #account .sectionHead{
+  text-align:left;
+  margin:0 auto 22px;
+  max-width:900px;
+}
+body.page-account #account .sectionHead>div{width:100%}
+body.page-account #account .sectionHead .eyebrow{margin-bottom:12px}
+body.page-account #accountTitle{font-size:clamp(2rem,4vw,2.7rem)}
+body.page-account #accountDesc{font-size:1rem}
+body.page-account .accountGrid{display:block;width:100%}
+body.page-account #authCard{
+  width:100%;
+  max-width:900px;
+  min-height:410px;
+  margin:0 auto;
+  padding:clamp(28px,5vw,54px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:#f1eadf;
+  border:1px solid #cfc1ad;
+  border-radius:14px;
+  box-shadow:0 18px 45px #3b2c1c18;
+}
+body.page-account #authCard .authTabs{justify-content:flex-start;margin-bottom:24px}
+body.page-account #authCard label,
+body.page-account #authCard input,
+body.page-account #authCard .accountSubmit,
+body.page-account #authCard .textAction,
+body.page-account #authCard .accountMessage{
+  width:100%;
+  max-width:100%;
+}
+body.page-account #authCard input{min-height:54px;font-size:1rem}
+body.page-account #authCard .accountSubmit{min-height:54px}
+body.page-account #authCard .textAction{margin-top:18px}
+@media(max-width:600px){
+  body.page-account main#home>.accountSection{
+    min-height:calc(100svh - 108px);
+    padding:24px 0 34px;
+    align-items:center;
+  }
+  body.page-account #account .wrap{width:calc(100% - 28px)}
+  body.page-account #account .sectionHead{text-align:left;margin-bottom:16px}
+  body.page-account #authCard{
+    width:100%;
+    max-width:none;
+    min-height:390px;
+    padding:25px 20px;
+    border-radius:12px;
+  }
+  body.page-account #authCard input{min-height:52px}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
