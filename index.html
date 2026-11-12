@@ -795,6 +795,38 @@ html.qb-compact-device #menu .sectionHead h2{font-size:1.55rem!important}
  html.qb-compact-device #menu .foodInfo{padding:7px!important}
 }
 
+
+/* Requested home-page refinements only: remove category showcase, contain slider photos, 3.1s cadence. */
+#menu .categoryShowcase{display:none!important}
+.heroFoodCarousel{background:#e8dfd1!important}
+.heroFoodCarousel>img,
+html.qb-compact-device .heroFoodCarousel>img{
+  object-fit:contain!important;
+  object-position:center center!important;
+  width:100%!important;height:100%!important;
+  padding:0!important;
+  background:#e8dfd1!important;
+}
+.heroCopy{
+  width:92%!important;max-width:900px!important;
+  margin:0 auto!important;
+  padding:18px 22px!important;
+  border:1px solid #d8c7ad!important;
+  border-radius:10px!important;
+  box-shadow:0 7px 20px #4a35200b!important;
+}
+.heroCopy h1{
+  max-width:760px!important;
+  margin:0!important;
+  font-size:clamp(1.8rem,4.5vw,3.2rem)!important;
+  line-height:1.16!important;
+  letter-spacing:-.025em!important;
+}
+@media(max-width:600px){
+  .heroCopy{width:92%!important;padding:16px 17px!important}
+  .heroCopy h1{font-size:clamp(1.65rem,6.2vw,2.25rem)!important;line-height:1.17!important}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -811,7 +843,7 @@ html.qb-compact-device #menu .sectionHead h2{font-size:1.55rem!important}
 </div></div>
 <div class="heroCopy"><h1 id="heroTitle">स्वाद ऐसा है कि<br><span>बार-बार आने का</span><br>मन करे!</h1></div>
 </div></section>
-<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
+<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase hidden" id="categoryShowcase" aria-hidden="true"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
 <section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">MEMBER ACCOUNT</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम"><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><input id="accountPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="कम से कम 6 अक्षर"><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit" id="googleAuthBtn" type="button">Google से जारी रखें</button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow">MY QUALITY ACCOUNT</span><h3 id="profileName">Guest</h3><p id="profileEmail">लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।</p></div></div><div class="profileActions"><button class="secondary" type="button" id="signOutBtn">लॉगआउट</button></div><h3 class="historyTitle">आपके ऑर्डर</h3><div id="orderHistory" class="orderHistory"><p class="muted">लॉगिन करने पर आपके ऑर्डर यहाँ दिखेंगे।</p></div></div></div></div></section>
 <section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields" id="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="2" placeholder="खास निर्देश (वैकल्पिक)"></textarea>
 <div class="deliveryLocationBox">
@@ -1156,7 +1188,7 @@ renderAll();
   test.src=selected.url;
  }
  show();
- setInterval(()=>{index++;show()},4200);
+ setInterval(()=>{index++;show()},3100);
 })();
 </script>
 <script type="module">
