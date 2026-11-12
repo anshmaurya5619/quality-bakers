@@ -946,6 +946,82 @@ html.qb-compact-device .heroFoodCarousel>img{
  .heroFoodDots{right:12px!important;bottom:10px!important}
 }
 
+
+/* High-contrast menu controls and balanced slogan treatment. */
+/* Dish cards and every size/price control must stand apart from the pale page. */
+#menu .foodCard{
+  background:linear-gradient(145deg,#382b20 0%,#251d17 100%)!important;
+  border:1px solid #9a7748!important;
+  border-radius:13px!important;
+  box-shadow:0 5px 14px #2b1c1026!important;
+}
+#menu .foodInfo{background:transparent!important;color:#fff4df!important}
+#menu .foodInfo h3{color:#fff4df!important;font-weight:850!important}
+#menu .foodInfo .en{color:#d6c4a8!important}
+#menu .priceOption{
+  background:#4a3828!important;
+  border:1px solid #98764b!important;
+  color:#fff1d8!important;
+  border-radius:7px!important;
+  padding:8px 9px!important;
+  font-weight:800!important;
+}
+#menu .priceOption span{color:#fff1d8!important;font-weight:800!important}
+#menu .priceOption strong{color:#ffd58e!important;font-weight:900!important}
+#menu .addrow select{
+  background:#211a14!important;
+  color:#fff2dc!important;
+  border:1px solid #a88450!important;
+  border-radius:7px!important;
+  font-weight:800!important;
+  min-height:40px!important;
+}
+#menu .addrow select option{background:#211a14!important;color:#fff2dc!important}
+#menu .filter{
+  background:#3a2b20!important;
+  border:1px solid #8d6a42!important;
+  color:#fff0d6!important;
+  font-weight:850!important;
+  border-radius:8px!important;
+}
+#menu .filter.active{
+  background:#c49a5a!important;
+  border-color:#8a6231!important;
+  color:#21170e!important;
+}
+/* Slogan gets a deliberate, balanced composition rather than sitting in one corner. */
+.heroCopy{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  min-height:0!important;
+  padding:24px 18px!important;
+  background:linear-gradient(115deg,#f7f0e4 0%,#eadbc4 50%,#f7f0e4 100%)!important;
+  border:1px solid #cdb58f!important;
+  border-radius:12px!important;
+  box-shadow:0 8px 22px #4a352018!important;
+}
+.heroCopy h1{
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  color:#302116!important;
+  font-size:clamp(1.85rem,5vw,3rem)!important;
+  line-height:1.18!important;
+  letter-spacing:-.025em!important;
+  font-weight:900!important;
+  text-align:center!important;
+}
+.heroCopy h1 span{color:#98583d!important}
+@media(max-width:600px){
+ .heroCopy{width:92%!important;padding:20px 14px!important;min-height:0!important}
+ .heroCopy h1{font-size:clamp(1.8rem,7vw,2.25rem)!important;line-height:1.2!important}
+ #menu .foodInfo{padding:10px!important;gap:7px!important}
+ #menu .priceOption{min-width:0!important;padding:7px 6px!important;font-size:.78rem!important}
+ #menu .addrow select{padding:8px 6px!important;font-size:.8rem!important}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
