@@ -2092,8 +2092,6 @@ window.QB_CREATE_ORDER=async({customerName,customerPhone,note,deliveryLocation,i
 };
 setMode("login");
 
-document.getElementById("heroFoodCarousel")?.addEventListener("touchstart",()=>{if(heroFoodTimer)clearInterval(heroFoodTimer)},{passive:true});
-document.getElementById("heroFoodCarousel")?.addEventListener("touchend",()=>{if(heroFoodTimer)clearInterval(heroFoodTimer);heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100)},{passive:true});
 document.getElementById("heroFoodDots")?.addEventListener("click",e=>{const b=e.target.closest("[data-hero-dot]");if(!b)return;heroFoodIndex=Number(b.dataset.heroDot)||0;renderHeroFood();if(heroFoodTimer)clearInterval(heroFoodTimer);heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100)});
 document.getElementById("togglePassword")?.addEventListener("click",()=>{const input=document.getElementById("accountPassword"),button=document.getElementById("togglePassword");const show=input.type==="password";input.type=show?"text":"password";button.textContent=show?"🙈":"👁";button.setAttribute("aria-pressed",String(show));button.setAttribute("aria-label",show?"पासवर्ड छिपाएँ":"पासवर्ड दिखाएँ")});
 
