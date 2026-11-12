@@ -666,19 +666,32 @@ const items=[
 {id:"double-cheese-paneer-pizza",cat:"pizza",hi:"डबल चीज़ पनीर पिज्जा",en:"Double Cheese Paneer Pizza",emoji:"🍕",photo:"https://storage.googleapis.com/shy-pub/468423/SKU-0121_0-1762683875109.jpg",prices:[["Regular",200]]}
 ];
 // Keep trusted built-in dish photos as fallback if Firestore contains invalid photo values.
-const builtInMenuById=new Map(items.map(item=>[item.id,{...item}]));
+const builtInMenuList=items.map(item=>({...item}));
+const builtInMenuById=new Map(builtInMenuList.map(item=>[String(item.id),item]));
+const allowedMenuCategories=new Set(["noodles","starters","snacks","pizza","cakes"]);
 function validFoodPhoto(value){
  return typeof value==="string" && /^(https?:\\/\\/|data:image\\/)/i.test(value.trim());
 }
 function normalizeMenuItems(data){
- return data.map(remote=>{
+ return data.map((remote,index)=>{
   if(!remote||typeof remote!=="object")return null;
-  const base=builtInMenuById.get(String(remote.id||""))||{};
-  const candidate=validFoodPhoto(remote.photo)?remote.photo.trim():
+  const base=builtInMenuById.get(String(remote.id||""))||builtInMenuList[index]||{};
+  const photo=validFoodPhoto(remote.photo)?remote.photo.trim():
    (validFoodPhoto(remote.imageUrl)?remote.imageUrl.trim():
    (validFoodPhoto(remote.photoURL)?remote.photoURL.trim():base.photo));
-  return {...base,...remote,photo:candidate||""};
- }).filter(Boolean);
+  const prices=Array.isArray(remote.prices)&&remote.prices.length&&remote.prices.every(p=>Array.isArray(p)&&p.length>=2&&Number.isFinite(Number(p[1])))?remote.prices:base.prices;
+  const cat=allowedMenuCategories.has(remote.cat)?remote.cat:base.cat;
+  return {
+   ...base,...remote,
+   id:base.id||String(remote.id||("menu-item-"+index)),
+   cat,
+   hi:typeof remote.hi==="string"&&remote.hi.trim()?remote.hi:base.hi,
+   en:typeof remote.en==="string"&&remote.en.trim()?remote.en:base.en,
+   emoji:typeof remote.emoji==="string"?remote.emoji:base.emoji,
+   prices,
+   photo:photo||""
+  };
+ }).filter(item=>item&&item.cat&&Array.isArray(item.prices));
 }
 /* Hero carousel: rotate only real, available dishes from the same menu data. */
 let heroFoodIndex=0, heroFoodTimer=null;
