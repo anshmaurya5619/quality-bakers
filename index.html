@@ -883,6 +883,69 @@ html.qb-compact-device .heroFoodCarousel>img{
   .heroFoodDots{right:13px!important;bottom:11px!important}
 }
 
+
+/* Compact slider with full-photo foreground and soft matching backdrop. */
+.heroArt,
+html.qb-compact-device .heroArt{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2.05/1!important;
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:12px!important;
+  background:#30271f!important;
+}
+.heroFoodCarousel,
+html.qb-compact-device .heroFoodCarousel{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+  background:#30271f!important;
+  isolation:isolate!important;
+}
+.heroFoodCarousel:before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:-14px;
+  background-image:var(--hero-photo);
+  background-position:center;
+  background-size:cover;
+  filter:blur(13px) brightness(.72);
+  transform:scale(1.04);
+}
+.heroFoodCarousel>img,
+html.qb-compact-device .heroFoodCarousel>img{
+  position:absolute!important;
+  z-index:1!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  display:block!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+  transform:none!important;
+}
+.heroFoodShade{z-index:2!important;background:linear-gradient(0deg,#100d0bdc 0%,#100d0b20 35%,transparent 65%)!important}
+.heroFoodCaption{z-index:3!important;left:16px!important;right:16px!important;bottom:27px!important}
+.heroFoodDots{z-index:4!important;right:16px!important;bottom:12px!important}
+@media(max-width:600px){
+ .heroArt,html.qb-compact-device .heroArt{aspect-ratio:2.05/1!important;height:auto!important;min-height:0!important}
+ .heroFoodCarousel,html.qb-compact-device .heroFoodCarousel{height:100%!important}
+ .heroFoodCarousel>img,html.qb-compact-device .heroFoodCarousel>img{height:100%!important;object-fit:contain!important;padding:0!important}
+ .heroFoodCaption{left:12px!important;right:12px!important;bottom:25px!important}
+ .heroFoodCaption strong{font-size:1.08rem!important}
+ .heroFoodDots{right:12px!important;bottom:10px!important}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1002,6 +1065,7 @@ function renderHeroFood(){
  preload.onload=()=>{
   if(token!==heroLoadToken)return;
   const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
+  host.style.setProperty("--hero-photo", 'url("' + item.photo.replace(/["\\\\]/g,"") + '")');
   image.src=item.photo;
   image.alt=title+" — Quality Bakers";
   nameNode.textContent=title;
