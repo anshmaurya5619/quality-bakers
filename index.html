@@ -1160,6 +1160,9 @@ html.qb-compact-device .heroFoodCarousel>img{
 
 
 /* Customer dashboard navigation: compact header + three-line side menu. */
+body:not(.customer-signed-in) .drawerLinks a[data-account-tab]{display:none}
+body.customer-signed-in .drawerLinks a[data-view="account"]{display:none}
+
 .navinner{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:12px!important}
 .navinner>.headerActions{display:flex!important;align-items:center!important;gap:8px!important;margin-left:auto}
 .menuToggle{width:42px;height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid #c9b99f;border-radius:8px;background:#f6efe3;color:#30251b;padding:7px}
@@ -1462,6 +1465,7 @@ const existing=cart.find(x=>x.key===key);
 if(existing)existing.qty++;else cart.push({key,id,size:price[0],price:price[1],qty:1});
 updateCart();showToast(lang==="hi"?"कार्ट में जोड़ दिया गया":"Added to cart");
 }
+window.QB_ADD_ORDER_ITEMS=rows=>{rows.forEach(row=>{const item=items.find(x=>String(x.id)===String(row.id));if(!item)return;const price=item.prices.find(p=>String(p[0])===String(row.size))||item.prices.find(p=>Number(p[1])===Number(row.price));if(!price)return;const key=item.id+"-"+price[0],existing=cart.find(x=>x.key===key);if(existing)existing.qty+=Math.max(1,Number(row.quantity)||1);else cart.push({key,id:item.id,size:price[0],price:price[1],qty:Math.max(1,Number(row.quantity)||1)})});updateCart();showToast("पुराना ऑर्डर कार्ट में जोड़ दिया गया।")};
 function updateCart(){
 const count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+x.qty*x.price,0);
 const empty=cart.length===0;
@@ -1712,14 +1716,16 @@ function renderHistory(rows){
  host.innerHTML=rows.map(o=>{
   const date=o.createdAt?.toDate?o.createdAt.toDate().toLocaleString("en-IN"):"अभी-अभी";
   const lines=(o.items||[]).map(i=>'<li>'+String(i.nameHi||i.nameEn||"Item").replace(/[<>]/g,"")+' · '+Number(i.quantity||0)+' × ₹'+Number(i.price||0)+'</li>').join("");
-  return '<article class="orderCard"><div class="orderCardTop"><strong>Order #'+String(o.id).slice(-7)+'</strong><span class="orderStatus">'+String(o.status||"placed")+'</span></div><small>'+date+'</small><ul class="orderLines">'+lines+'</ul><div class="totalLine"><span>कुल</span><strong>₹'+Number(o.total||0)+'</strong></div></article>';
+  return '<article class="orderCard"><div class="orderCardTop"><strong>Order #'+String(o.id).slice(-7)+'</strong><span class="orderStatus">'+String(o.status||"placed")+'</span></div><small>'+date+'</small><ul class="orderLines">'+lines+'</ul><div class="totalLine"><span>कुल</span><strong>₹'+Number(o.total||0)+'</strong></div><button type="button" class="secondary reorderButton" data-reorder="'+String(o.id).replace(/[^a-zA-Z0-9_-]/g,"")+'">फिर से ऑर्डर करें</button></article>';
  }).join("");
 }
+const customerOrderCache=new Map();
+el("orderHistory").addEventListener("click",e=>{const b=e.target.closest("[data-reorder]");if(!b)return;const order=customerOrderCache.get(b.dataset.reorder);if(!order)return;if(typeof window.QB_ADD_ORDER_ITEMS==="function"){window.QB_ADD_ORDER_ITEMS(order.items||[]);showView("cart");}});
 async function loadOrders(user){
  el("orderHistory").innerHTML='<p class="muted">ऑर्डर लोड हो रहे हैं…</p>';
  try{
   const snap=await getDocs(query(collection(db,"orders"),where("customerUid","==",user.uid)));
-  renderHistory(snap.docs.map(d=>({id:d.id,...d.data()})));
+  const rows=snap.docs.map(d=>({id:d.id,...d.data()}));customerOrderCache.clear();rows.forEach(o=>customerOrderCache.set(String(o.id).replace(/[^a-zA-Z0-9_-]/g,""),o));renderHistory(rows);
  }catch(err){console.error("Customer order history could not be loaded:",err.code||err.message);el("orderHistory").innerHTML='<p class="muted">आपके ऑर्डर अभी उपलब्ध नहीं हैं। कृपया थोड़ी देर बाद फिर देखें या दुकान से संपर्क करें।</p>'}
 }
 onAuthStateChanged(auth,async user=>{
