@@ -1451,6 +1451,118 @@ body.page-account #authCard .accountSubmit{min-height:50px!important}
  body.page-account #authCard{padding:22px 18px!important}
 }
 
+
+/* ===== Quality Bakers responsive refinement ===== */
+:root{--bg:#e7dfd2;--panel:#f2ebdf;--cream:#30271f;--muted:#756b5f;--gold:#a77a43;--orange:#bd8150}
+html,body{max-width:100%;overflow-x:hidden}
+.hero{padding:18px 0 10px}
+.heroGrid{grid-template-columns:1fr;gap:14px}
+.heroArt{min-height:0;height:auto;aspect-ratio:auto;border:0;background:transparent;box-shadow:none;overflow:visible;display:block}
+.heroArt:before,.heroArt:after{display:none}
+.heroFoodCarousel{position:relative;inset:auto;width:100%;height:auto;min-height:0;overflow:hidden;background:transparent;border:0;border-radius:0;box-shadow:none;padding:0 0 26px}
+.heroFoodTrack{display:flex;gap:12px;will-change:transform;transition:transform .55s cubic-bezier(.22,.7,.2,1);padding:2px 1px 8px}
+.heroFoodCard{flex:0 0 calc((100% - 24px)/3);min-width:0;overflow:hidden;border-radius:14px;background:#f4ecdf;border:1px solid #cdbb9f;box-shadow:0 5px 16px #39271416}
+.heroFoodPhoto{width:100%;aspect-ratio:4/3;background:#d9cbb7;overflow:hidden}
+.heroFoodPhoto img{width:100%;height:100%;display:block;object-fit:cover}
+.heroFoodCardText{padding:9px 10px 11px;display:grid;gap:3px;color:#30271f}
+.heroFoodCardText small{font-size:.72rem;color:#8b6740;font-weight:800;letter-spacing:.04em}
+.heroFoodCardText strong{font-size:.95rem;line-height:1.25;overflow-wrap:anywhere}
+.heroFoodDots{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:9px}
+.heroFoodDots .heroDot{width:10px;height:10px;padding:0;border:0;border-radius:50%;background:#b8a58c;min-width:10px}
+.heroFoodDots .heroDot.active{width:26px;border-radius:9px;background:#81572e}
+.heroCopy{width:100%;padding:14px 0 8px;background:transparent;border:0;box-shadow:none}
+.heroCopyInner{max-width:780px!important;margin:0!important;text-align:left}
+.heroKicker{margin:0 0 8px!important;color:#91683b!important;letter-spacing:.08em!important;font-size:.75rem!important}
+.heroCopy h1{color:#30271f!important;text-align:left!important;font-size:clamp(1.45rem,5vw,2.5rem)!important;line-height:1.2!important;letter-spacing:-.02em!important;font-weight:850!important;max-width:24ch!important;margin:0!important}
+.heroCopy h1 span{color:inherit!important}
+.heroTagline{margin:9px 0 0!important;color:#6e6254!important;font-size:clamp(.88rem,2.4vw,1rem)!important;line-height:1.5!important}
+.heroOrnament{display:none!important}
+.categoryShowcase{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;margin:0 0 18px!important}
+.categoryTile{min-height:112px!important;padding:14px!important;border-radius:12px!important;background:#f1e6d5!important;color:#30271f!important;border:1px solid #cbb99f!important;box-shadow:0 3px 10px #3927140d!important}
+.categoryTile.noodles,.categoryTile.starters,.categoryTile.snacks,.categoryTile.pizza{background:#f1e6d5!important}
+.categoryTile strong{font-size:1rem!important;color:#30271f!important}
+.categoryTile small{font-size:.82rem!important;color:#655746!important;line-height:1.4!important}
+.menuGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch}
+.foodCard{height:100%;background:#f3ecdf!important;border:1px solid #d1c2ac!important;color:#30271f!important;border-radius:12px!important;overflow:hidden}
+.foodPic{height:auto!important;aspect-ratio:4/3!important;flex:0 0 auto}
+.foodInfo{padding:11px!important;gap:8px!important}
+.foodInfo h3{font-size:1rem!important;line-height:1.3}
+.foodInfo .en{color:#786b5c!important}
+.priceOption{min-width:0;padding:7px!important;overflow:visible!important}
+.addrow{margin-top:auto;gap:7px}
+.addrow select,.addbtn{min-height:42px}
+.addbtn{white-space:nowrap}
+.navinner{gap:8px}
+.headerActions{display:flex;align-items:center;gap:7px}
+.accountNavLink,.cartbtn,.languageOption{min-height:40px;font-size:.84rem!important;padding:8px 10px!important}
+.menuToggle{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:42px}
+.drawerLinks a[aria-current="page"]{background:#e5d4b9!important;color:#392817!important;border-left:4px solid #946a39;font-weight:900}
+.footer .wrap{align-items:center}
+.accountSection{background:var(--bg)!important;min-height:calc(100svh - 150px);padding:24px 0 28px!important}
+body.page-account{min-height:100svh;display:flex;flex-direction:column}
+body.page-account main#home{flex:1 0 auto;display:flex;flex-direction:column}
+body.page-account main#home>.accountSection{flex:1 0 auto;min-height:0!important;height:auto!important;padding:24px 0!important;display:block!important}
+body.page-account #account .wrap{width:min(760px,calc(100% - 32px))!important;max-width:760px!important;min-height:0!important;height:auto!important;margin:0 auto!important;display:block!important}
+body.page-account #account .sectionHead{margin:0 0 16px!important}
+body.page-account .accountGrid{display:block!important;height:auto!important;min-height:0!important}
+body.page-account #authCard{width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:24px!important;background:#f2ebdf!important;border:1px solid #d1c2ac!important;box-shadow:0 8px 24px #39271412!important}
+body.page-account #authCard form{max-width:none!important}
+.accountCard label{font-size:.95rem!important;color:#514334!important}
+.accountCard input{font-size:16px!important;min-height:48px!important;background:#fffaf2!important;color:#30271f!important;border:1px solid #cdbda6!important}
+.authTab,.accountSubmit{min-height:48px!important;font-size:16px!important}
+.authTab{color:#4c3b29!important}
+.authTab.active{background:#30271f!important;color:#fff!important}
+.passwordField{position:relative;display:flex;align-items:center}
+.passwordField input{padding-right:56px!important}
+.passwordToggle{position:absolute;right:5px;top:5px;bottom:5px;width:44px;border:0;border-radius:8px;background:#e9dece;color:#4b3926;font-size:18px}
+.googleAuthButton{display:flex;align-items:center;justify-content:center;gap:10px}
+.googleG{font-weight:900;font-size:1.25rem;color:#4285f4;background:#fff;border-radius:50%;width:25px;height:25px;display:inline-grid;place-items:center}
+.accountMessage{min-height:0!important;margin:14px 0 0!important;font-size:.92rem!important}
+#accountPhone[hidden],#accountName[hidden],#customerNameLabel[hidden],#customerPhoneLabel[hidden]{display:none!important}
+body.page-account .footer{margin-top:auto}
+@media(max-width:700px){
+ .topbar{font-size:.78rem;padding:6px 0}
+ .navinner{padding:8px 0}
+ .brandmark{width:36px;height:36px;font-size:1.1rem}
+ .brand{font-size:.78rem;gap:7px}
+ .brand small{font-size:.58rem;letter-spacing:.5px}
+ .headerActions{gap:5px}
+ .accountNavLink{font-size:.74rem!important;padding:7px!important;min-height:36px}
+ .languageSwitch{gap:2px}
+ .languageOption{font-size:.72rem!important;padding:6px!important;min-height:36px}
+ .cartbtn{font-size:.74rem!important;padding:7px!important;min-height:36px}
+ .menuToggle{min-width:36px;min-height:36px}
+ .hero{padding:12px 0 4px}
+ .heroFoodCard{flex-basis:calc((100% - 12px)/2)}
+ .heroFoodCardText{padding:8px}
+ .heroFoodCardText small{font-size:.66rem}
+ .heroFoodCardText strong{font-size:.88rem}
+ .heroCopy{padding:12px 0 8px}
+ .heroCopy h1{font-size:clamp(1.4rem,5.5vw,1.9rem)!important;max-width:25ch!important}
+ .categoryShowcase{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .menuGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .foodPic{aspect-ratio:4/3!important}
+ .foodInfo{padding:9px!important}
+ .foodInfo h3{font-size:.92rem!important}
+ .priceOption{font-size:.76rem!important}
+ .addrow{display:grid;grid-template-columns:1fr;gap:6px}
+ .addrow select,.addbtn{width:100%;min-width:0;min-height:42px;font-size:.84rem}
+ body.page-account main#home>.accountSection{padding:24px 0!important}
+ body.page-account #account .wrap{width:calc(100% - 32px)!important}
+ body.page-account #authCard{padding:20px 16px!important}
+ .footer{padding:18px 0!important}
+ .footer .wrap{display:flex!important;flex-direction:column!important;justify-content:center!important;text-align:center!important;gap:6px!important;font-size:.82rem}
+}
+@media(max-width:380px){
+ .brand small{display:none}
+ .accountNavLink{font-size:0!important}
+ .accountNavLink span:first-child{font-size:16px}
+ .languageOption{font-size:.68rem!important}
+ .cartbtn{font-size:.68rem!important}
+}
+@media(min-width:701px){.heroGrid{grid-template-columns:minmax(0,1fr)!important;gap:12px}.heroFoodCard{flex-basis:calc((100% - 36px)/4)}}
+@media(prefers-reduced-motion:reduce){.heroFoodTrack{transition:none}}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1459,16 +1571,14 @@ body.page-account #authCard .accountSubmit{min-height:50px!important}
 <nav class="nav"><div class="wrap navinner"><a class="brand" href="#home"><span class="brandmark">🍕</span><span>QUALITY BAKERS<small>FAST FOOD & PIZZA SHOP</small></span></a><div class="headerActions"><a class="accountNavLink" href="#account" id="accountNavLink"><span aria-hidden="true">👤</span> <span data-hi="लॉगिन / अकाउंट" data-en="Login / Account">लॉगिन / अकाउंट</span></a><div class="languageSwitch" role="group" aria-label="Choose language"><button class="languageOption active" id="langHi" type="button" aria-pressed="true"><span aria-hidden="true">🇮🇳</span> हिंदी</button><button class="languageOption" id="langEn" type="button" aria-pressed="false"><span aria-hidden="true">🇬🇧</span> English</button></div><button class="cartbtn" id="cartOpen" type="button">🛒 <span data-hi="कार्ट" data-en="Cart">कार्ट</span> (<span id="cartCount">0</span>)</button><button class="menuToggle" id="menuToggle" type="button" aria-label="मेन्यू खोलें" aria-expanded="false"><span></span><span></span><span></span></button></div></div></nav><div class="menuScrim" id="menuScrim"></div><aside class="siteDrawer" id="siteDrawer" aria-label="मुख्य मेन्यू"><div class="drawerHead"><strong>QUALITY BAKERS</strong><button id="drawerClose" type="button" aria-label="मेन्यू बंद करें">×</button></div><nav class="drawerLinks"><a href="#home" data-view="home">⌂ <span data-hi="होम" data-en="Home">होम</span></a><a href="#menu" data-view="home">🍽 <span data-hi="मेन्यू" data-en="Menu">मेन्यू</span></a><a href="#cart" data-view="cart">🛒 <span data-hi="कार्ट / ऑर्डर" data-en="Cart / Order">कार्ट / ऑर्डर</span></a><a href="#about" data-view="home">✦ <span data-hi="हमारे बारे में" data-en="About">हमारे बारे में</span></a><a href="#contact" data-view="home">☎ <span data-hi="संपर्क" data-en="Contact">संपर्क</span></a><div class="drawerDivider"></div><a href="#account" data-view="account" id="drawerAccountLink">👤 <span data-hi="लॉगिन / मेरा अकाउंट" data-en="Login / My Account">लॉगिन / मेरा अकाउंट</span></a><a href="#account" data-account-tab="orders">▤ <span data-hi="मेरे ऑर्डर" data-en="My Orders">मेरे ऑर्डर</span></a><a href="#account" data-account-tab="addresses">⌖ <span data-hi="मेरे पते" data-en="My Addresses">मेरे पते</span></a><a href="#account" data-account-tab="profile">⚙ <span data-hi="प्रोफाइल" data-en="Profile">प्रोफाइल</span></a><a href="#account" data-account-tab="support">♡ <span data-hi="सहायता" data-en="Support">सहायता</span></a><button type="button" class="drawerLogout" id="drawerLogoutBtn" hidden>↪ <span data-hi="लॉगआउट" data-en="Log out">लॉगआउट</span></button></nav></aside>
 <main id="home">
 <section class="hero"><div class="wrap heroGrid">
-<div class="heroArt"><div class="heroFoodCarousel" id="heroFoodCarousel" aria-label="मेन्यू में उपलब्ध खाने की तस्वीरें">
-<img id="heroFoodImage" src="" alt="" fetchpriority="high">
-<div class="heroFoodShade"></div>
-<div class="heroFoodCaption"><span id="heroFoodCategory">QUALITY BAKERS MENU</span><strong id="heroFoodName">हमारे मेन्यू से</strong></div>
-<div class="heroFoodDots" id="heroFoodDots" aria-hidden="true"></div>
+<div class="heroArt"><div class="heroFoodCarousel heroFoodCards" id="heroFoodCarousel" aria-label="मेन्यू में उपलब्ध खाने की तस्वीरें">
+<div class="heroFoodTrack" id="heroFoodTrack"></div>
+<div class="heroFoodDots" id="heroFoodDots" aria-label="Slider pagination"></div>
 </div></div>
-<div class="heroCopy"><div class="heroCopyInner"><span class="heroKicker">QUALITY • TASTE • TRADITION</span><h1 id="heroTitle">स्वाद ऐसा है कि<br><span>बार-बार आने का</span><br>मन करे!</h1><p class="heroTagline">ताज़ा सामग्री • बेहतरीन स्वाद • हर बार कुछ खास</p><span class="heroOrnament" aria-hidden="true">✦ ───── ✦</span></div></div>
+<div class="heroCopy"><div class="heroCopyInner"><span class="heroKicker" data-hi="अच्छा खाना · अच्छा मूड" data-en="GOOD FOOD · GOOD MOOD">अच्छा खाना · अच्छा मूड</span><h1 id="heroTitle">स्वाद ऐसा है कि बार-बार आने का मन करे!</h1><p class="heroTagline" data-hi="ताज़ा सामग्री • बेहतरीन स्वाद • हर बार कुछ खास" data-en="Fresh ingredients • Great taste • Something special every time">ताज़ा सामग्री • बेहतरीन स्वाद • हर बार कुछ खास</p></div></div>
 </div></section>
-<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow">🔥 CUSTOMER FAVOURITES</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase hidden" id="categoryShowcase" aria-hidden="true"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
-<section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">MEMBER ACCOUNT</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम"><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><input id="accountPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="कम से कम 6 अक्षर"><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit" id="googleAuthBtn" type="button">Google से जारी रखें</button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow">MY QUALITY ACCOUNT</span><h3 id="profileName">Guest</h3><p id="profileEmail"></p></div><button class="secondary profileLogout" type="button" id="signOutBtn">लॉगआउट</button></div><div class="customerTabs" role="tablist"><button type="button" class="customerTab active" data-customer-tab="orders">📦 मेरे ऑर्डर</button><button type="button" class="customerTab" data-customer-tab="addresses">📍 मेरे पते</button><button type="button" class="customerTab" data-customer-tab="profile">👤 प्रोफाइल</button><button type="button" class="customerTab" data-customer-tab="support">☎ सहायता</button></div><section class="customerPanel active" data-customer-panel="orders"><div class="customerPanelHead"><div><h3 class="historyTitle">आपके ऑर्डर</h3><p>अपने ऑर्डर और उनकी स्थिति देखें।</p></div><a class="secondary" href="#menu" id="orderAgainLink">मेन्यू देखें</a></div><div id="orderHistory" class="orderHistory"><p class="muted">आपके ऑर्डर यहाँ दिखेंगे।</p></div></section><section class="customerPanel" data-customer-panel="addresses"><div class="customerPanelHead"><div><h3>मेरे डिलीवरी पते</h3><p>अपना पता सेव करें ताकि अगली बार आसानी हो।</p></div></div><form id="savedAddressForm" class="savedAddressForm"><label for="savedAddressName">पते का नाम</label><input id="savedAddressName" maxlength="35" placeholder="घर, ऑफिस आदि" required><label for="savedAddressText">पूरा पता</label><textarea id="savedAddressText" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड" required></textarea><button class="primary" type="submit">पता सेव करें</button><p id="savedAddressMessage" role="status"></p></form><div id="savedAddressList" class="savedAddressList"><p class="muted">अभी कोई पता सेव नहीं है।</p></div></section><section class="customerPanel" data-customer-panel="profile"><div class="customerPanelHead"><div><h3>प्रोफाइल जानकारी</h3><p>अपना नाम और मोबाइल नंबर अपडेट करें।</p></div></div><form id="customerProfileForm" class="savedAddressForm"><label for="profileEditName">पूरा नाम</label><input id="profileEditName" maxlength="70" required><label for="profileEditPhone">मोबाइल नंबर</label><input id="profileEditPhone" type="tel" inputmode="numeric" maxlength="15" placeholder="मोबाइल नंबर"><label for="profileEditEmail">ईमेल</label><input id="profileEditEmail" type="email" disabled><button class="primary" type="submit">जानकारी अपडेट करें</button><p id="profileEditMessage" role="status"></p></form></section><section class="customerPanel" data-customer-panel="support"><div class="customerPanelHead"><div><h3>Quality Bakers सहायता</h3><p>ऑर्डर या मेन्यू से जुड़ी मदद के लिए संपर्क करें।</p></div></div><div class="supportLinks"><a href="https://wa.me/919918203207" target="_blank" rel="noopener">💬 WhatsApp पर संपर्क करें</a><a href="tel:9918203207">☎ 9918203207</a><a href="tel:8604665305">☎ 8604665305</a></div></section></div></div></div></section>
+<section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow" data-hi="🔥 ग्राहकों की पसंद" data-en="🔥 CUSTOMER FAVOURITES">🔥 ग्राहकों की पसंद</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase" aria-hidden="false"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong>Noodles & Rice</strong><small>स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong>Starters & Rolls</strong><small>हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong>Momos & Snacks</strong><small>हर मौके के लिए परफेक्ट!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong>Pizza</strong><small>हर सीज़न के लिए... परफेक्ट!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong>Designer Cakes</strong><small>खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
+<section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" data-hi="ग्राहक अकाउंट" data-en="MEMBER ACCOUNT">ग्राहक अकाउंट</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम" hidden><label id="customerPhoneLabel" for="accountPhone">मोबाइल नंबर</label><input id="accountPhone" type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="मोबाइल नंबर" hidden><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><div class="passwordField"><input id="accountPassword" type="password" required autocomplete="current-password" placeholder="अपना पासवर्ड लिखें"><button type="button" id="togglePassword" class="passwordToggle" aria-label="पासवर्ड दिखाएँ" aria-pressed="false">👁</button></div><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit googleAuthButton" id="googleAuthBtn" type="button"><span class="googleG" aria-hidden="true">G</span><span>Google से जारी रखें</span></button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow">MY QUALITY ACCOUNT</span><h3 id="profileName">Guest</h3><p id="profileEmail"></p></div><button class="secondary profileLogout" type="button" id="signOutBtn">लॉगआउट</button></div><div class="customerTabs" role="tablist"><button type="button" class="customerTab active" data-customer-tab="orders">📦 मेरे ऑर्डर</button><button type="button" class="customerTab" data-customer-tab="addresses">📍 मेरे पते</button><button type="button" class="customerTab" data-customer-tab="profile">👤 प्रोफाइल</button><button type="button" class="customerTab" data-customer-tab="support">☎ सहायता</button></div><section class="customerPanel active" data-customer-panel="orders"><div class="customerPanelHead"><div><h3 class="historyTitle">आपके ऑर्डर</h3><p>अपने ऑर्डर और उनकी स्थिति देखें।</p></div><a class="secondary" href="#menu" id="orderAgainLink">मेन्यू देखें</a></div><div id="orderHistory" class="orderHistory"><p class="muted">आपके ऑर्डर यहाँ दिखेंगे।</p></div></section><section class="customerPanel" data-customer-panel="addresses"><div class="customerPanelHead"><div><h3>मेरे डिलीवरी पते</h3><p>अपना पता सेव करें ताकि अगली बार आसानी हो।</p></div></div><form id="savedAddressForm" class="savedAddressForm"><label for="savedAddressName">पते का नाम</label><input id="savedAddressName" maxlength="35" placeholder="घर, ऑफिस आदि" required><label for="savedAddressText">पूरा पता</label><textarea id="savedAddressText" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड" required></textarea><button class="primary" type="submit">पता सेव करें</button><p id="savedAddressMessage" role="status"></p></form><div id="savedAddressList" class="savedAddressList"><p class="muted">अभी कोई पता सेव नहीं है।</p></div></section><section class="customerPanel" data-customer-panel="profile"><div class="customerPanelHead"><div><h3>प्रोफाइल जानकारी</h3><p>अपना नाम और मोबाइल नंबर अपडेट करें।</p></div></div><form id="customerProfileForm" class="savedAddressForm"><label for="profileEditName">पूरा नाम</label><input id="profileEditName" maxlength="70" required><label for="profileEditPhone">मोबाइल नंबर</label><input id="profileEditPhone" type="tel" inputmode="numeric" maxlength="15" placeholder="मोबाइल नंबर"><label for="profileEditEmail">ईमेल</label><input id="profileEditEmail" type="email" disabled><button class="primary" type="submit">जानकारी अपडेट करें</button><p id="profileEditMessage" role="status"></p></form></section><section class="customerPanel" data-customer-panel="support"><div class="customerPanelHead"><div><h3>Quality Bakers सहायता</h3><p>ऑर्डर या मेन्यू से जुड़ी मदद के लिए संपर्क करें।</p></div></div><div class="supportLinks"><a href="https://wa.me/919918203207" target="_blank" rel="noopener">💬 WhatsApp पर संपर्क करें</a><a href="tel:9918203207">☎ 9918203207</a><a href="tel:8604665305">☎ 8604665305</a></div></section></div></div></div></section>
 <section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields" id="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="2" placeholder="खास निर्देश (वैकल्पिक)"></textarea>
 <div class="deliveryLocationBox">
 <strong data-hi="डिलीवरी लोकेशन चुनें" data-en="Choose delivery location">डिलीवरी लोकेशन चुनें</strong>
@@ -1481,7 +1591,7 @@ body.page-account #authCard .accountSubmit{min-height:50px!important}
 </div></div><button class="checkout" id="checkoutBtn" type="button">WhatsApp पर ऑर्डर भेजें ↗</button><p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p></div></div></section>
 <section class="section" id="about"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="aboutEyebrow">❤️ GOOD FOOD, GOOD MOOD</span><h2 id="aboutTitle">Quality Bakers क्यों?</h2></div></div><div class="aboutGrid"><div class="aboutBox"><h3 id="aboutBoxTitle">हर बाइट में स्वाद</h3><p id="aboutText">आपकी पसंद के पिज्जा, चाइनीज़, मोमोज़ और स्नैक्स। मेन्यू में दी गई कीमतें देखकर आइटम चुनें और अपना ऑर्डर WhatsApp पर भेजें।</p></div><div class="aboutBox" id="contact"><h3 id="contactTitle">संपर्क करें</h3><p id="contactDesc">ऑर्डर और जानकारी के लिए संपर्क करें।</p><div class="contactRows"><a class="contactRow" href="tel:9918203207"><span class="contactIcon">📞</span><span><small id="phoneLabel1">मोबाइल नंबर 1</small><strong>9918203207</strong></span></a><a class="contactRow" href="tel:8604665305"><span class="contactIcon">📞</span><span><small id="phoneLabel2">मोबाइल नंबर 2</small><strong>8604665305</strong></span></a><div class="contactRow"><span class="contactIcon">👨‍🍳</span><span><small id="ownerLabel">प्रोपराइटर</small><strong>शिवम अग्रहरि</strong></span></div></div></div></div></div></section>
 </main>
-<footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText">Good Food • Good Mood • Fresh Food</span></div></footer>
+<footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText" data-hi="अच्छा खाना • अच्छा मूड • ताज़ा भोजन" data-en="Good Food • Good Mood • Fresh Food">अच्छा खाना • अच्छा मूड • ताज़ा भोजन</span></div></footer>
 
 
 <script>
@@ -1548,48 +1658,27 @@ let heroLoadToken=0;
 const heroSlides=builtInMenuList.filter(item=>validFoodPhoto(item.photo));
 function renderHeroFood(){
  const host=document.getElementById("heroFoodCarousel");
- const image=document.getElementById("heroFoodImage");
- const nameNode=document.getElementById("heroFoodName");
- const categoryNode=document.getElementById("heroFoodCategory");
+ const track=document.getElementById("heroFoodTrack");
  const dotsNode=document.getElementById("heroFoodDots");
- if(!host||!image||!nameNode||!categoryNode||!dotsNode)return;
+ if(!host||!track||!dotsNode)return;
  const slides=heroSlides.filter(item=>!heroFailedPhotos.has(item.photo));
- if(!slides.length){
-  host.style.background="linear-gradient(135deg,#422b1c,#201713)";
-  image.removeAttribute("src");
-  nameNode.textContent=lang==="hi"?"हमारे स्वादिष्ट व्यंजन":"Our delicious menu";
-  categoryNode.textContent="QUALITY BAKERS";
-  dotsNode.replaceChildren();
-  host.classList.remove("is-changing");
-  return;
- }
+ if(!slides.length){track.innerHTML='<p class="heroNoFood">Quality Bakers</p>';dotsNode.replaceChildren();return}
  heroFoodIndex=((heroFoodIndex%slides.length)+slides.length)%slides.length;
- const item=slides[heroFoodIndex];
- const token=++heroLoadToken;
- const preload=new Image();
- preload.onload=()=>{
-  if(token!==heroLoadToken)return;
+ const visible=slides.map((item,i)=>({item,i}));
+ track.innerHTML=visible.map(({item,i})=>{
   const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
-  host.style.setProperty("--hero-photo", 'url("' + item.photo.replace(/["\\\\]/g,"") + '")');
-  image.src=item.photo;
-  image.alt=title+" — Quality Bakers";
-  nameNode.textContent=title;
-  categoryNode.textContent=((categoryNames[item.cat]||{} )[lang]||"QUALITY BAKERS").toUpperCase();
-  dotsNode.innerHTML=slides.map((_,i)=>'<i class="'+(i===heroFoodIndex?'active':'')+'"></i>').join("");
-  host.classList.remove("is-changing");
- };
- preload.onerror=()=>{
-  if(token!==heroLoadToken)return;
-  heroFailedPhotos.add(item.photo);
-  heroFoodIndex=0;
-  renderHeroFood();
- };
- preload.src=item.photo;
+  const category=((categoryNames[item.cat]||{})[lang]||"Quality Bakers");
+  return '<article class="heroFoodCard" data-slide="'+i+'"><div class="heroFoodPhoto"><img src="'+item.photo.replace(/["<>]/g,"")+'" alt="'+title.replace(/["<>]/g,"")+'" loading="'+(i<3?"eager":"lazy")+'"></div><div class="heroFoodCardText"><small>'+category+'</small><strong>'+title+'</strong></div></article>';
+ }).join("");
+ const cardWidth=track.querySelector(".heroFoodCard")?.getBoundingClientRect().width||0;
+ const gap=parseFloat(getComputedStyle(track).gap)||12;
+ track.style.transform='translateX(-'+(heroFoodIndex*(cardWidth+gap))+'px)';
+ dotsNode.innerHTML=slides.map((_,i)=>'<button type="button" class="heroDot '+(i===heroFoodIndex?'active':'')+'" data-hero-dot="'+i+'" aria-label="'+(lang==="hi"?"स्लाइड ":"Slide ")+(i+1)+'"></button>').join("");
 }
 function startHeroFoodCarousel(){
  renderHeroFood();
  if(heroFoodTimer)clearInterval(heroFoodTimer);
- heroFoodTimer=setInterval(()=>{heroFoodIndex++;renderHeroFood()},4200);
+ heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100);
 }
 
 const categoryNames={all:{hi:"सभी आइटम",en:"All items"},noodles:{hi:"Noodles & Rice",en:"Noodles & Rice"},starters:{hi:"Starters & Rolls",en:"Starters & Rolls"},snacks:{hi:"Momos & Snacks",en:"Momos & Snacks"},pizza:{hi:"Pizza",en:"Pizza"},cakes:{hi:"डिज़ाइनर केक",en:"Designer Cakes"}};
@@ -1617,7 +1706,7 @@ const hi=lang==="hi";
 $("langHi").classList.toggle("active",hi);$("langHi").setAttribute("aria-pressed",String(hi));
 $("langEn").classList.toggle("active",!hi);$("langEn").setAttribute("aria-pressed",String(!hi));
 $("topTag").textContent=hi?"🍕 ताज़ा खाना • शानदार स्वाद • साफ़-सुथरी तैयारी":"🍕 Fresh Food • Tasty Food • Hygienic Food";
-$("heroTitle").innerHTML=hi?"स्वाद ऐसा है कि<br><span>बार-बार आने का</span><br>मन करे!":"So tasty that<br><span>you’ll want to</span><br>come back again!";
+$("heroTitle").textContent=hi?"स्वाद ऐसा है कि बार-बार आने का मन करे!":"So delicious, you’ll want to come back again!";
 
 
 
@@ -1648,7 +1737,8 @@ $("useLiveLocationBtn").textContent=hi?"📍 मेरी Live Location ले�
 $("useManualLocationBtn").textContent=hi?"✍️ पता खुद लिखें":"✍️ Enter address manually";
 $("locationStatus").textContent=hi?"ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।":"Choose one delivery location method to continue.";
 
-$("footerText").textContent="Good Food • Good Mood • Fresh Food";
+$("footerText").textContent=hi?"अच्छा खाना • अच्छा मूड • ताज़ा भोजन":"Good Food • Good Mood • Fresh Food";
+document.querySelectorAll("[data-hi][data-en]").forEach(node=>{node.textContent=hi?node.dataset.hi:node.dataset.en});
 }
 let pendingAdd=null;
 let deliveryLocation=null;
@@ -1859,9 +1949,14 @@ function setMode(mode){
  authMode=mode;
  el("showLogin").classList.toggle("active",mode==="login");
  el("showRegister").classList.toggle("active",mode==="register");
- el("customerNameLabel").style.display=mode==="register"?"block":"none";
- el("accountName").style.display=mode==="register"?"block":"none";
+ el("customerNameLabel").hidden=mode!=="register";
+ el("accountName").hidden=mode!=="register";
  el("accountName").required=mode==="register";
+ el("customerPhoneLabel").hidden=mode!=="register";
+ el("accountPhone").hidden=mode!=="register";
+ el("accountPhone").required=mode==="register";
+ el("accountPassword").placeholder=mode==="register"?"कम से कम 6 अक्षर":"अपना पासवर्ड लिखें";
+ el("accountPassword").minLength=mode==="register"?6:0;
  el("authSubmit").textContent=mode==="login"?"लॉगिन करें":"अकाउंट बनाएँ";
  el("accountPassword").autocomplete=mode==="login"?"current-password":"new-password";
  say("");
@@ -1879,15 +1974,17 @@ el("resetPasswordBtn").addEventListener("click",async()=>{
 el("showRegister").addEventListener("click",()=>setMode("register"));
 el("customerAuthForm").addEventListener("submit",async e=>{
  e.preventDefault();const email=el("accountEmail").value.trim(),password=el("accountPassword").value;
- const name=el("accountName").value.trim();
+ const name=el("accountName").value.trim(),phone=el("accountPhone").value.trim();
  el("authSubmit").disabled=true;say("कृपया प्रतीक्षा करें…");
  try{
   let credential;
   if(authMode==="register"){
    if(!name)throw new Error("कृपया अपना नाम लिखें।");
+   if(!phone)throw new Error("कृपया मोबाइल नंबर लिखें।");
+   if(!/^[0-9+() -]{10,15}$/.test(phone))throw new Error("मोबाइल नंबर सही लिखें।");
    credential=await createUserWithEmailAndPassword(auth,email,password);
    await updateProfile(credential.user,{displayName:name});
-   await setDoc(doc(db,"customers",credential.user.uid),{uid:credential.user.uid,name,email,createdAt:serverTimestamp()},{merge:true});
+   await setDoc(doc(db,"customers",credential.user.uid),{uid:credential.user.uid,name,email,phone,createdAt:serverTimestamp()},{merge:true});
    say("अकाउंट बन गया। आपका स्वागत है!");
   }else{
    credential=await signInWithEmailAndPassword(auth,email,password);
@@ -1994,6 +2091,12 @@ window.QB_CREATE_ORDER=async({customerName,customerPhone,note,deliveryLocation,i
  return result.id;
 };
 setMode("login");
+
+document.getElementById("heroFoodCarousel")?.addEventListener("touchstart",()=>{if(heroFoodTimer)clearInterval(heroFoodTimer)},{passive:true});
+document.getElementById("heroFoodCarousel")?.addEventListener("touchend",()=>{if(heroFoodTimer)clearInterval(heroFoodTimer);heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100)},{passive:true});
+document.getElementById("heroFoodDots")?.addEventListener("click",e=>{const b=e.target.closest("[data-hero-dot]");if(!b)return;heroFoodIndex=Number(b.dataset.heroDot)||0;renderHeroFood();if(heroFoodTimer)clearInterval(heroFoodTimer);heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100)});
+document.getElementById("togglePassword")?.addEventListener("click",()=>{const input=document.getElementById("accountPassword"),button=document.getElementById("togglePassword");const show=input.type==="password";input.type=show?"text":"password";button.textContent=show?"🙈":"👁";button.setAttribute("aria-pressed",String(show));button.setAttribute("aria-label",show?"पासवर्ड छिपाएँ":"पासवर्ड दिखाएँ")});
+
 </script>
 </body>
 </html>
