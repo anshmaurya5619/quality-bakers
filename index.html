@@ -827,6 +827,62 @@ html.qb-compact-device .heroFoodCarousel>img{
   .heroCopy h1{font-size:clamp(1.65rem,6.2vw,2.25rem)!important;line-height:1.17!important}
 }
 
+
+/* Slider image dimensions follow each source photo: no cropping and no letterbox gaps. */
+.heroArt,
+html.qb-compact-device .heroArt{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+.heroFoodCarousel,
+html.qb-compact-device .heroFoodCarousel{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+  background:transparent!important;
+}
+.heroFoodCarousel>img,
+html.qb-compact-device .heroFoodCarousel>img{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  object-fit:initial!important;
+  object-position:center!important;
+  padding:0!important;
+  margin:0!important;
+  transform:none!important;
+  background:transparent!important;
+}
+.heroFoodShade{position:absolute!important;inset:0!important}
+.heroFoodCaption{position:absolute!important;left:20px!important;right:20px!important;bottom:32px!important}
+.heroFoodDots{position:absolute!important;right:18px!important;bottom:14px!important}
+@media(max-width:600px){
+  .heroArt,html.qb-compact-device .heroArt{height:auto!important;min-height:0!important}
+  .heroFoodCarousel,html.qb-compact-device .heroFoodCarousel{height:auto!important}
+  .heroFoodCarousel>img,html.qb-compact-device .heroFoodCarousel>img{
+    width:100%!important;height:auto!important;object-fit:initial!important;padding:0!important
+  }
+  .heroFoodCaption{left:13px!important;right:13px!important;bottom:27px!important}
+  .heroFoodDots{right:13px!important;bottom:11px!important}
+}
+
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
