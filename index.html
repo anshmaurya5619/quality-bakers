@@ -1674,6 +1674,27 @@ body.page-account .footer{margin-top:auto}
  .heroFoodDots .heroDot{flex-basis:6px!important;width:6px!important;height:6px!important;min-width:6px!important}
  .heroFoodDots .heroDot.active{flex-basis:17px!important;width:17px!important}
 }
+
+/* Stable home slider: real menu photos, visible immediately, sized by its cards */
+.heroGrid{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:16px!important}
+.heroArt{display:block!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;overflow:visible!important;padding:0!important;margin:0!important;border:0!important;border-radius:14px!important;background:transparent!important;box-shadow:none!important}
+.heroFoodCarousel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;overflow:visible!important;padding:0!important;margin:0!important;border:0!important;border-radius:14px!important;background:transparent!important}
+.heroFoodTrack{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;width:100%!important;height:auto!important;padding:0!important;margin:0!important;transform:none!important;transition:none!important}
+.heroFoodCard{display:flex!important;flex-direction:column!important;flex-basis:auto!important;width:100%!important;height:auto!important;min-width:0!important;max-width:none!important;overflow:hidden!important;border:1px solid #cdbb9f!important;border-radius:12px!important;background:#f4ecdf!important;box-shadow:0 5px 16px #39271416!important}
+.heroFoodPhoto{display:block!important;width:100%!important;height:auto!important;aspect-ratio:4/3!important;flex:0 0 auto!important;overflow:hidden!important;background:#e8dfd1!important}
+.heroFoodPhoto img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;background:#e8dfd1!important}
+.heroFoodCardText{display:grid!important;gap:3px!important;min-height:58px!important;padding:8px 9px 10px!important;color:#30271f!important}
+.heroFoodCardText small{font-size:.7rem!important;line-height:1.2!important;color:#80613d!important}
+.heroFoodCardText strong{font-size:.88rem!important;line-height:1.25!important}
+.heroFoodDots{position:static!important;inset:auto!important;display:flex!important;justify-content:center!important;align-items:center!important;flex-wrap:nowrap!important;gap:6px!important;width:100%!important;max-width:100%!important;margin:10px auto 0!important;padding:0!important;overflow:hidden!important}
+.heroFoodDots .heroDot{flex:0 0 8px!important;width:8px!important;height:8px!important;min-width:8px!important;padding:0!important;border:0!important;border-radius:50%!important;background:#b8a58c!important}
+.heroFoodDots .heroDot.active{flex-basis:20px!important;width:20px!important;border-radius:9px!important;background:#81572e!important}
+.heroFoodCarousel:before{display:none!important}
+body:not(.customer-signed-in) #cartOpen{display:none!important}
+body.customer-signed-in #cartOpen{display:inline-flex!important}
+body.customer-signed-in .headerActions .accountNavLink{background:#365c49!important;border-color:#365c49!important;color:#fff!important}
+body.customer-signed-in .headerActions .accountNavLink:after{content:"✓";display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#fff;color:#365c49;font-size:12px}
+@media(max-width:600px){.heroFoodTrack{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.heroFoodCardText{min-height:52px!important;padding:7px!important}.heroFoodCardText strong{font-size:.82rem!important}.heroFoodDots{gap:4px!important;margin-top:8px!important}.heroFoodDots .heroDot{flex-basis:6px!important;width:6px!important;height:6px!important;min-width:6px!important}.heroFoodDots .heroDot.active{flex-basis:17px!important;width:17px!important}}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1683,7 +1704,10 @@ body.page-account .footer{margin-top:auto}
 <main id="home">
 <section class="hero"><div class="wrap heroGrid">
 <div class="heroArt"><div class="heroFoodCarousel heroFoodCards" id="heroFoodCarousel" aria-label="मेन्यू में उपलब्ध खाने की तस्वीरें">
-<div class="heroFoodTrack" id="heroFoodTrack"></div>
+<div class="heroFoodTrack" id="heroFoodTrack">
+<article class="heroFoodCard"><div class="heroFoodPhoto"><img src="https://cdn2.clevup.in/474920/VegChowmaincopy-1769401725309.jpeg?format=webp&amp;width=1200" alt="वेज चाउमीन" fetchpriority="high"></div><div class="heroFoodCardText"><small>Noodles &amp; Rice</small><strong>वेज चाउमीन</strong></div></article>
+<article class="heroFoodCard"><div class="heroFoodPhoto"><img src="https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg" alt="पनीर चाउमीन" fetchpriority="high"></div><div class="heroFoodCardText"><small>Noodles &amp; Rice</small><strong>पनीर चाउमीन</strong></div></article>
+</div>
 <div class="heroFoodDots" id="heroFoodDots" aria-label="Slider pagination"></div>
 </div></div>
 <div class="heroCopy"><div class="heroCopyInner"><span class="heroKicker" data-hi="अच्छा खाना · अच्छा मूड" data-en="GOOD FOOD · GOOD MOOD">अच्छा खाना · अच्छा मूड</span><h1 id="heroTitle">स्वाद ऐसा है कि बार-बार आने का मन करे!</h1><p class="heroTagline" data-hi="ताज़ा सामग्री • बेहतरीन स्वाद • हर बार कुछ खास" data-en="Fresh ingredients • Great taste • Something special every time">ताज़ा सामग्री • बेहतरीन स्वाद • हर बार कुछ खास</p></div></div>
@@ -1762,8 +1786,10 @@ const heroFailedPhotos=new Set();
 let heroLoadToken=0;
 // Use the same built-in dish photographs shown on menu cards; Firestore updates
 // must never replace the homepage slideshow with malformed or missing URLs.
-const heroSlides=builtInMenuList.filter(item=>validFoodPhoto(item.photo));
+let heroSlides=builtInMenuList.filter(item=>validFoodPhoto(item.photo));
 function renderHeroFood(){
+ heroSlides=(items||builtInMenuList).filter(item=>item&&item.available!==false&&validFoodPhoto(item.photo));
+ if(!heroSlides.length)heroSlides=builtInMenuList.filter(item=>validFoodPhoto(item.photo));
  const host=document.getElementById("heroFoodCarousel");
  const track=document.getElementById("heroFoodTrack");
  const dotsNode=document.getElementById("heroFoodDots");
@@ -2063,55 +2089,8 @@ $("year").textContent=new Date().getFullYear();
 renderAll();
 // Independent slideshow runs in the next script, even if another page feature fails.
 </script>
-<script>
-(function(){
- const hero=document.getElementById("heroFoodCarousel"),img=document.getElementById("heroFoodImage");
- const caption=document.getElementById("heroFoodName"),category=document.getElementById("heroFoodCategory"),dots=document.getElementById("heroFoodDots");
- if(!hero||!img||!caption||!category)return;
- const fallback=[
-  {name:"पनीर चाउमीन",en:"Paneer Chowmein",cat:"Noodles & Rice",url:"https://static.joonsite.com/storage/119636/media/2510141316559555.jpeg"},
-  {name:"बर्गर",en:"Burger",cat:"Momos & Snacks",url:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=85"},
-  {name:"डिज़ाइनर केक",en:"Designer Cake",cat:"Designer Cakes",url:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1000&q=85"}
- ];
- let index=0,seq=0;
- function slides(){
-  const cards=Array.from(document.querySelectorAll("#menuGrid .foodCard"));
-  const fromMenu=cards.map(card=>{
-   const photo=card.querySelector(".foodPic img");
-   const title=card.querySelector(".foodInfo h3");
-   const en=card.querySelector(".foodInfo .en");
-   const cat=card.querySelector(".tag");
-   return photo&&title&&/^https?:/.test(photo.src)?{name:title.textContent,en:en?en.textContent:title.textContent,cat:cat?cat.textContent:"Quality Bakers",url:photo.src}:null;
-  }).filter(Boolean);
-  return fromMenu.length?fromMenu:fallback;
- }
- function show(){
-  const options=slides();
-  if(!options.length)return;
-  index%=options.length;
-  const selected=options[index],mySeq=++seq;
-  const test=new Image();
-  test.onload=()=>{
-   if(mySeq!==seq)return;
-   img.src=selected.url;
-   img.alt=selected.en+" — Quality Bakers";
-   img.style.opacity="1";
-   caption.textContent=document.getElementById("langEn")?.classList.contains("active")?selected.en:selected.name;
-   category.textContent=selected.cat.toUpperCase();
-   if(dots)dots.innerHTML=options.slice(0,12).map((_,i)=>'<i class="'+(i===index?'active':'')+'"></i>').join("");
-  };
-  test.onerror=()=>{
-   if(mySeq!==seq)return;
-   index=(index+1)%options.length;
-   if(index!==0)show();
-   else{img.removeAttribute("src");caption.textContent="Quality Bakers";}
-  };
-  test.src=selected.url;
- }
- show();
- setInterval(()=>{index++;show()},3100);
-})();
-</script>
+<!-- Removed obsolete single-image carousel; the menu-driven card carousel above is the only slider. -->
+
 <script type="module">
 import { doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { db } from "./firebase-client.js";
@@ -2258,7 +2237,10 @@ onAuthStateChanged(auth,async user=>{
   el("profileName").textContent=user.displayName||"आपका अकाउंट";
   el("profileEmail").textContent=user.email||"";
   el("customerName").value=user.displayName||"";
-  el("accountNavLink").classList.add("hidden");
+  el("accountNavLink").classList.remove("hidden");
+  const accountLabel=el("accountNavLink").querySelector("span[data-hi]");
+  if(accountLabel){accountLabel.dataset.hi="मेरा अकाउंट";accountLabel.dataset.en="My Account";accountLabel.textContent=lang==="hi"?"मेरा अकाउंट":"My Account";}
+  el("accountNavLink").setAttribute("aria-label",lang==="hi"?"मेरा अकाउंट खोलें":"Open my account");
   el("drawerAccountLink").querySelector("span").textContent="मेरा अकाउंट";
   await Promise.all([loadOrders(user),loadCustomerDetails(user)]);
   renderMenu();
@@ -2269,6 +2251,9 @@ onAuthStateChanged(auth,async user=>{
   document.body.classList.remove("customer-signed-in");
   el("drawerLogoutBtn").hidden=true;
   el("accountNavLink").classList.remove("hidden");
+  const accountLabel=el("accountNavLink").querySelector("span[data-hi]");
+  if(accountLabel){accountLabel.dataset.hi="लॉगिन / अकाउंट";accountLabel.dataset.en="Login / Account";accountLabel.textContent=lang==="hi"?"लॉगिन / अकाउंट":"Login / Account";}
+  el("accountNavLink").setAttribute("aria-label",lang==="hi"?"लॉगिन या अकाउंट खोलें":"Open login or account");
   el("drawerAccountLink").querySelector("span").textContent="लॉगिन / मेरा अकाउंट";
   el("authCard").classList.remove("hidden");el("profileCard").classList.add("hidden");
   el("profileName").textContent="Guest";el("profileEmail").textContent="लॉगिन करने पर आपकी जानकारी यहाँ दिखेगी।";
