@@ -1593,6 +1593,8 @@ body.page-account .footer{margin-top:auto}
 .orderPane .locationChoice:disabled{opacity:.6;cursor:wait}
 
 .customerLiveTrack{display:flex;align-items:center;gap:12px;margin:14px 0;padding:12px;border-radius:10px;background:#e4eee3;border:1px solid #bfd3bd;color:#31583a}.customerLiveTrack p{margin:3px 0 6px;font-size:.84rem}.customerLiveTrack a{color:#245b38;font-weight:800;text-decoration:underline}.customerLiveTrack.waiting{background:#f0e8da;border-color:#d8c7ad;color:#695237}.truckPulse{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;font-size:22px;animation:truckGlow 1.7s infinite}@keyframes truckGlow{50%{box-shadow:0 0 0 8px #77a77a22;transform:scale(1.04)}}
+
+.addbtn.added{background:#315b48!important;color:#fff!important;border-color:#315b48!important;transform:scale(.98)}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1842,6 +1844,22 @@ function showView(view){
  const accountLink=document.querySelector('.headerActions a[href="#account"]');if(accountLink){if(view==="account")accountLink.setAttribute("aria-current","page");else accountLink.removeAttribute("aria-current");}
  if(view==="account"||view==="cart")document.getElementById(view).scrollIntoView({behavior:"smooth",block:"start"});
 }
+function highlightDrawerSection(id){
+ document.querySelectorAll(".drawerLinks a[aria-current='page']").forEach(a=>a.removeAttribute("aria-current"));
+ const link=document.querySelector('.drawerLinks a[href="#'+id+'"]:not([data-account-tab])');
+ if(link)link.setAttribute("aria-current","page");
+}
+function startSectionHighlighting(){
+ const ids=["home","menu","about","contact"];
+ const targets=ids.map(id=>document.getElementById(id)).filter(Boolean);
+ if(!("IntersectionObserver" in window))return;
+ const observer=new IntersectionObserver(entries=>{
+  const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+  if(visible&&!document.body.classList.contains("page-account")&&!document.body.classList.contains("page-cart"))highlightDrawerSection(visible.target.id);
+ },{rootMargin:"-24% 0px -58% 0px",threshold:[0,.1,.25,.5]});
+ targets.forEach(el=>observer.observe(el));
+}
+startSectionHighlighting();
 function openCart(){showView("cart")}
 function openAccount(){showView("account")}
 function closeCart(){showView("home")}
@@ -1864,7 +1882,11 @@ function activateCustomerTab(tab){
 document.querySelectorAll("[data-customer-tab]").forEach(b=>b.addEventListener("click",()=>activateCustomerTab(b.dataset.customerTab)));
 $("orderAgainLink").addEventListener("click",()=>showView("home"));
 $("filters").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;activeCat=b.dataset.cat;renderFilters();renderMenu()});
-$("menuGrid").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(b)addToCart(b.dataset.add)});
+$("menuGrid").addEventListener("click",e=>{
+ const b=e.target.closest("[data-add]");if(!b)return;
+ const oldText=b.textContent;addToCart(b.dataset.add);
+ if(window.QB_AUTH_USER){b.textContent=lang==="hi"?"✓ कार्ट में जुड़ गया":"✓ Added";b.classList.add("added");b.disabled=true;setTimeout(()=>{if(b.isConnected){b.textContent=oldText;b.classList.remove("added");b.disabled=false}},1200)}
+});
 $("cartItems").addEventListener("click",e=>{
 const q=e.target.closest("[data-qty]"),r=e.target.closest("[data-remove]");
 if(q){const item=cart.find(x=>x.key===q.dataset.qty);if(item){item.qty+=Number(q.dataset.delta);if(item.qty<=0)cart=cart.filter(x=>x.key!==item.key)}updateCart()}
