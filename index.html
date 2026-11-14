@@ -1586,6 +1586,11 @@ body.page-account .footer{margin-top:auto}
 .orderSuccess{margin-top:14px;padding:14px;border-radius:10px;background:#e2efe4;color:#245536;line-height:1.55}
 .cartPanel .cartStatus{margin:12px 0 0}
 @media(max-width:540px){.orderStepper{gap:6px;padding:9px}.orderStepper .step{font-size:.76rem;gap:5px}.orderStepper .step b{width:27px;height:27px}.orderPane{min-height:240px}}
+
+/* Single active navigation item; no false multi-highlight */
+.drawerLinks a[aria-current="page"]{background:#dfc9a9!important;color:#382819!important;border-left:4px solid #986c3b!important;font-weight:900!important}
+.drawerLinks a:not([aria-current="page"]){background:transparent!important;border-left:4px solid transparent!important}
+.orderPane .locationChoice:disabled{opacity:.6;cursor:wait}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1764,27 +1769,33 @@ let deliveryLocation=null;
 window.QB_AUTH_USER=null;
 function setLocationStatus(message){$("locationStatus").textContent=message}
 $("useLiveLocationBtn").addEventListener("click",()=>{
- if(!navigator.geolocation){setLocationStatus("इस ब्राउज़र में Live Location उपलब्ध नहीं है। पता खुद लिखें।");return}
- setLocationStatus("आपकी अनुमति से Live Location ली जा रही है…");
- navigator.geolocation.getCurrentPosition(pos=>{
-  deliveryLocation={mode:"gps",latitude:Number(pos.coords.latitude),longitude:Number(pos.coords.longitude),accuracyMeters:Math.round(pos.coords.accuracy),capturedAt:new Date().toISOString()};
-  $("manualAddressWrap").hidden=false;
-  $("useLiveLocationBtn").classList.add("active");
-  $("useManualLocationBtn").classList.remove("active");
-  setLocationStatus("Live Location मिल गई (लगभग "+Math.round(pos.coords.accuracy)+" मीटर की सटीकता)। चाहें तो मकान/लैंडमार्क भी लिखें।");
+ if(!navigator.geolocation){setLocationStatus("इस ब्राउज़र में लोकेशन उपलब्ध नहीं है। पता खुद लिखें।");return}
+ setLocationStatus("GPS लोकेशन ली जा रही है… कृपया अनुमति दें।");
+ $("useLiveLocationBtn").disabled=true;
+ navigator.geolocation.getCurrentPosition(async pos=>{
+  const latitude=Number(pos.coords.latitude),longitude=Number(pos.coords.longitude);
+  deliveryLocation={mode:"gps",latitude,longitude,accuracyMeters:Math.round(pos.coords.accuracy),capturedAt:new Date().toISOString()};
+  $("manualAddressWrap").hidden=false;$("useLiveLocationBtn").classList.add("active");$("useManualLocationBtn").classList.remove("active");
+  $("customerAddress").value=latitude.toFixed(6)+", "+longitude.toFixed(6);
+  setLocationStatus("लोकेशन मिल गई। पता अपने आप भर रहे हैं…");
+  try{
+   const url="https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+encodeURIComponent(latitude)+"&lon="+encodeURIComponent(longitude)+"&zoom=18&addressdetails=1";
+   const response=await fetch(url,{headers:{"Accept":"application/json"}});
+   if(!response.ok)throw new Error("Address lookup unavailable");
+   const data=await response.json();
+   if(data.display_name)$("customerAddress").value=String(data.display_name).slice(0,500);
+   setLocationStatus("✓ लाइव लोकेशन और पता भर गया। मकान/फ्लैट/लैंडमार्क जाँचकर सही कर लें। GPS सटीकता लगभग "+Math.round(pos.coords.accuracy)+" मीटर।");
+  }catch(err){setLocationStatus("GPS लोकेशन सेव है। पता अपने आप नहीं मिला, इसलिए नीचे मकान नंबर/लैंडमार्क खुद जोड़ दें।")}
+  finally{$("useLiveLocationBtn").disabled=false}
  },err=>{
-  deliveryLocation=null;
-  $("manualAddressWrap").hidden=false;
-  setLocationStatus(err.code===1?"Location permission नहीं मिली। पता खुद लिखें।":"Live Location नहीं मिल सकी। पता खुद लिखें।");
- },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+  deliveryLocation=null;$("manualAddressWrap").hidden=false;$("useLiveLocationBtn").disabled=false;
+  setLocationStatus(err.code===1?"लोकेशन अनुमति नहीं मिली। ब्राउज़र में अनुमति दें या पता खुद लिखें।":"लोकेशन नहीं मिल सकी। GPS चालू करके फिर कोशिश करें या पता खुद लिखें।");
+ },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 });
 $("useManualLocationBtn").addEventListener("click",()=>{
- deliveryLocation=null;
- $("manualAddressWrap").hidden=false;
- $("customerAddress").focus();
- $("useManualLocationBtn").classList.add("active");
- $("useLiveLocationBtn").classList.remove("active");
- setLocationStatus("अपना पूरा डिलीवरी पता लिखें।");
+ deliveryLocation=null;$("manualAddressWrap").hidden=false;$("customerAddress").focus();
+ $("useManualLocationBtn").classList.add("active");$("useLiveLocationBtn").classList.remove("active");
+ setLocationStatus("पूरा पता लिखें: मकान नंबर, गली, मोहल्ला, शहर और पिन कोड।");
 });
 function addToCart(id){
 if(!window.QB_AUTH_USER){
@@ -1820,10 +1831,11 @@ function showView(view){
  account.classList.toggle("view-active",view==="account");
  cartView.classList.toggle("view-active",view==="cart");
  document.querySelectorAll(".navlinks a,.drawerLinks a").forEach(a=>a.removeAttribute("aria-current"));
- document.querySelectorAll('.drawerLinks a[data-view],.drawerLinks a[data-account-tab]').forEach(a=>{
-  const tab=a.dataset.accountTab;
-  const target=a.dataset.view;
-  if((view==="account"&&(target==="account"||!!tab))||(view==="cart"&&target==="cart")||(view==="home"&&target==="home"))a.setAttribute("aria-current","page");
+ const activeTarget=view==="cart"?"cart":view==="account"?"account":(location.hash.replace("#","")||"home");
+ document.querySelectorAll(".drawerLinks a[href]").forEach(a=>{
+  const href=a.getAttribute("href");
+  if(href==="#"+activeTarget && !a.hasAttribute("data-account-tab"))a.setAttribute("aria-current","page");
+  if(view==="account"&&a.dataset.accountTab==="orders")a.setAttribute("aria-current","page");
  });
  const accountLink=document.querySelector('.headerActions a[href="#account"]');if(accountLink){if(view==="account")accountLink.setAttribute("aria-current","page");else accountLink.removeAttribute("aria-current");}
  if(view==="account"||view==="cart")document.getElementById(view).scrollIntoView({behavior:"smooth",block:"start"});
@@ -2098,6 +2110,7 @@ onAuthStateChanged(auth,async user=>{
   el("drawerAccountLink").querySelector("span").textContent="मेरा अकाउंट";
   await Promise.all([loadOrders(user),loadCustomerDetails(user)]);
   renderMenu();
+  if(document.body.classList.contains("page-account"))showView("home");
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   document.body.classList.remove("customer-signed-in");
