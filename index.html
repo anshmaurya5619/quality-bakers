@@ -1595,6 +1595,8 @@ body.page-account .footer{margin-top:auto}
 .customerLiveTrack{display:flex;align-items:center;gap:12px;margin:14px 0;padding:12px;border-radius:10px;background:#e4eee3;border:1px solid #bfd3bd;color:#31583a}.customerLiveTrack p{margin:3px 0 6px;font-size:.84rem}.customerLiveTrack a{color:#245b38;font-weight:800;text-decoration:underline}.customerLiveTrack.waiting{background:#f0e8da;border-color:#d8c7ad;color:#695237}.truckPulse{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;font-size:22px;animation:truckGlow 1.7s infinite}@keyframes truckGlow{50%{box-shadow:0 0 0 8px #77a77a22;transform:scale(1.04)}}
 
 .addbtn.added{background:#315b48!important;color:#fff!important;border-color:#315b48!important;transform:scale(.98)}
+
+.heroFoodPhoto.photoUnavailable{display:grid;place-items:center;background:linear-gradient(135deg,#dfcfb8,#f4e9d8)}.heroFoodPhoto.photoUnavailable:after{content:"🍽️";font-size:clamp(2rem,8vw,4rem);opacity:.75}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1696,7 +1698,7 @@ function renderHeroFood(){
  track.innerHTML=visible.map(({item,i})=>{
   const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
   const category=((categoryNames[item.cat]||{})[lang]||"Quality Bakers");
-  return '<article class="heroFoodCard" data-slide="'+i+'"><div class="heroFoodPhoto"><img src="'+item.photo.replace(/["<>]/g,"")+'" alt="'+title.replace(/["<>]/g,"")+'" loading="'+(i<3?"eager":"lazy")+'"></div><div class="heroFoodCardText"><small>'+category+'</small><strong>'+title+'</strong></div></article>';
+  return '<article class="heroFoodCard" data-slide="'+i+'"><div class="heroFoodPhoto"><img src="'+item.photo.replace(/["<>]/g,"")+'" alt="'+title.replace(/["<>]/g,"")+'" loading="'+(i<3?"eager":"lazy")+'" onerror="this.onerror=null;this.closest(\'.heroFoodPhoto\').classList.add(\'photoUnavailable\');this.remove();"></div><div class="heroFoodCardText"><small>'+category+'</small><strong>'+title+'</strong></div></article>';
  }).join("");
  const cardWidth=track.querySelector(".heroFoodCard")?.getBoundingClientRect().width||0;
  const gap=parseFloat(getComputedStyle(track).gap)||12;
