@@ -44,12 +44,29 @@ service cloud.firestore {
         && request.resource.data.total >= 0;
       allow read: if isOwner()
         || (signedIn() && resource.data.customerUid == request.auth.uid);
+      // Owner can update order status or publish their current delivery GPS.
       allow update: if isOwner()
-        && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['status','updatedAt'])
-        && request.resource.data.status in [
-          'placed','confirmed','preparing','ready','completed','cancelled'
-        ];
+        && (
+          (
+            request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status','updatedAt'])
+            && request.resource.data.status in [
+              'placed','confirmed','preparing','ready','completed','cancelled'
+            ]
+          )
+          ||
+          (
+            request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['ownerLocation','trackingUpdatedAt'])
+            && request.resource.data.ownerLocation is map
+            && request.resource.data.ownerLocation.latitude is number
+            && request.resource.data.ownerLocation.longitude is number
+            && request.resource.data.ownerLocation.latitude >= -90
+            && request.resource.data.ownerLocation.latitude <= 90
+            && request.resource.data.ownerLocation.longitude >= -180
+            && request.resource.data.ownerLocation.longitude <= 180
+          )
+        );
       allow delete: if isOwner();
     }
 
