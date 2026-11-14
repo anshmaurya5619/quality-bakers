@@ -115,7 +115,7 @@ function render(){
  }).join("")||'<p class="muted">इस फ़िल्टर में कोई ऑर्डर नहीं है।</p>';
 }
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$"customerSearch").addEventListener("input",renderCustomerDirectory);$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);$("enableAlerts").addEventListener("click",enableAlerts);
+$("customerSearch").addEventListener("input",renderCustomerDirectory);$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);$("enableAlerts").addEventListener("click",enableAlerts);
 $("orders").addEventListener("click",async e=>{
  const start=e.target.closest("[data-track-start]");
  if(start){
