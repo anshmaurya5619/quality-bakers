@@ -2145,7 +2145,7 @@ onAuthStateChanged(auth,async user=>{
   el("drawerAccountLink").querySelector("span").textContent="मेरा अकाउंट";
   await Promise.all([loadOrders(user),loadCustomerDetails(user)]);
   renderMenu();
-  if(document.body.classList.contains("page-account"))showView("home");
+  if(document.body.classList.contains("page-account")){showView("home");document.getElementById("menu")?.scrollIntoView({behavior:"smooth",block:"start"});highlightDrawerSection("menu");}
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   if(customerOrdersUnsub){customerOrdersUnsub();customerOrdersUnsub=null}
