@@ -99,7 +99,7 @@ $("orders").addEventListener("click",async e=>{
   trackingOrderId=id;lastTrackWrite=0;$("dashStatus").textContent="Owner GPS permission माँगी जा रही है…";
   trackingWatchId=navigator.geolocation.watchPosition(async pos=>{
    const now=Date.now();if(now-lastTrackWrite<8000)return;lastTrackWrite=now;
-   const ownerLocation={latitude:Number(pos.coords.latitude),longitude:Number(pos.coords.longitude),accuracyMeters:Math.round(pos.coords.accuracy),capturedAt:new Date().toISOString()};
+   const ownerLocation={latitude:Number(pos.coords.latitude),longitude:Number(pos.coords.longitude),accuracyMeters:Math.round(pos.coords.accuracy),capturedAt:new Date().toISOString(),active:true};
    try{await updateDoc(doc(db,"orders",id),{ownerLocation,trackingUpdatedAt:serverTimestamp()});$("dashStatus").textContent="🚚 Order #"+id.slice(-8)+" के लिए आपकी live location साझा हो रही है।"}
    catch(err){$("dashStatus").textContent="Location update नहीं हुई: "+(err.code||err.message)}
   },err=>{$("dashStatus").textContent="GPS error: "+err.message;trackingWatchId=null;trackingOrderId=null},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
@@ -108,6 +108,8 @@ $("orders").addEventListener("click",async e=>{
  const stop=e.target.closest("[data-track-stop]");
  if(stop&&stop.dataset.trackStop===trackingOrderId){
   if(trackingWatchId!==null)navigator.geolocation.clearWatch(trackingWatchId);
+  const row=allOrders.find(x=>x.id===trackingOrderId);
+  if(row?.ownerLocation){try{await updateDoc(doc(db,"orders",trackingOrderId),{ownerLocation:{...row.ownerLocation,active:false},trackingUpdatedAt:serverTimestamp()})}catch(err){$("dashStatus").textContent="Tracking pause update नहीं हुआ: "+(err.code||err.message)}}
   trackingWatchId=null;trackingOrderId=null;$("dashStatus").textContent="Live location sharing बंद कर दी गई।";return;
  }
  const b=e.target.closest("[data-save]");if(!b)return;const id=b.dataset.save,s=$("orders").querySelector('[data-status="'+CSS.escape(id)+'"]');if(!s)return;b.disabled=true;try{await updateDoc(doc(db,"orders",id),{status:s.value,updatedAt:serverTimestamp()});const row=allOrders.find(x=>x.id===id);if(row)row.status=s.value;render();$("dashStatus").textContent="Order status updated."}catch(err){$("dashStatus").textContent="Status update failed: "+(err.code||err.message);b.disabled=false}
