@@ -2101,7 +2101,7 @@ onSnapshot(menuRef,snap=>{
 </script>
 <script type="module">
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 
 let authMode="login";
@@ -2228,9 +2228,39 @@ async function loadOrders(user){
   });
  }catch(err){console.error("Customer order history could not be loaded:",err.code||err.message);el("orderHistory").innerHTML='<p class="muted">ऑर्डर अभी उपलब्ध नहीं हैं। Firestore rules और इंटरनेट कनेक्शन जाँचें।</p>'}
 }
+let announcementUnsub=null;
+function startCustomerAnnouncements(user){
+ if(announcementUnsub)announcementUnsub();
+ const feed=query(collection(db,"announcements"),orderBy("createdAt","desc"),limit(20));
+ let first=true;
+ announcementUnsub=onSnapshot(feed,snap=>{
+  const fresh=snap.docChanges().filter(change=>change.type==="added").map(change=>({id:change.doc.id,...change.doc.data()}));
+  if(first){
+   first=false;
+   const latest=snap.docs[0];
+   if(latest){
+    const item={id:latest.id,...latest.data()};
+    const key="qb-announcement-seen-"+user.uid;
+    if(localStorage.getItem(key)!==item.id)showCustomerAnnouncement(item,key);
+   }
+   return;
+  }
+  fresh.forEach(item=>showCustomerAnnouncement(item,"qb-announcement-seen-"+user.uid));
+ },err=>console.warn("Customer announcements unavailable:",err.code||err.message));
+}
+function showCustomerAnnouncement(item,key){
+ const title=String(item.title||"Quality Bakers Update").slice(0,80);
+ const message=String(item.message||"").slice(0,600);
+ showToast("📣 "+title+" — "+message);
+ try{localStorage.setItem(key,item.id)}catch(e){}
+ if("Notification" in window&&Notification.permission==="granted"){
+  try{const n=new Notification(title,{body:message,tag:"qb-announcement-"+item.id});n.onclick=()=>{window.focus();n.close()}}catch(e){}
+ }
+}
 onAuthStateChanged(auth,async user=>{
  window.QB_AUTH_USER=user||null;
  if(user){
+  startCustomerAnnouncements(user);
   document.body.classList.add("customer-signed-in");
   el("drawerLogoutBtn").hidden=false;
   el("authCard").classList.add("hidden");el("profileCard").classList.remove("hidden");
@@ -2248,6 +2278,7 @@ onAuthStateChanged(auth,async user=>{
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
   if(customerOrdersUnsub){customerOrdersUnsub();customerOrdersUnsub=null}
+  if(announcementUnsub){announcementUnsub();announcementUnsub=null}
   document.body.classList.remove("customer-signed-in");
   el("drawerLogoutBtn").hidden=true;
   el("accountNavLink").classList.remove("hidden");
