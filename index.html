@@ -1727,7 +1727,7 @@ $("menuGrid").innerHTML=shown.map(i=>`<article class="foodCard ${i.cat==="pizza"
 <div class="addrow"><select id="size-${i.id}" aria-label="Choose size for ${i.en}">${i.prices.map((p,n)=>`<option value="${n}">${p[0]==="Regular"?(lang==="hi"?"रेगुलर":"Regular"):p[0]} · ${money(p[1])}</option>`).join("")}</select>${window.QB_AUTH_USER?`<button class="addbtn" data-add="${i.id}" type="button" ${i.available===false?"disabled":""}>${i.available===false?(lang==="hi"?"अभी उपलब्ध नहीं":"Out of stock"):(lang==="hi"?"＋ जोड़ें":"＋ Add")}</button>`:""}</div>
 </div></article>`).join("");
 }
-function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText();renderHeroFood()}
+function renderAll(){renderFilters();renderMenu();updateCart();setLanguageText();startHeroFoodCarousel()}
 window.QB_APPLY_MENU=data=>{if(!Array.isArray(data)||!data.length)return;items.splice(0,items.length,...normalizeMenuItems(data));renderAll()};
 function setLanguageText(){
 const hi=lang==="hi";
