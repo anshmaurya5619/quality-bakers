@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function isOwner() {
-      return signedIn() && request.auth.uid == "PASTE_OWNER_AUTH_UID";
+      return signedIn() && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1";
     }
 
     // Publicly readable published menu; only the owner may publish.
