@@ -1915,7 +1915,7 @@ $("toDetailsBtn").addEventListener("click",()=>{
  setOrderStep(2);
 });
 $("toDeliveryBtn").addEventListener("click",()=>{
- const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\\D/g,"");
+ const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\D/g,"");
  if(name.length<2){$("cartStatus").textContent="कृपया अपना पूरा नाम लिखें।";$("customerName").focus();return}
  if(phone.length!==10){$("cartStatus").textContent="कृपया 10 अंकों का मोबाइल नंबर लिखें।";$("customerPhone").focus();return}
  $("customerPhone").value=phone;setOrderStep(3);
@@ -1924,7 +1924,7 @@ document.querySelectorAll("[data-order-back]").forEach(b=>b.addEventListener("cl
 $("checkoutBtn").addEventListener("click",async()=>{
  if(!cart.length){showToast("पहले कार्ट में आइटम चुनें।");setOrderStep(1);return}
  const user=window.QB_AUTH_USER;if(!user){showToast("ऑर्डर बुक करने के लिए लॉगिन करें।");openAccount();return}
- const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\\D/g,""),note=$("customerNote").value.trim(),address=$("customerAddress").value.trim();
+ const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\D/g,""),note=$("customerNote").value.trim(),address=$("customerAddress").value.trim();
  if(name.length<2||phone.length!==10){setOrderStep(2);showToast("नाम और 10 अंकों का मोबाइल नंबर भरें।");return}
  if(!address||address.length<8){showToast("पूरा डिलीवरी पता भरें या लाइव लोकेशन से पता प्राप्त करें।");$("customerAddress").focus();return}
  if(!deliveryLocation)deliveryLocation={mode:"manual",address};
@@ -1936,9 +1936,9 @@ $("checkoutBtn").addEventListener("click",async()=>{
   const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,deliveryLocation,items:orderItems,total});
   cart=[];deliveryLocation=null;$("customerAddress").value="";$("customerNote").value="";$("customerPhone").value="";$("manualAddressWrap").hidden=false;
   updateCart();setOrderStep(1);
-  $("orderSuccess").hidden=false;$("orderSuccess").innerHTML="<strong>✓ आपका ऑर्डर बुक हो गया!</strong><br>ऑर्डर नंबर: #"+String(orderId).slice(-8)+"<br>अब आप अपने अकाउंट → मेरे ऑर्डर में स्थिति और डिलीवरी अपडेट देख सकते हैं।";
+  $("orderSuccess").hidden=false;$("orderSuccess").innerHTML="<strong>✓ आपका ऑर्डर बुक हो गया!</strong><br>ऑर्डर नंबर: #"+String(orderId).slice(-8)+"<br>अब आप नीचे से अपने ऑर्डर ट्रैक कर सकते हैं। <a href="#account" onclick="document.getElementById('account').scrollIntoView({behavior:'smooth'});return false">मेरे ऑर्डर देखें</a>";
   showToast("ऑर्डर सीधे दुकान के Owner Desk पर भेज दिया गया है।");
-  openAccount();
+
  }catch(err){showToast("ऑर्डर बुक नहीं हुआ: "+(err.message||err.code||"कृपया फिर कोशिश करें।"))}
  finally{btn.disabled=false;btn.textContent="ऑर्डर बुक करें ✓"}
 });
