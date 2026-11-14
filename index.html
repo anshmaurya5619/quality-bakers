@@ -1563,6 +1563,29 @@ body.page-account .footer{margin-top:auto}
 @media(min-width:701px){.heroGrid{grid-template-columns:minmax(0,1fr)!important;gap:12px}.heroFoodCard{flex-basis:calc((100% - 36px)/4)}}
 @media(prefers-reduced-motion:reduce){.heroFoodTrack{transition:none}}
 
+
+/* Three-stage order booking and live status */
+.orderStepper{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 22px;padding:12px;background:#eee5d7;border-radius:12px}
+.orderStepper .step{display:flex;align-items:center;gap:7px;color:#897966;font-size:.86rem;font-weight:800}
+.orderStepper .step b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#d8cbb8;color:#544330}
+.orderStepper .step.active,.orderStepper .step.done{color:#5f3d1d}
+.orderStepper .step.active b,.orderStepper .step.done b{background:#986c3b;color:white}
+.orderStepper>i{height:2px;flex:1;max-width:58px;background:#d1c2ac}
+.orderPane{display:none;min-height:260px}
+.orderPane.active{display:block;animation:orderPaneIn .25s ease}
+@keyframes orderPaneIn{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+.orderPane h3{margin:0 0 5px;color:#34291f}
+.paneHint{margin:0 0 18px;color:#776958;font-size:.9rem}
+.orderPane .checkoutFields{display:grid;gap:7px}
+.orderPane label{font-size:.88rem;font-weight:750;color:#5b4934;margin-top:8px}
+.orderPane input,.orderPane textarea{min-height:48px;padding:12px;border:1px solid #cdbda6;border-radius:8px;background:#fffaf2;color:#33291f;font:inherit;font-size:16px;width:100%}
+.orderPane textarea{resize:vertical}
+.wizardActions{display:flex;gap:10px;margin-top:18px}
+.wizardActions>*{flex:1;min-height:48px}
+.wizardActions .secondary{background:#e9dfd0;color:#493a29;border:1px solid #cdbda6;border-radius:9px;font-weight:800}
+.orderSuccess{margin-top:14px;padding:14px;border-radius:10px;background:#e2efe4;color:#245536;line-height:1.55}
+.cartPanel .cartStatus{margin:12px 0 0}
+@media(max-width:540px){.orderStepper{gap:6px;padding:9px}.orderStepper .step{font-size:.76rem;gap:5px}.orderStepper .step b{width:27px;height:27px}.orderPane{min-height:240px}}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1579,16 +1602,12 @@ body.page-account .footer{margin-top:auto}
 </div></section>
 <section class="section" id="menu"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="menuEyebrow" data-hi="🔥 ग्राहकों की पसंद" data-en="🔥 CUSTOMER FAVOURITES">🔥 ग्राहकों की पसंद</span><h2 id="menuTitle">हमारा मेन्यू</h2><p id="menuDesc">अपना पसंदीदा आइटम चुनें, साइज़ चुनें और कार्ट में जोड़ें।</p></div></div><div class="categoryShowcase" id="categoryShowcase" aria-hidden="false"><button type="button" class="categoryTile noodles" onclick="selectCategory('noodles')"><span class="tileIcon">🍜</span><strong data-hi="नूडल्स और राइस" data-en="Noodles & Rice">नूडल्स और राइस</strong><small data-hi="स्वाद ऐसा... कि बार-बार आने का मन करे!" data-en="A taste worth coming back for!">स्वाद ऐसा... कि बार-बार आने का मन करे!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('starters')"><span class="tileIcon">🌯</span><strong data-hi="स्टार्टर्स और रोल्स" data-en="Starters & Rolls">स्टार्टर्स और रोल्स</strong><small data-hi="हर बाइट में असली स्वाद!" data-en="Real flavor in every bite!">हर बाइट में असली स्वाद!</small></button><button type="button" class="categoryTile snacks" onclick="selectCategory('snacks')"><span class="tileIcon">🥟</span><strong data-hi="मोमोज़ और स्नैक्स" data-en="Momos & Snacks">मोमोज़ और स्नैक्स</strong><small data-hi="हर मौके के लिए बेहतरीन!" data-en="Perfect for every occasion!">हर मौके के लिए बेहतरीन!</small></button><button type="button" class="categoryTile pizza" onclick="selectCategory('pizza')"><span class="tileIcon">🍕</span><strong data-hi="पिज्जा" data-en="Pizza">पिज्जा</strong><small data-hi="हर मौके के लिए खास!" data-en="A favorite for every occasion!">हर मौके के लिए खास!</small></button><button type="button" class="categoryTile starters" onclick="selectCategory('cakes')"><span class="tileIcon">🎂</span><strong data-hi="डिज़ाइनर केक" data-en="Designer Cakes">डिज़ाइनर केक</strong><small data-hi="खास मौकों के लिए खूबसूरत केक" data-en="Beautiful cakes for special moments">खास मौकों के लिए खूबसूरत केक</small></button></div><div class="filters" id="filters"></div><div class="menuGrid" id="menuGrid"></div><div class="notice" id="priceNotice">नोट: स्प्रिंग रोल के लिए फोटो में Full की कीमत नहीं दी गई है, इसलिए ऑर्डर में केवल उपलब्ध Half कीमत रखी गई है।</div></div></section>
 <section class="section accountSection" id="account"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" data-hi="ग्राहक अकाउंट" data-en="MEMBER ACCOUNT">ग्राहक अकाउंट</span><h2 id="accountTitle">आपका अकाउंट</h2><p id="accountDesc">लॉगिन करें, ऑर्डर सेव करें और अपनी पिछली खरीद देखें।</p></div></div><div class="accountGrid"><div class="accountCard" id="authCard"><div class="authTabs"><button type="button" class="authTab active" id="showLogin">लॉगिन</button><button type="button" class="authTab" id="showRegister">नया अकाउंट</button></div><form id="customerAuthForm"><label id="customerNameLabel" for="accountName">पूरा नाम</label><input id="accountName" type="text" maxlength="70" autocomplete="name" placeholder="आपका नाम" hidden><label id="customerPhoneLabel" for="accountPhone">मोबाइल नंबर</label><input id="accountPhone" type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="मोबाइल नंबर" hidden><label for="accountEmail">ईमेल</label><input id="accountEmail" type="email" required autocomplete="email" placeholder="name@example.com"><label for="accountPassword">पासवर्ड</label><div class="passwordField"><input id="accountPassword" type="password" required autocomplete="current-password" placeholder="अपना पासवर्ड लिखें"><button type="button" id="togglePassword" class="passwordToggle" aria-label="पासवर्ड दिखाएँ" aria-pressed="false">👁</button></div><button class="primary accountSubmit" id="authSubmit" type="submit">लॉगिन करें</button><button class="secondary accountSubmit googleAuthButton" id="googleAuthBtn" type="button"><span class="googleG" aria-hidden="true">G</span><span>Google से जारी रखें</span></button><button class="textAction" id="resetPasswordBtn" type="button">पासवर्ड भूल गए?</button></form><p class="accountMessage" id="authMessage" role="status" aria-live="polite"></p></div><div class="accountCard accountSummary" id="profileCard"><div class="profileHead"><div class="profileAvatar">QB</div><div><span class="eyebrow" data-hi="मेरा क्वालिटी अकाउंट" data-en="MY QUALITY ACCOUNT">मेरा क्वालिटी अकाउंट</span><h3 id="profileName">Guest</h3><p id="profileEmail"></p></div><button class="secondary profileLogout" type="button" id="signOutBtn">लॉगआउट</button></div><div class="customerTabs" role="tablist"><button type="button" class="customerTab active" data-customer-tab="orders">📦 मेरे ऑर्डर</button><button type="button" class="customerTab" data-customer-tab="addresses">📍 मेरे पते</button><button type="button" class="customerTab" data-customer-tab="profile">👤 प्रोफाइल</button><button type="button" class="customerTab" data-customer-tab="support">☎ सहायता</button></div><section class="customerPanel active" data-customer-panel="orders"><div class="customerPanelHead"><div><h3 class="historyTitle">आपके ऑर्डर</h3><p>अपने ऑर्डर और उनकी स्थिति देखें।</p></div><a class="secondary" href="#menu" id="orderAgainLink">मेन्यू देखें</a></div><div id="orderHistory" class="orderHistory"><p class="muted">आपके ऑर्डर यहाँ दिखेंगे।</p></div></section><section class="customerPanel" data-customer-panel="addresses"><div class="customerPanelHead"><div><h3>मेरे डिलीवरी पते</h3><p>अपना पता सेव करें ताकि अगली बार आसानी हो।</p></div></div><form id="savedAddressForm" class="savedAddressForm"><label for="savedAddressName">पते का नाम</label><input id="savedAddressName" maxlength="35" placeholder="घर, ऑफिस आदि" required><label for="savedAddressText">पूरा पता</label><textarea id="savedAddressText" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड" required></textarea><button class="primary" type="submit">पता सेव करें</button><p id="savedAddressMessage" role="status"></p></form><div id="savedAddressList" class="savedAddressList"><p class="muted">अभी कोई पता सेव नहीं है।</p></div></section><section class="customerPanel" data-customer-panel="profile"><div class="customerPanelHead"><div><h3>प्रोफाइल जानकारी</h3><p>अपना नाम और मोबाइल नंबर अपडेट करें।</p></div></div><form id="customerProfileForm" class="savedAddressForm"><label for="profileEditName">पूरा नाम</label><input id="profileEditName" maxlength="70" required><label for="profileEditPhone">मोबाइल नंबर</label><input id="profileEditPhone" type="tel" inputmode="numeric" maxlength="15" placeholder="मोबाइल नंबर"><label for="profileEditEmail">ईमेल</label><input id="profileEditEmail" type="email" disabled><button class="primary" type="submit">जानकारी अपडेट करें</button><p id="profileEditMessage" role="status"></p></form></section><section class="customerPanel" data-customer-panel="support"><div class="customerPanelHead"><div><h3>Quality Bakers सहायता</h3><p>ऑर्डर या मेन्यू से जुड़ी मदद के लिए संपर्क करें।</p></div></div><div class="supportLinks"><a href="https://wa.me/919918203207" target="_blank" rel="noopener">💬 WhatsApp पर संपर्क करें</a><a href="tel:9918203207">☎ 9918203207</a><a href="tel:8604665305">☎ 8604665305</a></div></section></div></div></div></section>
-<section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><div class="checkoutFields" id="checkoutFields"><input id="customerName" placeholder="आपका नाम (ज़रूरी)" maxlength="70"><input id="customerPhone" placeholder="मोबाइल नंबर (वैकल्पिक)" inputmode="tel" maxlength="15"><textarea id="customerNote" rows="2" placeholder="खास निर्देश (वैकल्पिक)"></textarea>
-<div class="deliveryLocationBox">
-<strong data-hi="डिलीवरी लोकेशन चुनें" data-en="Choose delivery location">डिलीवरी लोकेशन चुनें</strong>
-<div class="locationChoices">
-<button class="secondary locationChoice" id="useLiveLocationBtn" type="button">📍 मेरी Live Location लें</button>
-<button class="secondary locationChoice" id="useManualLocationBtn" type="button">✍️ पता खुद लिखें</button>
-</div>
-<p id="locationStatus" class="locationStatus" role="status" aria-live="polite">ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।</p>
-<div id="manualAddressWrap" hidden><label for="customerAddress">पूरा डिलीवरी पता</label><textarea id="customerAddress" rows="3" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड"></textarea></div>
-</div></div><button class="checkout" id="checkoutBtn" type="button">WhatsApp पर ऑर्डर भेजें ↗</button><p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p></div></div></section>
+<section class="section cartSection" id="cart"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow">🛒 YOUR ORDER</span><h2 id="cartTitle">आपका ऑर्डर</h2><p id="cartIntro">मेन्यू से आइटम जोड़ें, मात्रा चुनें और अपना ऑर्डर भेजें।</p></div></div><div class="cartPanel">
+<div class="orderStepper" id="orderStepper"><div class="step active" data-step-indicator="1"><b>1</b><span>ऑर्डर</span></div><i></i><div class="step" data-step-indicator="2"><b>2</b><span>जानकारी</span></div><i></i><div class="step" data-step-indicator="3"><b>3</b><span>डिलीवरी</span></div></div>
+<section class="orderPane active" data-order-pane="1"><div class="cartItems" id="cartItems"></div><div class="cartEmptyAction" id="cartEmptyAction"><p>अभी आपका कार्ट खाली है।</p><a class="primary" href="#menu" id="emptyCartMenuLink">मेन्यू देखें</a></div><div class="totalLine"><span id="totalLabel">कुल राशि</span><strong id="cartTotal">₹0</strong></div><button class="checkout" id="toDetailsBtn" type="button">आगे बढ़ें · ग्राहक विवरण →</button></section>
+<section class="orderPane" data-order-pane="2"><h3>ग्राहक की जानकारी</h3><p class="paneHint">ऑर्डर की पुष्टि और संपर्क के लिए ये जानकारी भरें।</p><div class="checkoutFields" id="checkoutFields"><label for="customerName">पूरा नाम</label><input id="customerName" placeholder="आपका नाम" maxlength="70" autocomplete="name"><label for="customerPhone">मोबाइल नंबर</label><input id="customerPhone" placeholder="10 अंकों का मोबाइल नंबर" inputmode="tel" maxlength="15" autocomplete="tel"><label for="customerNote">खास निर्देश (वैकल्पिक)</label><textarea id="customerNote" rows="3" placeholder="जैसे कम मसाला, बिना प्याज आदि"></textarea></div><div class="wizardActions"><button class="secondary" data-order-back="1" type="button">← वापस</button><button class="checkout" id="toDeliveryBtn" type="button">आगे बढ़ें · डिलीवरी पता →</button></div></section>
+<section class="orderPane" data-order-pane="3"><h3>डिलीवरी का पता</h3><p class="paneHint">अपनी लाइव लोकेशन लें या पता खुद भरें।</p><div class="deliveryLocationBox"><strong>डिलीवरी लोकेशन चुनें</strong><div class="locationChoices"><button class="secondary locationChoice" id="useLiveLocationBtn" type="button">📍 मेरी लाइव लोकेशन लें</button><button class="secondary locationChoice" id="useManualLocationBtn" type="button">✍️ पता खुद लिखें</button></div><p id="locationStatus" class="locationStatus" role="status" aria-live="polite">लोकेशन लेने पर पता नीचे अपने आप भरने की कोशिश होगी।</p><div id="manualAddressWrap"><label for="customerAddress">पूरा डिलीवरी पता</label><textarea id="customerAddress" rows="4" maxlength="500" placeholder="मकान नंबर, गली, मोहल्ला, शहर, पिन कोड"></textarea></div></div><div class="wizardActions"><button class="secondary" data-order-back="2" type="button">← वापस</button><button class="checkout" id="checkoutBtn" type="button">ऑर्डर बुक करें ✓</button></div></section>
+<p class="cartStatus" id="cartStatus" role="status" aria-live="polite"></p><div class="orderSuccess" id="orderSuccess" hidden></div></div></div></section>
 <section class="section" id="about"><div class="wrap"><div class="sectionHead"><div><span class="eyebrow" id="aboutEyebrow" data-hi="❤️ अच्छा खाना, अच्छा मूड" data-en="❤️ GOOD FOOD, GOOD MOOD">❤️ अच्छा खाना, अच्छा मूड</span><h2 id="aboutTitle">Quality Bakers क्यों?</h2></div></div><div class="aboutGrid"><div class="aboutBox"><h3 id="aboutBoxTitle">हर बाइट में स्वाद</h3><p id="aboutText">आपकी पसंद के पिज्जा, चाइनीज़, मोमोज़ और स्नैक्स। मेन्यू में दी गई कीमतें देखकर आइटम चुनें और अपना ऑर्डर WhatsApp पर भेजें।</p></div><div class="aboutBox" id="contact"><h3 id="contactTitle">संपर्क करें</h3><p id="contactDesc">ऑर्डर और जानकारी के लिए संपर्क करें।</p><div class="contactRows"><a class="contactRow" href="tel:9918203207"><span class="contactIcon">📞</span><span><small id="phoneLabel1">मोबाइल नंबर 1</small><strong>9918203207</strong></span></a><a class="contactRow" href="tel:8604665305"><span class="contactIcon">📞</span><span><small id="phoneLabel2">मोबाइल नंबर 2</small><strong>8604665305</strong></span></a><div class="contactRow"><span class="contactIcon">👨‍🍳</span><span><small id="ownerLabel">प्रोपराइटर</small><strong>शिवम अग्रहरि</strong></span></div></div></div></div></div></section>
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="year"></span> Quality Bakers • Fast Food & Pizza Shop</span><span id="footerText" data-hi="अच्छा खाना • अच्छा मूड • ताज़ा भोजन" data-en="Good Food • Good Mood • Fresh Food">अच्छा खाना • अच्छा मूड • ताज़ा भोजन</span></div></footer>
@@ -1846,35 +1865,46 @@ document.querySelectorAll('.navlinks a[href="#home"],.navlinks a[href="#menu"],.
 $("emptyCartMenuLink").addEventListener("click",()=>showView("home"));
 $("langHi").addEventListener("click",()=>{lang="hi";renderAll()});
 $("langEn").addEventListener("click",()=>{lang="en";renderAll()});
+let orderStep=1;
+function setOrderStep(step){
+ orderStep=Math.max(1,Math.min(3,step));
+ document.querySelectorAll("[data-order-pane]").forEach(p=>p.classList.toggle("active",Number(p.dataset.orderPane)===orderStep));
+ document.querySelectorAll("[data-step-indicator]").forEach(p=>{const n=Number(p.dataset.stepIndicator);p.classList.toggle("active",n===orderStep);p.classList.toggle("done",n<orderStep)});
+ $("cartStatus").textContent="";
+}
+$("toDetailsBtn").addEventListener("click",()=>{
+ if(!cart.length){showToast("पहले मेन्यू से आइटम चुनें।");return}
+ if(!window.QB_AUTH_USER){showToast("ऑर्डर करने के लिए पहले लॉगिन करें।");openAccount();return}
+ $("customerName").value=$("customerName").value||window.QB_AUTH_USER.displayName||"";
+ setOrderStep(2);
+});
+$("toDeliveryBtn").addEventListener("click",()=>{
+ const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\\D/g,"");
+ if(name.length<2){$("cartStatus").textContent="कृपया अपना पूरा नाम लिखें।";$("customerName").focus();return}
+ if(phone.length!==10){$("cartStatus").textContent="कृपया 10 अंकों का मोबाइल नंबर लिखें।";$("customerPhone").focus();return}
+ $("customerPhone").value=phone;setOrderStep(3);
+});
+document.querySelectorAll("[data-order-back]").forEach(b=>b.addEventListener("click",()=>setOrderStep(Number(b.dataset.orderBack))));
 $("checkoutBtn").addEventListener("click",async()=>{
- if(!cart.length){showToast(lang==="hi"?"पहले कार्ट में आइटम जोड़ें":"Please add items to cart first");return}
- const user=window.QB_AUTH_USER;
- if(!user){showToast(lang==="hi"?"ऑर्डर सेव करने के लिए पहले लॉगिन करें।":"Please sign in before placing an order.");openAccount();return}
- const name=$("customerName").value.trim()||user.displayName||"Customer";
- const phone=$("customerPhone").value.trim(),note=$("customerNote").value.trim();
- const manualAddress=$("customerAddress").value.trim();
- if(!deliveryLocation && !manualAddress){showToast(lang==="hi"?"कृपया Live Location लें या पूरा पता लिखें।":"Please capture live location or enter a delivery address.");return}
- const orderLocation=deliveryLocation?{...deliveryLocation,manualAddress:manualAddress||""}:{mode:"manual",address:manualAddress};
- const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ if(!cart.length){showToast("पहले कार्ट में आइटम चुनें।");setOrderStep(1);return}
+ const user=window.QB_AUTH_USER;if(!user){showToast("ऑर्डर बुक करने के लिए लॉगिन करें।");openAccount();return}
+ const name=$("customerName").value.trim(),phone=$("customerPhone").value.replace(/\\D/g,""),note=$("customerNote").value.trim(),address=$("customerAddress").value.trim();
+ if(name.length<2||phone.length!==10){setOrderStep(2);showToast("नाम और 10 अंकों का मोबाइल नंबर भरें।");return}
+ if(!address||address.length<8){showToast("पूरा डिलीवरी पता भरें या लाइव लोकेशन से पता प्राप्त करें।");$("customerAddress").focus();return}
+ if(!deliveryLocation)deliveryLocation={mode:"manual",address};
+ else deliveryLocation={...deliveryLocation,address,manualAddress:address};
+ const total=cart.reduce((sum,x)=>sum+x.qty*x.price,0);
  const orderItems=cart.map(x=>{const i=items.find(z=>z.id===x.id);return {id:x.id,nameHi:i.hi,nameEn:i.en,size:x.size,price:Number(x.price),quantity:x.qty,lineTotal:Number(x.price*x.qty)}});
- const btn=$("checkoutBtn");btn.disabled=true;btn.textContent=lang==="hi"?"ऑर्डर सेव हो रहा है…":"Saving order…";
- const waWindow=window.open("about:blank","_blank");
+ const btn=$("checkoutBtn");btn.disabled=true;btn.textContent="ऑर्डर बुक हो रहा है…";
  try{
-  if(typeof window.QB_CREATE_ORDER!=="function")throw new Error("Order service is not ready. Refresh and try again.");
-  const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,deliveryLocation:orderLocation,items:orderItems,total});
-  let lines=["QUALITY BAKERS - ORDER","Order ID: "+orderId,"Name: "+name];
-  if(phone)lines.push("Phone: "+phone);
-  lines.push("Items:");
-  orderItems.forEach(x=>lines.push(x.nameHi+" ("+x.size+") x "+x.quantity+" = "+money(x.lineTotal)));
-  lines.push("Total: "+money(total));if(orderLocation.mode==="gps")lines.push("Live location: https://www.google.com/maps?q="+orderLocation.latitude+","+orderLocation.longitude);
-  if(orderLocation.manualAddress||orderLocation.address)lines.push("Delivery address: "+(orderLocation.manualAddress||orderLocation.address));
-  if(note)lines.push("Special instructions: "+note);
-  lines.push("Please confirm my order.");
-  const waUrl="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\\n"));if(waWindow){waWindow.location.href=waUrl}else{$("cartStatus").innerHTML='<a href="'+waUrl+'" target="_blank" rel="noopener">WhatsApp संदेश तैयार है — भेजने के लिए यहाँ दबाएँ</a>'}
-  cart=[];deliveryLocation=null;$("customerAddress").value="";$("manualAddressWrap").hidden=true;$("useLiveLocationBtn").classList.remove("active");$("useManualLocationBtn").classList.remove("active");setLocationStatus("ऑर्डर के लिए एक लोकेशन चुनना जरूरी है।");updateCart();showToast(lang==="hi"?"ऑर्डर सेव हो गया। WhatsApp में भेजकर दुकान से पुष्टि लें।":"Order saved. Send it on WhatsApp and wait for shop confirmation.");
+  const orderId=await window.QB_CREATE_ORDER({customerName:name,customerPhone:phone,note,deliveryLocation,items:orderItems,total});
+  cart=[];deliveryLocation=null;$("customerAddress").value="";$("customerNote").value="";$("customerPhone").value="";$("manualAddressWrap").hidden=false;
+  updateCart();setOrderStep(1);
+  $("orderSuccess").hidden=false;$("orderSuccess").innerHTML="<strong>✓ आपका ऑर्डर बुक हो गया!</strong><br>ऑर्डर नंबर: #"+String(orderId).slice(-8)+"<br>अब आप अपने अकाउंट → मेरे ऑर्डर में स्थिति और डिलीवरी अपडेट देख सकते हैं।";
+  showToast("ऑर्डर सीधे दुकान के Owner Desk पर भेज दिया गया है।");
   openAccount();
- }catch(err){if(waWindow)waWindow.close();showToast(lang==="hi"?"ऑर्डर सेव नहीं हुआ: "+(err.message||err.code):"Order could not be saved: "+(err.message||err.code));}
- finally{btn.disabled=false;btn.textContent=lang==="hi"?"WhatsApp पर ऑर्डर भेजें ↗":"Send Order on WhatsApp ↗";}
+ }catch(err){showToast("ऑर्डर बुक नहीं हुआ: "+(err.message||err.code||"कृपया फिर कोशिश करें।"))}
+ finally{btn.disabled=false;btn.textContent="ऑर्डर बुक करें ✓"}
 });
 $("year").textContent=new Date().getFullYear();
 renderAll();
