@@ -1591,6 +1591,8 @@ body.page-account .footer{margin-top:auto}
 .drawerLinks a[aria-current="page"]{background:#dfc9a9!important;color:#382819!important;border-left:4px solid #986c3b!important;font-weight:900!important}
 .drawerLinks a:not([aria-current="page"]){background:transparent!important;border-left:4px solid transparent!important}
 .orderPane .locationChoice:disabled{opacity:.6;cursor:wait}
+
+.customerLiveTrack{display:flex;align-items:center;gap:12px;margin:14px 0;padding:12px;border-radius:10px;background:#e4eee3;border:1px solid #bfd3bd;color:#31583a}.customerLiveTrack p{margin:3px 0 6px;font-size:.84rem}.customerLiveTrack a{color:#245b38;font-weight:800;text-decoration:underline}.customerLiveTrack.waiting{background:#f0e8da;border-color:#d8c7ad;color:#695237}.truckPulse{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;font-size:22px;animation:truckGlow 1.7s infinite}@keyframes truckGlow{50%{box-shadow:0 0 0 8px #77a77a22;transform:scale(1.04)}}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1981,7 +1983,7 @@ onSnapshot(menuRef,snap=>{
 </script>
 <script type="module">
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 
 let authMode="login";
@@ -2085,17 +2087,28 @@ function renderHistory(rows){
  host.innerHTML=rows.map(o=>{
   const date=o.createdAt?.toDate?o.createdAt.toDate().toLocaleString("en-IN"):"अभी-अभी";
   const lines=(o.items||[]).map(i=>'<li>'+String(i.nameHi||i.nameEn||"Item").replace(/[<>]/g,"")+' · '+Number(i.quantity||0)+' × ₹'+Number(i.price||0)+'</li>').join("");
-  return '<article class="orderCard"><div class="orderCardTop"><strong>Order #'+String(o.id).slice(-7)+'</strong><span class="orderStatus">'+String(o.status||"placed")+'</span></div><small>'+date+'</small><ul class="orderLines">'+lines+'</ul><div class="totalLine"><span>कुल</span><strong>₹'+Number(o.total||0)+'</strong></div><button type="button" class="secondary reorderButton" data-reorder="'+String(o.id).replace(/[^a-zA-Z0-9_-]/g,"")+'">फिर से ऑर्डर करें</button></article>';
+  const statusText={placed:"ऑर्डर मिला",confirmed:"ऑर्डर स्वीकार हुआ",preparing:"तैयार हो रहा है",ready:"डिलीवरी के लिए तैयार",completed:"डिलीवर हो गया",cancelled:"रद्द"}[o.status||"placed"]||"ऑर्डर की स्थिति";
+  const live=o.ownerLocation?'<div class="customerLiveTrack"><div class="truckPulse">🚚</div><div><strong>डिलीवरी लाइव ट्रैकिंग</strong><p>दुकान की लोकेशन अपडेट हो रही है।</p><a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+Number(o.ownerLocation.latitude)+','+Number(o.ownerLocation.longitude)+'">नक्शे पर लाइव लोकेशन देखें ↗</a></div></div>':'<div class="customerLiveTrack waiting"><div class="truckPulse">📍</div><div><strong>लाइव ट्रैकिंग तैयार हो रही है</strong><p>दुकान ऑर्डर स्वीकार करके डिलीवरी शुरू करेगी, तब लोकेशन यहाँ दिखेगी।</p></div></div>';
+  return '<article class="orderCard"><div class="orderCardTop"><strong>Order #'+String(o.id).slice(-7)+'</strong><span class="orderStatus">'+statusText+'</span></div><small>'+date+'</small><ul class="orderLines">'+lines+'</ul><div class="totalLine"><span>कुल</span><strong>₹'+Number(o.total||0)+'</strong></div>'+live+'<button type="button" class="secondary reorderButton" data-reorder="'+String(o.id).replace(/[^a-zA-Z0-9_-]/g,"")+'">फिर से ऑर्डर करें</button></article>';
  }).join("");
 }
 const customerOrderCache=new Map();
 el("orderHistory").addEventListener("click",e=>{const b=e.target.closest("[data-reorder]");if(!b)return;const order=customerOrderCache.get(b.dataset.reorder);if(!order)return;if(typeof window.QB_ADD_ORDER_ITEMS==="function"){window.QB_ADD_ORDER_ITEMS(order.items||[]);showView("cart");}});
+let customerOrdersUnsub=null;
 async function loadOrders(user){
  el("orderHistory").innerHTML='<p class="muted">ऑर्डर लोड हो रहे हैं…</p>';
  try{
-  const snap=await getDocs(query(collection(db,"orders"),where("customerUid","==",user.uid)));
-  const rows=snap.docs.map(d=>({id:d.id,...d.data()}));customerOrderCache.clear();rows.forEach(o=>customerOrderCache.set(String(o.id).replace(/[^a-zA-Z0-9_-]/g,""),o));renderHistory(rows);
- }catch(err){console.error("Customer order history could not be loaded:",err.code||err.message);el("orderHistory").innerHTML='<p class="muted">आपके ऑर्डर अभी उपलब्ध नहीं हैं। कृपया थोड़ी देर बाद फिर देखें या दुकान से संपर्क करें।</p>'}
+  if(customerOrdersUnsub)customerOrdersUnsub();
+  const q=query(collection(db,"orders"),where("customerUid","==",user.uid));
+  await new Promise((resolve,reject)=>{
+   let first=true;
+   customerOrdersUnsub=onSnapshot(q,snap=>{
+    const rows=snap.docs.map(d=>({id:d.id,...d.data()}));
+    customerOrderCache.clear();rows.forEach(o=>customerOrderCache.set(String(o.id).replace(/[^a-zA-Z0-9_-]/g,""),o));
+    renderHistory(rows);if(first){first=false;resolve()}
+   },err=>{console.error("Customer live order updates failed:",err.code||err.message);if(first){first=false;reject(err)}});
+  });
+ }catch(err){console.error("Customer order history could not be loaded:",err.code||err.message);el("orderHistory").innerHTML='<p class="muted">ऑर्डर अभी उपलब्ध नहीं हैं। Firestore rules और इंटरनेट कनेक्शन जाँचें।</p>'}
 }
 onAuthStateChanged(auth,async user=>{
  window.QB_AUTH_USER=user||null;
@@ -2113,6 +2126,7 @@ onAuthStateChanged(auth,async user=>{
   if(document.body.classList.contains("page-account"))showView("home");
   if(pendingAdd){const p=pendingAdd;pendingAdd=null;const size=$("size-"+p.id);if(size)size.value=String(p.priceIndex);addToCart(p.id);showToast(lang==="hi"?"लॉगिन सफल — आइटम कार्ट में जुड़ गया।":"Signed in — item added to cart.");}
  }else{
+  if(customerOrdersUnsub){customerOrdersUnsub();customerOrdersUnsub=null}
   document.body.classList.remove("customer-signed-in");
   el("drawerLogoutBtn").hidden=true;
   el("accountNavLink").classList.remove("hidden");
