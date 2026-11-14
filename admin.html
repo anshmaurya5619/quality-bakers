@@ -7,13 +7,18 @@
 .ownerTrack{margin-top:12px;padding:12px;border:1px solid #7d6849;border-radius:8px;background:#211d17}.ownerTrack .btn{margin:5px 6px 0 0}.trackLive{color:#9fe0ad}.trackMap{display:inline-block;margin-top:7px;color:#d8b77a}
 
 #newOrderAlert:not([hidden]){position:fixed;z-index:9999;right:16px;top:16px;width:min(440px,calc(100vw - 32px));max-height:75vh;overflow:auto;background:#f5ead7;color:#302418;border:2px solid #bd8c4c;box-shadow:0 18px 55px #0008;border-radius:14px;padding:18px}#newOrderAlert p{margin:8px 0}#newOrderAlert .alertClose{float:right;border:0;border-radius:50%;width:32px;height:32px;background:#e7d6bd;color:#382819;font-size:20px}
+
+#customerDirectoryPanel input{min-height:44px;font-size:16px}@media(max-width:700px){#customerDirectoryPanel .panelhead{align-items:stretch}#customerDirectoryPanel input{max-width:none!important}}
 </style></head><body>
 <header class="top"><div class="wrap topin"><a class="brand" href="./index.html">QUALITY BAKERS<small>OWNER DESK · PRIVATE MANAGEMENT</small></a><div class="actions"><a class="btn" href="./index.html">Customer Website</a><a class="btn" href="./private-menu-demo.html">Menu Editor</a><button class="btn hidden" id="logout" type="button">Logout</button></div></div></header>
 <main class="wrap main"><section class="hero"><div><span class="eyebrow">OWNER CONTROL CENTRE</span><h1>Orders & Store Desk</h1><p class="muted">ग्राहकों के ऑर्डर देखें, पुष्टि करें और उनकी स्थिति अपडेट करें।</p></div><div class="actions"><button class="btn" id="enableAlerts" type="button">🔔 Enable order alerts</button><button class="btn" id="refresh" type="button">↻ Refresh Orders</button></div></section>
 <section class="login" id="loginBox"><h2>Owner Login</h2><form id="loginForm"><div class="field"><label for="email">Owner Email</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn primary" type="submit">Login</button></form><button class="btn" id="google" type="button" style="width:100%;margin-top:10px">Continue with Google</button><p class="status" id="loginStatus" role="status"></p><p class="muted">केवल UID allowlist में मौजूद मालिक ही Dashboard खोल सकता है।</p></section>
 <section id="dashboard" class="hidden"><div class="stats"><div class="stat"><small>Total orders</small><strong id="totalOrders">0</strong></div><div class="stat"><small>New / Placed</small><strong id="newOrders">0</strong></div><div class="stat"><small>Preparing</small><strong id="preparingOrders">0</strong></div><div class="stat"><small>Completed</small><strong id="completedOrders">0</strong></div></div>
 <div class="panel"><div class="panelhead"><div><span class="eyebrow">CUSTOMER ORDERS</span><h2>Order Management</h2></div><select id="filter"><option value="all">All orders</option><option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="orders" id="orders"><p class="muted">Orders load honge…</p></div></div>
-<div class="note">नया ऑर्डर आने पर यह Dashboard तुरंत अपडेट होगा। 🔔 Enable order alerts दबाने पर ब्राउज़र Notification और आवाज़ भी मिलेगी (Dashboard खुला होना चाहिए)। ग्राहक के Checkout पर दुकान के WhatsApp के लिए ऑर्डर की पूरी जानकारी वाला संदेश तैयार होता है; ग्राहक को WhatsApp में Send दबाना होता है।</div><div class="panel" id="newOrderAlert" hidden aria-live="polite"></div><p class="status" id="dashStatus" role="status"></p></section></main>
+<div class="panel" id="customerDirectoryPanel">
+<div class="panelhead"><div><span class="eyebrow">CUSTOMER RECORDS</span><h2>ग्राहक सूची / Customer Directory</h2><p class="muted">यह सूची सभी ऑर्डर से बनेगी—नए, चल रहे और पूरे हो चुके ऑर्डर सहित।</p></div><input id="customerSearch" type="search" placeholder="नाम / मोबाइल / ईमेल खोजें" style="max-width:280px;width:100%;padding:10px;border:1px solid #8e795b77;border-radius:7px;background:#11100e;color:#f1e8d8"></div>
+<div id="customerDirectory" class="orders"><p class="muted">ग्राहक रिकॉर्ड लोड हो रहे हैं…</p></div>
+</div><div class="note">नया ऑर्डर आने पर यह Dashboard तुरंत अपडेट होगा। 🔔 Enable order alerts दबाने पर ब्राउज़र Notification और आवाज़ भी मिलेगी (Dashboard खुला होना चाहिए)। ग्राहक के Checkout पर दुकान के WhatsApp के लिए ऑर्डर की पूरी जानकारी वाला संदेश तैयार होता है; ग्राहक को WhatsApp में Send दबाना होता है।</div><div class="panel" id="newOrderAlert" hidden aria-live="polite"></div><p class="status" id="dashStatus" role="status"></p></section></main>
 <script type="module">
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
@@ -78,8 +83,29 @@ function watchOrders(){
   });
  },err=>{$("dashStatus").textContent="Live order updates नहीं चल सके: "+(err.code||err.message)});
 }
+
+function renderCustomerDirectory(){
+ const host=$("customerDirectory");if(!host)return;
+ const byCustomer=new Map();
+ allOrders.forEach(o=>{
+  const key=String(o.customerUid||o.customerEmail||o.customerPhone||o.id);
+  const current=byCustomer.get(key)||{key,name:o.customerName||"ग्राहक",phone:o.customerPhone||"",email:o.customerEmail||"",orders:0,total:0,lastOrder:o,completed:0};
+  current.orders+=1;current.total+=Number(o.total||0);
+  if(o.status==="completed")current.completed+=1;
+  const oldTime=current.lastOrder.createdAt?.toMillis?.()||0,newTime=o.createdAt?.toMillis?.()||0;
+  if(newTime>=oldTime){current.lastOrder=o;current.name=o.customerName||current.name;current.phone=o.customerPhone||current.phone;current.email=o.customerEmail||current.email}
+  byCustomer.set(key,current);
+ });
+ const q=String($("customerSearch")?.value||"").trim().toLowerCase();
+ const rows=[...byCustomer.values()].filter(c=>[c.name,c.phone,c.email].join(" ").toLowerCase().includes(q)).sort((x,y)=>(y.lastOrder.createdAt?.toMillis?.()||0)-(x.lastOrder.createdAt?.toMillis?.()||0));
+ host.innerHTML=rows.map(c=>{
+  const date=c.lastOrder.createdAt?.toDate?c.lastOrder.createdAt.toDate().toLocaleString("en-IN"):"तारीख उपलब्ध नहीं";
+  return '<article class="order"><div class="orderhead"><div><div class="orderid">'+esc(c.name)+'</div><span class="muted">आखिरी ऑर्डर: '+esc(date)+'</span></div><span class="pill">'+c.orders+' Orders</span></div><p>📞 '+(c.phone?'<a href="tel:'+encodeURIComponent(c.phone)+'">'+esc(c.phone)+'</a>':"मोबाइल उपलब्ध नहीं")+'<br>✉ '+esc(c.email||"ईमेल उपलब्ध नहीं")+'</p><div class="orderfoot"><span>कुल ऑर्डर राशि: <b>₹'+Math.round(c.total)+'</b><br><span class="muted">Completed: '+c.completed+' · Customer ID: '+esc(c.key.slice(0,12))+'</span></span><a class="btn" href="#order-'+esc(c.lastOrder.id)+'" onclick="document.getElementById(\'filter\').value=\'all\';document.getElementById(\'filter\').dispatchEvent(new Event(\'change\'));setTimeout(()=>document.getElementById(\'order-'+esc(c.lastOrder.id)+'\')?.scrollIntoView({behavior:\'smooth\'}),50)">आखिरी ऑर्डर देखें</a></div></article>';
+ }).join("")||'<p class="muted">इस खोज में ग्राहक नहीं मिला।</p>';
+}
 function render(){
  const count=s=>allOrders.filter(o=>o.status===s).length;
+ renderCustomerDirectory();
  $("totalOrders").textContent=allOrders.length;$("newOrders").textContent=count("placed");$("preparingOrders").textContent=count("preparing");$("completedOrders").textContent=count("completed");
  const f=$("filter").value,rows=allOrders.filter(o=>f==="all"||o.status===f);
  $("orders").innerHTML=rows.map(o=>{
@@ -89,7 +115,7 @@ function render(){
  }).join("")||'<p class="muted">इस फ़िल्टर में कोई ऑर्डर नहीं है।</p>';
 }
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);$("enableAlerts").addEventListener("click",enableAlerts);
+$"customerSearch").addEventListener("input",renderCustomerDirectory);$("filter").addEventListener("change",render);$("refresh").addEventListener("click",loadOrders);$("enableAlerts").addEventListener("click",enableAlerts);
 $("orders").addEventListener("click",async e=>{
  const start=e.target.closest("[data-track-start]");
  if(start){
