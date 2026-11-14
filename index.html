@@ -1597,6 +1597,26 @@ body.page-account .footer{margin-top:auto}
 .addbtn.added{background:#315b48!important;color:#fff!important;border-color:#315b48!important;transform:scale(.98)}
 
 .heroFoodPhoto.photoUnavailable{display:grid;place-items:center;background:linear-gradient(135deg,#dfcfb8,#f4e9d8)}.heroFoodPhoto.photoUnavailable:after{content:"🍽️";font-size:clamp(2rem,8vw,4rem);opacity:.75}
+
+/* Final homepage slider fit + persistent active navigation state */
+.heroArt{height:auto!important;min-height:0!important;aspect-ratio:auto!important;background:transparent!important;overflow:visible!important}
+.heroFoodCarousel{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;overflow:hidden!important;padding:0 0 28px!important;background:transparent!important;border-radius:16px!important}
+.heroFoodTrack{position:relative!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;width:100%!important;padding:0!important;margin:0!important;transform:none!important;transition:none!important}
+.heroFoodCard{display:flex!important;flex-direction:column!important;flex-basis:auto!important;width:100%!important;min-width:0!important;max-width:none!important;height:100%!important}
+.heroFoodPhoto{width:100%!important;aspect-ratio:4/3!important;flex:0 0 auto!important;overflow:hidden!important;background:#dfd2bf!important}
+.heroFoodPhoto img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
+.heroFoodCardText{min-height:62px!important;padding:8px 9px 10px!important}
+.heroFoodCardText strong{font-size:clamp(.82rem,2.2vw,1rem)!important;line-height:1.25!important}
+.heroFoodDots{position:absolute!important;left:0!important;right:0!important;bottom:2px!important;display:flex!important;justify-content:center!important;align-items:center!important;flex-wrap:wrap!important;gap:7px!important;max-width:100%!important}
+.heroFoodDots .heroDot{width:9px!important;height:9px!important;min-width:9px!important;padding:0!important;border:0!important;background:#a89173!important}
+.heroFoodDots .heroDot.active{width:23px!important;background:#81572e!important}
+.heroFoodCarousel{touch-action:pan-y!important}
+.drawerLinks a[aria-current="page"]{background:#b48750!important;color:#fff!important;border-left:4px solid #49301c!important;font-weight:900!important;box-shadow:0 3px 10px #39271422!important}
+@media(max-width:600px){
+ .heroFoodTrack{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .heroFoodCardText{min-height:58px!important}
+ .heroFoodDots{gap:6px!important}
+}
 </style>
 <script>try{if(window.screen&&Math.min(window.screen.width,window.screen.height)<=600){document.documentElement.classList.add("qb-compact-device")}}catch(e){}</script>
 </head>
@@ -1692,23 +1712,54 @@ function renderHeroFood(){
  const dotsNode=document.getElementById("heroFoodDots");
  if(!host||!track||!dotsNode)return;
  const slides=heroSlides.filter(item=>!heroFailedPhotos.has(item.photo));
- if(!slides.length){track.innerHTML='<p class="heroNoFood">Quality Bakers</p>';dotsNode.replaceChildren();return}
+ if(!slides.length){track.innerHTML='<p class="heroNoFood">🍽️ Quality Bakers</p>';dotsNode.replaceChildren();return}
  heroFoodIndex=((heroFoodIndex%slides.length)+slides.length)%slides.length;
- const visible=slides.map((item,i)=>({item,i}));
- track.innerHTML=visible.map(({item,i})=>{
+ const visibleCount=window.matchMedia("(max-width:600px)").matches?2:3;
+ const visible=Array.from({length:Math.min(visibleCount,slides.length)},(_,offset)=>{
+  const index=(heroFoodIndex+offset)%slides.length;
+  return {item:slides[index],index};
+ });
+ track.innerHTML=visible.map(({item,index})=>{
   const title=lang==="hi"?(item.hi||item.en):(item.en||item.hi);
   const category=((categoryNames[item.cat]||{})[lang]||"Quality Bakers");
-  return '<article class="heroFoodCard" data-slide="'+i+'"><div class="heroFoodPhoto"><img src="'+item.photo.replace(/["<>]/g,"")+'" alt="'+title.replace(/["<>]/g,"")+'" loading="'+(i<3?"eager":"lazy")+'" onerror="this.onerror=null;this.closest(\'.heroFoodPhoto\').classList.add(\'photoUnavailable\');this.remove();"></div><div class="heroFoodCardText"><small>'+category+'</small><strong>'+title+'</strong></div></article>';
+  const photo=String(item.photo||"").replace(/["<>]/g,"");
+  return '<article class="heroFoodCard" data-slide="'+index+'"><div class="heroFoodPhoto"><img src="'+photo+'" alt="'+title.replace(/["<>]/g,"")+'" loading="eager" decoding="async" onerror="this.onerror=null;this.closest(\'.heroFoodPhoto\').classList.add(\'photoUnavailable\');this.remove();"></div><div class="heroFoodCardText"><small>'+category+'</small><strong>'+title+'</strong></div></article>';
  }).join("");
- const cardWidth=track.querySelector(".heroFoodCard")?.getBoundingClientRect().width||0;
- const gap=parseFloat(getComputedStyle(track).gap)||12;
- track.style.transform='translateX(-'+(heroFoodIndex*(cardWidth+gap))+'px)';
  dotsNode.innerHTML=slides.map((_,i)=>'<button type="button" class="heroDot '+(i===heroFoodIndex?'active':'')+'" data-hero-dot="'+i+'" aria-label="'+(lang==="hi"?"स्लाइड ":"Slide ")+(i+1)+'"></button>').join("");
 }
-function startHeroFoodCarousel(){
+function moveHeroFood(step=1){
+ heroFoodIndex=(heroFoodIndex+step+heroSlides.length)%heroSlides.length;
  renderHeroFood();
- if(heroFoodTimer)clearInterval(heroFoodTimer);
- heroFoodTimer=setInterval(()=>{heroFoodIndex=(heroFoodIndex+1)%heroSlides.length;renderHeroFood()},3100);
+}
+function pauseHeroFood(){
+ if(heroFoodTimer){clearInterval(heroFoodTimer);heroFoodTimer=null}
+}
+function resumeHeroFood(){
+ pauseHeroFood();
+ if(heroSlides.length>1)heroFoodTimer=setInterval(()=>moveHeroFood(1),3300);
+}
+function startHeroFoodCarousel(){
+ const host=document.getElementById("heroFoodCarousel");
+ if(!host)return;
+ renderHeroFood();
+ resumeHeroFood();
+ if(!host.dataset.sliderBound){
+  host.dataset.sliderBound="1";
+  let touchStartX=0,touchStartY=0,swipePaused=false;
+  host.addEventListener("touchstart",e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;swipePaused=true;pauseHeroFood()},{passive:true});
+  host.addEventListener("touchend",e=>{
+   if(!swipePaused)return;
+   const dx=e.changedTouches[0].clientX-touchStartX;
+   const dy=e.changedTouches[0].clientY-touchStartY;
+   if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy))moveHeroFood(dx<0?1:-1);
+   swipePaused=false;resumeHeroFood();
+  },{passive:true});
+  host.addEventListener("mouseenter",pauseHeroFood);
+  host.addEventListener("mouseleave",resumeHeroFood);
+  host.addEventListener("focusin",pauseHeroFood);
+  host.addEventListener("focusout",resumeHeroFood);
+  host.addEventListener("click",e=>{const dot=e.target.closest("[data-hero-dot]");if(dot){pauseHeroFood();heroFoodIndex=Number(dot.dataset.heroDot)||0;renderHeroFood();resumeHeroFood()}});
+ }
 }
 
 const categoryNames={all:{hi:"सभी आइटम",en:"All items"},noodles:{hi:"Noodles & Rice",en:"Noodles & Rice"},starters:{hi:"Starters & Rolls",en:"Starters & Rolls"},snacks:{hi:"Momos & Snacks",en:"Momos & Snacks"},pizza:{hi:"Pizza",en:"Pizza"},cakes:{hi:"डिज़ाइनर केक",en:"Designer Cakes"}};
@@ -1846,6 +1897,7 @@ function showView(view){
  const accountLink=document.querySelector('.headerActions a[href="#account"]');if(accountLink){if(view==="account")accountLink.setAttribute("aria-current","page");else accountLink.removeAttribute("aria-current");}
  if(view==="account"||view==="cart")document.getElementById(view).scrollIntoView({behavior:"smooth",block:"start"});
 }
+let navHighlightLockUntil=0;
 function highlightDrawerSection(id){
  document.querySelectorAll(".drawerLinks a[aria-current='page']").forEach(a=>a.removeAttribute("aria-current"));
  const link=document.querySelector('.drawerLinks a[href="#'+id+'"]:not([data-account-tab])');
@@ -1856,9 +1908,10 @@ function startSectionHighlighting(){
  const targets=ids.map(id=>document.getElementById(id)).filter(Boolean);
  if(!("IntersectionObserver" in window))return;
  const observer=new IntersectionObserver(entries=>{
+  if(Date.now()<navHighlightLockUntil||document.body.classList.contains("page-account")||document.body.classList.contains("page-cart"))return;
   const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-  if(visible&&!document.body.classList.contains("page-account")&&!document.body.classList.contains("page-cart"))highlightDrawerSection(visible.target.id);
- },{rootMargin:"-24% 0px -58% 0px",threshold:[0,.1,.25,.5]});
+  if(visible)highlightDrawerSection(visible.target.id);
+ },{rootMargin:"-18% 0px -62% 0px",threshold:[0,.08,.2,.4]});
  targets.forEach(el=>observer.observe(el));
 }
 startSectionHighlighting();
@@ -1871,6 +1924,11 @@ $("drawerClose").addEventListener("click",closeSiteDrawer);
 $("menuScrim").addEventListener("click",closeSiteDrawer);
 document.querySelectorAll(".drawerLinks a").forEach(a=>a.addEventListener("click",e=>{
  closeSiteDrawer();
+ const navTarget=(a.getAttribute("href")||"").replace("#","");
+ if(["home","menu","about","contact"].includes(navTarget)){
+  navHighlightLockUntil=Date.now()+1800;
+  highlightDrawerSection(navTarget);
+ }
  const tab=a.dataset.accountTab;
  if(tab){e.preventDefault();openAccount();setTimeout(()=>activateCustomerTab(tab),0);return}
  if(a.dataset.view==="cart"){e.preventDefault();openCart();return}
