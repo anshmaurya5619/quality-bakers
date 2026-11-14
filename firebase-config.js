@@ -11,5 +11,5 @@ export const firebaseConfig = {
 };
 
 // Replace with the owner Firebase Authentication UID before publishing rules.
-export const QB_ADMIN_UID = "PASTE_OWNER_AUTH_UID";
+export const QB_ADMIN_UID = "4iZybwaOm9hZJhdjRttjmlvnpVu1";
 
