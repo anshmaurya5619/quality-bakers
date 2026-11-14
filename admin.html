@@ -14,6 +14,15 @@
 <main class="wrap main"><section class="hero"><div><span class="eyebrow">OWNER CONTROL CENTRE</span><h1>Orders & Store Desk</h1><p class="muted">ग्राहकों के ऑर्डर देखें, पुष्टि करें और उनकी स्थिति अपडेट करें।</p></div><div class="actions"><button class="btn" id="enableAlerts" type="button">🔔 Enable order alerts</button><button class="btn" id="refresh" type="button">↻ Refresh Orders</button></div></section>
 <section class="login" id="loginBox"><h2>Owner Login</h2><form id="loginForm"><div class="field"><label for="email">Owner Email</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn primary" type="submit">Login</button></form><button class="btn" id="google" type="button" style="width:100%;margin-top:10px">Continue with Google</button><p class="status" id="loginStatus" role="status"></p><p class="muted">केवल UID allowlist में मौजूद मालिक ही Dashboard खोल सकता है।</p></section>
 <section id="dashboard" class="hidden"><div class="stats"><div class="stat"><small>Total orders</small><strong id="totalOrders">0</strong></div><div class="stat"><small>New / Placed</small><strong id="newOrders">0</strong></div><div class="stat"><small>Preparing</small><strong id="preparingOrders">0</strong></div><div class="stat"><small>Completed</small><strong id="completedOrders">0</strong></div></div>
+<div class="panel" id="broadcastPanel">
+<div class="panelhead"><div><span class="eyebrow">CUSTOMER ANNOUNCEMENTS</span><h2>📣 सभी लॉगिन ग्राहकों को संदेश भेजें</h2><p class="muted">Offer, discount, holiday या दुकान की सूचना यहाँ से भेजें।</p></div></div>
+<form id="broadcastForm">
+<div class="field"><label for="broadcastTitle">शीर्षक</label><input id="broadcastTitle" maxlength="80" required placeholder="जैसे: आज का स्पेशल ऑफर"></div>
+<div class="field"><label for="broadcastMessage">संदेश</label><textarea id="broadcastMessage" maxlength="600" required rows="4" placeholder="ऑफर या सूचना लिखें..." style="width:100%;padding:12px;background:#11100e;border:1px solid #8e795b77;border-radius:7px;color:var(--ivory);font:inherit"></textarea></div>
+<button class="btn primary" id="broadcastSend" type="submit">📨 सभी ग्राहकों को भेजें</button>
+<p class="status" id="broadcastStatus" role="status"></p>
+</form><div class="note">यह संदेश वेबसाइट पर लॉगिन किए हुए ग्राहकों को लाइव दिखेगा। वेबसाइट बंद होने पर मोबाइल Push Notification के लिए अलग FCM setup आवश्यक होगा।</div>
+</div>
 <div class="panel"><div class="panelhead"><div><span class="eyebrow">CUSTOMER ORDERS</span><h2>Order Management</h2></div><select id="filter"><option value="all">All orders</option><option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="orders" id="orders"><p class="muted">Orders load honge…</p></div></div>
 <div class="panel" id="customerDirectoryPanel">
 <div class="panelhead"><div><span class="eyebrow">CUSTOMER RECORDS</span><h2>ग्राहक सूची / Customer Directory</h2><p class="muted">यह सूची सभी ऑर्डर से बनेगी—नए, चल रहे और पूरे हो चुके ऑर्डर सहित।</p></div><input id="customerSearch" type="search" placeholder="नाम / मोबाइल / ईमेल खोजें" style="max-width:280px;width:100%;padding:10px;border:1px solid #8e795b77;border-radius:7px;background:#11100e;color:#f1e8d8"></div>
@@ -21,10 +30,22 @@
 </div><div class="note">नया ऑर्डर आने पर यह Dashboard तुरंत अपडेट होगा। 🔔 Enable order alerts दबाने पर ब्राउज़र Notification और आवाज़ भी मिलेगी (Dashboard खुला होना चाहिए)। ग्राहक के Checkout पर दुकान के WhatsApp के लिए ऑर्डर की पूरी जानकारी वाला संदेश तैयार होता है; ग्राहक को WhatsApp में Send दबाना होता है।</div><div class="panel" id="newOrderAlert" hidden aria-live="polite"></div><p class="status" id="dashStatus" role="status"></p></section></main>
 <script type="module">
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp, onSnapshot, addDoc, limit } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 import { QB_ADMIN_UID } from "./firebase-config.js";
 const $=id=>document.getElementById(id);let allOrders=[],stopOrders=null,firstOrderSnapshot=true,alertsEnabled=false,audioContext=null,trackingWatchId=null,trackingOrderId=null,lastTrackWrite=0;
+async function sendBroadcast(e){
+ e.preventDefault();
+ const title=$("broadcastTitle").value.trim(),message=$("broadcastMessage").value.trim(),button=$("broadcastSend");
+ if(!title||!message)return;
+ button.disabled=true;$("broadcastStatus").textContent="संदेश भेजा जा रहा है…";
+ try{
+  await addDoc(collection(db,"announcements"),{title:title.slice(0,80),message:message.slice(0,600),createdAt:serverTimestamp(),createdBy:auth.currentUser.uid});
+  $("broadcastForm").reset();$("broadcastStatus").textContent="✓ संदेश सभी लॉगिन ग्राहकों के लिए प्रकाशित हो गया।";
+ }catch(err){$("broadcastStatus").textContent="संदेश नहीं भेजा गया: "+(err.code||err.message)}
+ finally{button.disabled=false}
+}
+$("broadcastForm").addEventListener("submit",sendBroadcast);
 function orderSummary(o){
  const names=(o.items||[]).map(i=>(i.nameHi||i.nameEn||"Item")+" × "+Number(i.quantity||0)).join(", ");
  const where=o.deliveryLocation?.mode==="gps"?"GPS location captured":(o.deliveryLocation?.address||"Address not entered");
