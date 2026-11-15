@@ -25,14 +25,14 @@ beforeEach(async () => {
 test("public menu is readable without login", async () => {
   await env.withSecurityRulesDisabled(async context => {
     await setDoc(doc(context.firestore(), "publicMenu/current"), {
-      items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/burger.jpg", prices: [["Full", 60]] }]
+      items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/burger.jpg", prices: [{ label: "Full", amount: 60 }] }]
     });
   });
   await assertSucceeds(getDoc(doc(env.unauthenticatedContext().firestore(), "publicMenu/current")));
 });
 
 test("only the configured owner can publish menu changes", async () => {
-  const menu = { items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/burger.jpg", prices: [["Full", 60]] }] };
+  const menu = { items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/burger.jpg", prices: [{ label: "Full", amount: 60 }] }] };
   await assertSucceeds(setDoc(doc(env.authenticatedContext(ownerUid).firestore(), "publicMenu/current"), menu));
   await assertFails(setDoc(doc(env.authenticatedContext(customerUid).firestore(), "publicMenu/current"), menu));
   await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), "publicMenu/attacker"), menu));
