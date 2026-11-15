@@ -159,6 +159,21 @@ $("orders").addEventListener("click",async e=>{
   if(row?.ownerLocation){try{await updateDoc(doc(db,"orders",trackingOrderId),{ownerLocation:{...row.ownerLocation,active:false},trackingUpdatedAt:serverTimestamp()})}catch(err){$("dashStatus").textContent="Tracking pause update नहीं हुआ: "+(err.code||err.message)}}
   trackingWatchId=null;trackingOrderId=null;$("dashStatus").textContent="Live location sharing बंद कर दी गई।";return;
  }
- const b=e.target.closest("[data-save]");if(!b)return;const id=b.dataset.save,s=$("orders").querySelector('[data-status="'+CSS.escape(id)+'"]');if(!s)return;b.disabled=true;try{await updateDoc(doc(db,"orders",id),{status:s.value,updatedAt:serverTimestamp()});const row=allOrders.find(x=>x.id===id);if(row)row.status=s.value;render();$("dashStatus").textContent="Order status updated."}catch(err){$("dashStatus").textContent="Status update failed: "+(err.code||err.message);b.disabled=false}
+ const b=e.target.closest("[data-save]");if(!b)return;const id=b.dataset.save,s=$("orders").querySelector('[data-status="'+CSS.escape(id)+'"]');if(!s)return;b.disabled=true;try{
+  const nextStatus=s.value;
+  // Stop GPS sharing before a terminal status is written; rules intentionally
+  // reject tracking updates after an order is completed or cancelled.
+  if((nextStatus==="completed"||nextStatus==="cancelled")&&trackingOrderId===id&&trackingWatchId!==null){
+   navigator.geolocation.clearWatch(trackingWatchId);
+   trackingWatchId=null;trackingOrderId=null;
+   const row=allOrders.find(x=>x.id===id);
+   if(row?.ownerLocation){
+    await updateDoc(doc(db,"orders",id),{ownerLocation:{...row.ownerLocation,active:false},trackingUpdatedAt:serverTimestamp()});
+    row.ownerLocation={...row.ownerLocation,active:false};
+   }
+  }
+  await updateDoc(doc(db,"orders",id),{status:nextStatus,updatedAt:serverTimestamp()});
+  const row=allOrders.find(x=>x.id===id);if(row)row.status=nextStatus;render();$("dashStatus").textContent="Order status updated.";
+ }catch(err){$("dashStatus").textContent="Status update failed: "+(err.code||err.message);b.disabled=false}
 });
 </script></body></html>
