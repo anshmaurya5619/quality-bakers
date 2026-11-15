@@ -1,11 +1,12 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Publicly viewable menu photos; upload/delete restricted to owner UID.
+    // Menu photos are public to view; only the verified owner may upload images.
+    // The current storefront uses Cloudinary, so this rule does not change its upload flow.
     match /menu/{allPaths=**} {
       allow read: if true;
       allow write: if request.auth != null
-        && request.auth.uid == "PASTE_OWNER_AUTH_UID"
+        && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1"
         && request.resource != null
         && request.resource.size < 5 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
