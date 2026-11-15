@@ -1767,7 +1767,7 @@ function normalizeMenuItems(data){
   const photo=validFoodPhoto(remote.photo)?remote.photo.trim():
    (validFoodPhoto(remote.imageUrl)?remote.imageUrl.trim():
    (validFoodPhoto(remote.photoURL)?remote.photoURL.trim():base.photo));
-  const prices=Array.isArray(remote.prices)&&remote.prices.length&&remote.prices.every(p=>Array.isArray(p)&&p.length>=2&&Number.isFinite(Number(p[1])))?remote.prices:base.prices;
+  const normalizedPrices=Array.isArray(remote.prices)?remote.prices.map(p=>Array.isArray(p)?[String(p[0]),Number(p[1])]:p&&typeof p==="object"?[String(p.label??p.size??"Regular"),Number(p.amount??p.price)]:null).filter(p=>p&&p[0]&&Number.isFinite(p[1])):[];const prices=normalizedPrices.length?normalizedPrices:base.prices;
   const cat=allowedMenuCategories.has(remote.cat)?remote.cat:base.cat;
   return {
    ...base,...remote,
