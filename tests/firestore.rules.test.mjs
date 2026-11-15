@@ -88,6 +88,31 @@ test("only owner can advance a valid order status", async () => {
   }));
 });
 
+test("owner GPS tracking is allowed only for active delivery statuses", async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "orders/gps-order"), {
+      customerUid, status: "placed"
+    });
+  });
+  const ownerDb = env.authenticatedContext(ownerUid).firestore();
+  const location = {
+    latitude: 25.75, longitude: 82.68, accuracyMeters: 15,
+    capturedAt: new Date().toISOString(), active: true
+  };
+  await assertFails(updateDoc(doc(ownerDb, "orders/gps-order"), {
+    ownerLocation: location, trackingUpdatedAt: serverTimestamp()
+  }));
+  await assertSucceeds(updateDoc(doc(ownerDb, "orders/gps-order"), {
+    status: "confirmed", updatedAt: serverTimestamp()
+  }));
+  await assertSucceeds(updateDoc(doc(ownerDb, "orders/gps-order"), {
+    ownerLocation: location, trackingUpdatedAt: serverTimestamp()
+  }));
+  await assertFails(updateDoc(doc(env.authenticatedContext(customerUid).firestore(), "orders/gps-order"), {
+    ownerLocation: { ...location, active: false }, trackingUpdatedAt: serverTimestamp()
+  }));
+});
+
 test("customer profile is private to its authenticated UID", async () => {
   const ownDb = env.authenticatedContext(customerUid).firestore();
   await assertSucceeds(setDoc(doc(ownDb, "customers/" + customerUid), {
