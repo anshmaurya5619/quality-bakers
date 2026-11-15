@@ -33,7 +33,14 @@ test("public menu is readable without login", async () => {
 
 test("only the configured owner can publish menu changes", async () => {
   const menu = { items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/burger.jpg", prices: [{ label: "Full", amount: 60 }] }] };
-  await assertSucceeds(setDoc(doc(env.authenticatedContext(ownerUid).firestore(), "publicMenu/current"), menu));
+  const ownerDb = env.authenticatedContext(ownerUid).firestore();
+  await assertSucceeds(setDoc(doc(ownerDb, "publicMenu/current"), menu));
+  await assertSucceeds(updateDoc(doc(ownerDb, "publicMenu/current"), {
+    items: [{ id: "burger", hi: "बर्गर", en: "Burger", cat: "snacks", photo: "https://example.com/new-burger.jpg", prices: [{ label: "Full", amount: 70 }] }]
+  }));
+  const published = await getDoc(doc(ownerDb, "publicMenu/current"));
+  assert.equal(published.data().items.length, 1);
+  assert.equal(published.data().items[0].prices[0].amount, 70);
   await assertFails(setDoc(doc(env.authenticatedContext(customerUid).firestore(), "publicMenu/current"), menu));
   await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), "publicMenu/attacker"), menu));
 });
