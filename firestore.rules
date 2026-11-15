@@ -21,7 +21,7 @@ service cloud.firestore {
     function validDeliveryLocation(location) {
       return location is map
         && location.keys().hasOnly([
-          'mode', 'latitude', 'longitude', 'accuracyMeters',
+          'mode', 'latitude', 'longitude', 'accuracyMeters', 'capturedAt',
           'address', 'manualAddress'
         ])
         && location.mode in ['gps', 'manual']
@@ -38,6 +38,8 @@ service cloud.firestore {
             && location.address.size() >= 8
             && location.address.size() <= 500)
         )
+        && (!('capturedAt' in location)
+          || (location.capturedAt is string && location.capturedAt.size() <= 40))
         && (!('address' in location)
           || (location.address is string && location.address.size() <= 500))
         && (!('manualAddress' in location)
