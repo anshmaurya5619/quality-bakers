@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateOrder } from "./index.js";
+import { validateOrder, toFirestoreFields } from "./index.js";
 
 const menu = { items: [
   { id: "burger", hi: "बर्गर", en: "Burger", available: true,
@@ -41,4 +41,10 @@ test("accepts the site's GPS payload including reverse-geocoded address", () => 
 });
 test("rejects invalid quantities and excessive totals", () => {
   assert.throws(() => validateOrder({ ...base, items: [{ ...base.items[0], quantity: 0 }] }, menu, claims), /मात्रा/);
+});
+
+test("trusted order createdAt is encoded as a Firestore timestamp", () => {
+  const fields = toFirestoreFields({ createdAt: "2026-11-17T10:00:00.000Z", status: "placed" });
+  assert.deepEqual(fields.createdAt, { timestampValue: "2026-11-17T10:00:00.000Z" });
+  assert.deepEqual(fields.status, { stringValue: "placed" });
 });
