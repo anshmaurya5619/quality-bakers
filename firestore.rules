@@ -1,95 +1,179 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function isOwner() {
-      return signedIn() && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1";
+
+    function signedIn() {
+      return request.auth != null;
     }
 
-    // Publicly readable published menu; only the owner may publish.
+    function isOwner() {
+      return signedIn()
+        && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1";
+    }
+
+    function validCoordinates(location) {
+      return location.latitude is number
+        && location.longitude is number
+        && location.latitude >= -90
+        && location.latitude <= 90
+        && location.longitude >= -180
+        && location.longitude <= 180;
+    }
+
+    function validOwnerLocation(location) {
+      return location is map
+        && location.keys().hasOnly([
+          'latitude',
+          'longitude',
+          'accuracyMeters',
+          'capturedAt',
+          'active'
+        ])
+        && validCoordinates(location)
+        && location.accuracyMeters is number
+        && location.accuracyMeters >= 0
+        && location.capturedAt is string
+        && location.capturedAt.size() > 0
+        && location.capturedAt.size() <= 40
+        && location.active is bool;
+    }
+
+    function validStatusTransition(oldStatus, newStatus) {
+      return oldStatus == newStatus
+        || (oldStatus == 'placed' && newStatus in ['confirmed', 'cancelled'])
+        || (oldStatus == 'confirmed' && newStatus in ['preparing', 'cancelled'])
+        || (oldStatus == 'preparing' && newStatus in ['ready', 'cancelled'])
+        || (oldStatus == 'ready' && newStatus in ['completed', 'cancelled']);
+    }
+
+    function validCustomerProfile(uid) {
+      return request.resource.data.keys().hasOnly([
+          'uid',
+          'name',
+          'email',
+          'phone',
+          'createdAt',
+          'updatedAt',
+          'addresses'
+        ])
+        && request.resource.data.uid == uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 70
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 20
+        && (!('createdAt' in request.resource.data)
+          || request.resource.data.createdAt is timestamp)
+        && (!('updatedAt' in request.resource.data)
+          || request.resource.data.updatedAt is timestamp)
+        && (!('addresses' in request.resource.data)
+          || (request.resource.data.addresses is list
+            && request.resource.data.addresses.size() <= 10));
+    }
+
+    // Public menu is readable by customers; only the configured owner can publish.
     match /publicMenu/{document} {
       allow read: if true;
-      allow write: if isOwner();
+      allow create, update, delete: if isOwner();
     }
 
-    // A customer can create an order only for their own authenticated UID.
-    // Owner can read every order and update its status from admin.html.
+    // Orders are created only by the trusted Cloudflare Worker.
+    // The Worker verifies Firebase ID tokens and recalculates every line against
+    // publicMenu/current before writing with its server-side service account.
     match /orders/{orderId} {
-      allow create: if signedIn()
-        && request.resource.data.keys().hasOnly([
-          'customerUid','customerName','customerEmail','customerPhone',
-          'note','deliveryLocation','items','total','status','createdAt'
-        ])
-        && request.resource.data.customerUid == request.auth.uid
-        && request.resource.data.status == 'placed'
-        && request.resource.data.customerName is string
-        && request.resource.data.customerName.size() > 0
-        && request.resource.data.customerName.size() <= 70
-        && request.resource.data.deliveryLocation is map
-        && request.resource.data.deliveryLocation.mode in ['gps','manual']
-        && (request.resource.data.deliveryLocation.mode == 'gps'
-          ? request.resource.data.deliveryLocation.latitude is number
-            && request.resource.data.deliveryLocation.longitude is number
-            && request.resource.data.deliveryLocation.latitude >= -90
-            && request.resource.data.deliveryLocation.latitude <= 90
-            && request.resource.data.deliveryLocation.longitude >= -180
-            && request.resource.data.deliveryLocation.longitude <= 180
-          : request.resource.data.deliveryLocation.address is string
-            && request.resource.data.deliveryLocation.address.size() >= 5
-            && request.resource.data.deliveryLocation.address.size() <= 500)
-        && request.resource.data.items is list
-        && request.resource.data.items.size() > 0
-        && request.resource.data.items.size() <= 30
-        && request.resource.data.total is number
-        && request.resource.data.total >= 0;
-      allow read: if isOwner()
+      // No browser/customer can submit a forged total or write an order directly.
+      allow create: if false;
+
+      // Owner can query all orders; a customer can query only their own UID orders.
+      allow get, list: if isOwner()
         || (signedIn() && resource.data.customerUid == request.auth.uid);
-      // Owner can update order status or publish their current delivery GPS.
+
+      // Only the owner can advance status or update the owner's live GPS.
       allow update: if isOwner()
         && (
           (
             request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['status','updatedAt'])
+              .hasOnly(['status', 'updatedAt'])
             && request.resource.data.status in [
-              'placed','confirmed','preparing','ready','completed','cancelled'
+              'placed',
+              'confirmed',
+              'preparing',
+              'ready',
+              'completed',
+              'cancelled'
             ]
+            && validStatusTransition(
+              resource.data.get('status', 'placed'),
+              request.resource.data.status
+            )
+            && request.resource.data.updatedAt == request.time
           )
           ||
           (
             request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['ownerLocation','trackingUpdatedAt'])
-            && request.resource.data.ownerLocation is map
-            && request.resource.data.ownerLocation.latitude is number
-            && request.resource.data.ownerLocation.longitude is number
-            && request.resource.data.ownerLocation.latitude >= -90
-            && request.resource.data.ownerLocation.latitude <= 90
-            && request.resource.data.ownerLocation.longitude >= -180
-            && request.resource.data.ownerLocation.longitude <= 180
+              .hasOnly(['ownerLocation', 'trackingUpdatedAt'])
+            && validOwnerLocation(request.resource.data.ownerLocation)
+            && request.resource.data.trackingUpdatedAt == request.time
+            && resource.data.get('status', 'placed') in [
+              'confirmed',
+              'preparing',
+              'ready'
+            ]
           )
         );
+
       allow delete: if isOwner();
     }
 
-    // Owner broadcasts announcements; every authenticated customer can read them.
+    // Signed-in customers can read announcements; only owner can publish/remove.
     match /announcements/{announcementId} {
       allow read: if signedIn();
+
       allow create: if isOwner()
-        && request.resource.data.keys().hasOnly(['title','message','createdAt','createdBy'])
+        && request.resource.data.keys().hasOnly([
+          'title',
+          'message',
+          'createdAt',
+          'createdBy'
+        ])
         && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() >= 1
         && request.resource.data.title.size() <= 80
         && request.resource.data.message is string
-        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() >= 1
         && request.resource.data.message.size() <= 600
         && request.resource.data.createdBy == request.auth.uid
         && request.resource.data.createdAt == request.time;
+
       allow update: if false;
       allow delete: if isOwner();
     }
 
-    // Customer can access only their own profile.
+    // Customer profile, phone and up to 10 saved addresses are private to that UID.
     match /customers/{uid} {
-      allow read, create, update: if signedIn() && request.auth.uid == uid;
+      allow get: if signedIn() && request.auth.uid == uid;
+
+      allow list: if false;
+
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && validCustomerProfile(uid);
+
+      allow update: if signedIn()
+        && request.auth.uid == uid
+        && validCustomerProfile(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly([
+            'name',
+            'email',
+            'phone',
+            'createdAt',
+            'updatedAt',
+            'addresses'
+          ]);
+
       allow delete: if isOwner();
     }
   }
