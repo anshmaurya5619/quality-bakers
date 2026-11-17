@@ -1,12 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     function signedIn() {
       return request.auth != null;
     }
 
     function isOwner() {
-      return signedIn() && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1";
+      return signedIn()
+        && request.auth.uid == "4iZybwaOm9hZJhdjRttjmlvnpVu1";
     }
 
     function validCoordinates(location) {
@@ -18,32 +20,22 @@ service cloud.firestore {
         && location.longitude <= 180;
     }
 
-    function validDeliveryLocation(location) {
+    function validOwnerLocation(location) {
       return location is map
         && location.keys().hasOnly([
-          'mode', 'latitude', 'longitude', 'accuracyMeters', 'capturedAt',
-          'address', 'manualAddress'
+          'latitude',
+          'longitude',
+          'accuracyMeters',
+          'capturedAt',
+          'active'
         ])
-        && location.mode in ['gps', 'manual']
-        && (
-          (location.mode == 'gps'
-            && validCoordinates(location)
-            && (!('accuracyMeters' in location)
-              || (location.accuracyMeters is number
-                && location.accuracyMeters >= 0
-                && location.accuracyMeters <= 10000)))
-          ||
-          (location.mode == 'manual'
-            && location.address is string
-            && location.address.size() >= 8
-            && location.address.size() <= 500)
-        )
-        && (!('capturedAt' in location)
-          || (location.capturedAt is string && location.capturedAt.size() <= 40))
-        && (!('address' in location)
-          || (location.address is string && location.address.size() <= 500))
-        && (!('manualAddress' in location)
-          || (location.manualAddress is string && location.manualAddress.size() <= 500));
+        && validCoordinates(location)
+        && location.accuracyMeters is number
+        && location.accuracyMeters >= 0
+        && location.capturedAt is string
+        && location.capturedAt.size() > 0
+        && location.capturedAt.size() <= 40
+        && location.active is bool;
     }
 
     function validStatusTransition(oldStatus, newStatus) {
@@ -54,68 +46,68 @@ service cloud.firestore {
         || (oldStatus == 'ready' && newStatus in ['completed', 'cancelled']);
     }
 
-    function validOwnerLocation(location) {
-      return location is map
-        && location.keys().hasOnly([
-          'latitude', 'longitude', 'accuracyMeters', 'capturedAt', 'active'
+    function validCustomerProfile(uid) {
+      return request.resource.data.keys().hasOnly([
+          'uid',
+          'name',
+          'email',
+          'phone',
+          'createdAt',
+          'updatedAt',
+          'addresses'
         ])
-        && validCoordinates(location)
-        && location.accuracyMeters is number
-        && location.accuracyMeters >= 0
-        && location.accuracyMeters <= 10000
-        && location.capturedAt is string
-        && location.capturedAt.size() > 0
-        && location.capturedAt.size() <= 40
-        && location.active is bool;
+        && request.resource.data.uid == uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 70
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 20
+        && (!('createdAt' in request.resource.data)
+          || request.resource.data.createdAt is timestamp)
+        && (!('updatedAt' in request.resource.data)
+          || request.resource.data.updatedAt is timestamp)
+        && (!('addresses' in request.resource.data)
+          || (request.resource.data.addresses is list
+            && request.resource.data.addresses.size() <= 10));
     }
 
-    // Public menu data is readable by everyone; only the verified owner can publish it.
+    // Public menu is readable by customers; only the configured owner can publish.
     match /publicMenu/{document} {
       allow read: if true;
-      allow write: if isOwner();
+      allow create, update, delete: if isOwner();
     }
 
+    // Orders are created only by the trusted Cloudflare Worker.
+    // The Worker verifies Firebase ID tokens and recalculates every line against
+    // publicMenu/current before writing with its server-side service account.
     match /orders/{orderId} {
-      // Customer can create only an order under their own authenticated account.
-      allow create: if signedIn()
-        && request.resource.data.keys().hasOnly([
-          'customerUid', 'customerName', 'customerEmail', 'customerPhone',
-          'note', 'deliveryLocation', 'items', 'total', 'status', 'createdAt'
-        ])
-        && request.resource.data.customerUid == request.auth.uid
-        && request.resource.data.customerName is string
-        && request.resource.data.customerName.size() >= 2
-        && request.resource.data.customerName.size() <= 70
-        && request.resource.data.customerEmail is string
-        && request.resource.data.customerEmail.size() <= 254
-        && request.resource.data.customerPhone is string
-        && request.resource.data.customerPhone.size() >= 10
-        && request.resource.data.customerPhone.size() <= 20
-        && request.resource.data.note is string
-        && request.resource.data.note.size() <= 500
-        && validDeliveryLocation(request.resource.data.deliveryLocation)
-        && request.resource.data.items is list
-        && request.resource.data.items.size() > 0
-        && request.resource.data.items.size() <= 30
-        && request.resource.data.total is number
-        && request.resource.data.total >= 0
-        && request.resource.data.total <= 100000
-        && request.resource.data.status == 'placed'
-        && request.resource.data.createdAt == request.time;
+      // No browser/customer can submit a forged total or write an order directly.
+      allow create: if false;
 
-      allow read: if isOwner()
+      // Owner can query all orders; a customer can query only their own UID orders.
+      allow get, list: if isOwner()
         || (signedIn() && resource.data.customerUid == request.auth.uid);
 
-      // Only the owner may change status or publish/stop delivery-location sharing.
+      // Only the owner can advance status or update the owner's live GPS.
       allow update: if isOwner()
         && (
           (
             request.resource.data.diff(resource.data).affectedKeys()
               .hasOnly(['status', 'updatedAt'])
             && request.resource.data.status in [
-              'placed', 'confirmed', 'preparing', 'ready', 'completed', 'cancelled'
+              'placed',
+              'confirmed',
+              'preparing',
+              'ready',
+              'completed',
+              'cancelled'
             ]
-            && validStatusTransition(resource.data.status, request.resource.data.status)
+            && validStatusTransition(
+              resource.data.get('status', 'placed'),
+              request.resource.data.status
+            )
             && request.resource.data.updatedAt == request.time
           )
           ||
@@ -124,68 +116,63 @@ service cloud.firestore {
               .hasOnly(['ownerLocation', 'trackingUpdatedAt'])
             && validOwnerLocation(request.resource.data.ownerLocation)
             && request.resource.data.trackingUpdatedAt == request.time
-            && resource.data.status in ['confirmed', 'preparing', 'ready']
+            && resource.data.get('status', 'placed') in [
+              'confirmed',
+              'preparing',
+              'ready'
+            ]
           )
         );
 
       allow delete: if isOwner();
     }
 
+    // Signed-in customers can read announcements; only owner can publish/remove.
     match /announcements/{announcementId} {
       allow read: if signedIn();
+
       allow create: if isOwner()
         && request.resource.data.keys().hasOnly([
-          'title', 'message', 'createdAt', 'createdBy'
+          'title',
+          'message',
+          'createdAt',
+          'createdBy'
         ])
         && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() >= 1
         && request.resource.data.title.size() <= 80
         && request.resource.data.message is string
-        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() >= 1
         && request.resource.data.message.size() <= 600
         && request.resource.data.createdBy == request.auth.uid
         && request.resource.data.createdAt == request.time;
+
       allow update: if false;
       allow delete: if isOwner();
     }
 
+    // Customer profile, phone and up to 10 saved addresses are private to that UID.
     match /customers/{uid} {
-      // A customer may read/write only their own bounded profile document.
-      allow read: if signedIn() && request.auth.uid == uid;
+      allow get: if signedIn() && request.auth.uid == uid;
+
+      allow list: if false;
+
       allow create: if signedIn()
         && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly([
-          'uid', 'name', 'email', 'phone', 'createdAt', 'updatedAt', 'addresses'
-        ])
-        && request.resource.data.uid == uid
-        && request.resource.data.name is string
-        && request.resource.data.name.size() >= 1
-        && request.resource.data.name.size() <= 70
-        && request.resource.data.email is string
-        && request.resource.data.email.size() <= 254
-        && request.resource.data.phone is string
-        && request.resource.data.phone.size() <= 20
-        && (!('addresses' in request.resource.data)
-          || (request.resource.data.addresses is list
-            && request.resource.data.addresses.size() <= 10));
+        && validCustomerProfile(uid);
+
       allow update: if signedIn()
         && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly([
-          'uid', 'name', 'email', 'phone', 'createdAt', 'updatedAt', 'addresses'
-        ])
-        && request.resource.data.uid == uid
-        && request.resource.data.name is string
-        && request.resource.data.name.size() >= 1
-        && request.resource.data.name.size() <= 70
-        && request.resource.data.email is string
-        && request.resource.data.email.size() <= 254
-        && request.resource.data.phone is string
-        && request.resource.data.phone.size() <= 20
-        && (!('addresses' in request.resource.data)
-          || (request.resource.data.addresses is list
-            && request.resource.data.addresses.size() <= 10))
+        && validCustomerProfile(uid)
         && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['uid', 'name', 'email', 'phone', 'updatedAt', 'addresses']);
+          .hasOnly([
+            'name',
+            'email',
+            'phone',
+            'updatedAt',
+            'addresses'
+          ]);
+
       allow delete: if isOwner();
     }
   }
