@@ -118,7 +118,7 @@ function toFirestoreValue(value) {
   if (typeof value === "object") return { mapValue: { fields: toFirestoreFields(value) } };
   throw new Error("Unsupported order field type");
 }
-function toFirestoreFields(data) {
+export function toFirestoreFields(data) {
   return Object.fromEntries(Object.entries(data).map(([k, v]) => [
     k,
     k === "createdAt" && typeof v === "string"
