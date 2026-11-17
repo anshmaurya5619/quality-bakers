@@ -2182,15 +2182,15 @@ function renderSavedAddresses(rows){
 }
 el("savedAddressList").addEventListener("click",async e=>{
  const b=e.target.closest("[data-delete-address]");if(!b||!auth.currentUser)return;
- try{const ref=doc(db,"customers",auth.currentUser.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];rows.splice(Number(b.dataset.deleteAddress),1);await setDoc(ref,{addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows)}
- catch(err){el("savedAddressMessage").textContent="पता हटाया नहीं जा सका। कृपया फिर कोशिश करें।"}
+ try{const user=auth.currentUser,ref=doc(db,"customers",user.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];rows.splice(Number(b.dataset.deleteAddress),1);await setDoc(ref,{uid:user.uid,name:String(user.displayName||data.name||"Customer").slice(0,70),email:user.email||data.email||"",phone:String(data.phone||"").slice(0,20),createdAt:data.createdAt||serverTimestamp(),addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows)}
+ catch(err){el("savedAddressMessage").textContent="पता हटाया नहीं जा सका: "+(err.code||"कृपया फिर कोशिश करें।")}
 });
 el("savedAddressForm").addEventListener("submit",async e=>{
  e.preventDefault();const user=auth.currentUser;if(!user)return;
  const label=el("savedAddressName").value.trim(),address=el("savedAddressText").value.trim();
  if(!label||!address)return;
  const msg=el("savedAddressMessage");msg.textContent="पता सेव हो रहा है…";
- try{const ref=doc(db,"customers",user.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];rows.push({label:label.slice(0,35),address:address.slice(0,500),createdAt:new Date().toISOString()});await setDoc(ref,{addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows);el("savedAddressForm").reset();msg.textContent="पता सेव हो गया।"}
+ try{const ref=doc(db,"customers",user.uid),snap=await getDoc(ref),data=snap.exists()?snap.data():{},rows=Array.isArray(data.addresses)?data.addresses:[];if(rows.length>=10){msg.textContent="अधिकतम 10 पते सेव कर सकते हैं। नया पता जोड़ने से पहले एक पुराना हटाएँ।";return}rows.push({label:label.slice(0,35),address:address.slice(0,500),createdAt:new Date().toISOString()});await setDoc(ref,{uid:user.uid,name:String(user.displayName||data.name||"Customer").slice(0,70),email:user.email||data.email||"",phone:String(data.phone||"").slice(0,20),createdAt:data.createdAt||serverTimestamp(),addresses:rows,updatedAt:serverTimestamp()},{merge:true});renderSavedAddresses(rows);el("savedAddressForm").reset();msg.textContent="पता सेव हो गया।"}
  catch(err){console.error("Address save failed",err.code||err.message);msg.textContent="पता सेव नहीं हुआ। Firestore customer rules जाँचें।"}
 });
 el("customerProfileForm").addEventListener("submit",async e=>{
