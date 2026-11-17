@@ -26,7 +26,7 @@
 <div class="prices"><div class="field"><label for="size1">साइज़ 1</label><input id="size1" value="Half" maxlength="30"></div><div class="field"><label for="price1">कीमत 1 (₹)</label><input id="price1" type="number" min="0" max="100000" required value="40"></div><div class="field"><label for="size2">साइज़ 2 (न हो तो खाली)</label><input id="size2" value="Full" maxlength="30"></div><div class="field"><label for="price2">कीमत 2 (₹)</label><input id="price2" type="number" min="0" max="100000" value="60"></div></div>
 <div class="buttons"><button class="btn primary" type="submit">💾 बदलाव सेव करें</button><button class="btn secondary" type="button" id="clearForm">नया / साफ़ करें</button></div></form></div>
 <div id="manageMenuPage"><hr style="border:0;border-top:1px solid #ffffff20;margin:20px 0"><h2>मेन्यू आइटम</h2><p class="muted">एडिट से नाम, कीमत और फोटो बदलें। हटाएँ दबाने पर आइटम ड्राफ्ट से हटेगा; सार्वजनिक मेन्यू से हटाने के लिए अंत में Firebase पर Publish करना जरूरी है।</p><div class="itemlist" id="itemList"></div>
-<div class="buttons"><button class="btn primary" id="publishBtn" type="button">🚀 Firebase पर Publish करें</button><button class="btn secondary" id="exportBtn" type="button">JSON बैकअप डाउनलोड</button><button class="btn secondary" id="importBtn" type="button">JSON बैकअप इम्पोर्ट</button><input id="importFile" class="hidden" type="file" accept="application/json"></div><div class="buttons"><button class="btn danger" id="resetBtn" type="button">डेमो मूल मेन्यू पर रीसेट करें</button></div></div></section>
+<div class="buttons"><button class="btn primary" id="publishBtn" type="button">🚀 Firebase पर Publish करें</button><button class="btn secondary" id="exportBtn" type="button">JSON बैकअप डाउनलोड</button><button class="btn secondary" id="importBtn" type="button">JSON बैकअप इम्पोर्ट</button><input id="importFile" class="hidden" type="file" accept="application/json"></div></div></section>
 <section class="panel" id="menuPreviewPage"><h2>👀 मेन्यू प्रीव्यू</h2><p class="muted">यह प्रीव्यू इस डेमो की सेव की गई कीमतें, नाम और फोटो दिखाता है।</p><div class="previewGrid" id="preview"></div></section>
 </div></main>
 <script>
@@ -77,7 +77,7 @@ $("itemList").addEventListener("click",e=>{const ed=e.target.closest("[data-edit
 $("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(menu,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="quality-bakers-demo-menu.json";a.click();URL.revokeObjectURL(a.href)});
 $("importBtn").addEventListener("click",()=>$("importFile").click());
 $("importFile").addEventListener("change",async()=>{const f=$("importFile").files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data)||!data.every(i=>i.id&&i.hi&&i.en&&Array.isArray(i.prices)))throw Error();menu=data;persist()}catch{$("status").textContent="यह सही Quality Bakers JSON बैकअप नहीं है।"} $("importFile").value=""});
-$("resetBtn").addEventListener("click",()=>{$("status").textContent="Reset सुरक्षा के लिए बंद है। JSON बैकअप इम्पोर्ट करके आवश्यक बदलाव करें।"});
+
 render();
 </script>
 <script type="module">
