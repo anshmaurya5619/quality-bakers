@@ -2105,6 +2105,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, on
 import { doc, setDoc, getDoc, addDoc, collection, getDocs, query, where, serverTimestamp, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import { auth, db } from "./firebase-client.js";
 import { QB_ADMIN_UID } from "./firebase-config.js";
+import { ORDER_API_URL } from "./order-api-config.js";
 
 let authMode="login";
 const el=id=>document.getElementById(id);
@@ -2299,12 +2300,15 @@ onAuthStateChanged(auth,async user=>{
 });
 window.QB_CREATE_ORDER=async({customerName,customerPhone,note,deliveryLocation,items,total})=>{
  const user=auth.currentUser;if(!user)throw new Error("पहले लॉगिन करें।");
- const cleanItems=items.map(i=>({id:String(i.id),nameHi:String(i.nameHi),nameEn:String(i.nameEn),size:String(i.size),price:Number(i.price),quantity:Number(i.quantity),lineTotal:Number(i.lineTotal)}));
- const payload={customerUid:user.uid,customerName:String(customerName).slice(0,70),customerEmail:user.email||"",customerPhone:String(customerPhone||"").slice(0,20),note:String(note||"").slice(0,500),deliveryLocation,items:cleanItems,total:Number(total),status:"placed",createdAt:serverTimestamp()};
- const result=await addDoc(collection(db,"orders"),payload);
- await setDoc(doc(db,"customers",user.uid),{uid:user.uid,name:payload.customerName,email:payload.customerEmail,phone:payload.customerPhone,updatedAt:serverTimestamp()},{merge:true});
+ if(!ORDER_API_URL||ORDER_API_URL.startsWith("PASTE_"))throw new Error("सुरक्षित Order API अभी deploy/configure नहीं हुई है। Owner को Worker URL configure करना होगा।");
+ const idToken=await user.getIdToken(true);
+ const response=await fetch(ORDER_API_URL,{method:"POST",headers:{"Authorization":"Bearer "+idToken,"Content-Type":"application/json"},body:JSON.stringify({customerName,customerPhone,note,deliveryLocation,items,total})});
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok||!result.ok||!result.orderId)throw new Error(result.error||"सुरक्षित ऑर्डर सेव नहीं हो सका। कृपया दोबारा कोशिश करें।");
+ try{await setDoc(doc(db,"customers",user.uid),{uid:user.uid,name:String(customerName).slice(0,70),email:user.email||"",phone:String(customerPhone||"").slice(0,20),updatedAt:serverTimestamp()},{merge:true});}
+ catch(err){console.warn("Order saved, but customer profile refresh failed:",err.code||err.message);}
  await loadOrders(user);
- return result.id;
+ return result.orderId;
 };
 setMode("login");
 
