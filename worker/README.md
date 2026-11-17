@@ -13,4 +13,7 @@ This Worker validates each order against the current Firestore menu before creat
 6. Deploy, then put the Worker URL into `order-api-config.js` as `ORDER_API_URL`.
 7. Test customer login, manual/GPS checkout, owner order list, status changes, and tracking before publishing Firebase rules.
 
-The Worker verifies Firebase ID tokens against Google's public signing keys and writes using the server-side service account. Never put the service-account key in the browser or repository.
+The Worker verifies Firebase ID tokens against Google's public signing keys and writes using the server-side service account. The Worker only needs Firestore read/create access; it does not need update/delete permission. Never put the service-account key in the browser or repository.
+
+## Firebase Storage note
+Do not switch menu uploads to Firebase Storage on this project unless its billing plan is deliberately changed. Current Firebase documentation says Cloud Storage for Firebase requires the Blaze plan; Spark projects cannot access Storage buckets. Keep the existing HTTPS URL or Cloudinary Free unsigned-preset path instead. No billing change is authorized.
