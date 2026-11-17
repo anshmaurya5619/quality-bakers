@@ -169,3 +169,14 @@ test("owner status updates require legal progression and timestamp", async () =>
     status: "confirmed", updatedAt: serverTimestamp()
   }));
 });
+
+test("legacy customer profile can receive a missing createdAt timestamp", async () => {
+  const db = env.authenticatedContext("legacy-customer").firestore();
+  const profile = doc(db, "customers/legacy-customer");
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "customers/legacy-customer"), {
+      uid: "legacy-customer", name: "Legacy Customer", email: "", phone: ""
+    });
+  });
+  await assertSucceeds(updateDoc(profile, { createdAt: serverTimestamp(), updatedAt: serverTimestamp() }));
+});
