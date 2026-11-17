@@ -6,11 +6,11 @@
 
 .ownerTrack{margin-top:12px;padding:12px;border:1px solid #7d6849;border-radius:8px;background:#211d17}.ownerTrack .btn{margin:5px 6px 0 0}.trackLive{color:#9fe0ad}.trackMap{display:inline-block;margin-top:7px;color:#d8b77a}
 
-#newOrderAlert:not([hidden]){position:fixed;z-index:9999;right:16px;top:16px;width:min(440px,calc(100vw - 32px));max-height:75vh;overflow:auto;background:#f5ead7;color:#302418;border:2px solid #bd8c4c;box-shadow:0 18px 55px #0008;border-radius:14px;padding:18px}#newOrderAlert p{margin:8px 0}#newOrderAlert .alertClose{float:right;border:0;border-radius:50%;width:32px;height:32px;background:#e7d6bd;color:#382819;font-size:20px}
+#newOrderAlert:not([hidden]){display:block;width:100%;max-height:none;overflow:visible;background:#f5ead7;color:#302418;border:1px solid #bd8c4c;border-radius:10px;padding:18px;margin:18px 0;box-shadow:none}#newOrderAlert p{margin:8px 0}#newOrderAlert .alertClose{display:inline-block;margin-top:10px;border:1px solid #8b6b43;border-radius:6px;padding:8px 12px;background:#e7d6bd;color:#382819;font-size:14px}
 
 #customerDirectoryPanel input{min-height:44px;font-size:16px}@media(max-width:700px){#customerDirectoryPanel .panelhead{align-items:stretch}#customerDirectoryPanel input{max-width:none!important}}
 </style></head><body>
-<header class="top"><div class="wrap topin"><a class="brand" href="./index.html">QUALITY BAKERS<small>OWNER DESK · PRIVATE MANAGEMENT</small></a><div class="actions"><a class="btn" href="./index.html">Customer Website</a><a class="btn" href="./private-menu-demo.html">Menu Editor</a><button class="btn hidden" id="logout" type="button">Logout</button></div></div></header>
+<header class="top"><div class="wrap topin"><a class="brand" href="./index.html">QUALITY BAKERS<small>OWNER DESK · PRIVATE MANAGEMENT</small></a><div class="actions"><a class="btn" href="./index.html">Customer Website</a><a class="btn" href="./owner.html">Owner Home</a><a class="btn" href="./private-menu-demo.html#add">Menu Editor</a><button class="btn hidden" id="logout" type="button">Logout</button></div></div></header>
 <main class="wrap main"><section class="hero"><div><span class="eyebrow">OWNER CONTROL CENTRE</span><h1>Orders & Store Desk</h1><p class="muted">ग्राहकों के ऑर्डर देखें, पुष्टि करें और उनकी स्थिति अपडेट करें।</p></div><div class="actions"><button class="btn" id="enableAlerts" type="button">🔔 Enable order alerts</button><button class="btn" id="refresh" type="button">↻ Refresh Orders</button></div></section>
 <section class="login" id="loginBox"><h2>Owner Login</h2><form id="loginForm"><div class="field"><label for="email">Owner Email</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn primary" type="submit">Login</button></form><button class="btn" id="google" type="button" style="width:100%;margin-top:10px">Continue with Google</button><p class="status" id="loginStatus" role="status"></p><p class="muted">केवल UID allowlist में मौजूद मालिक ही Dashboard खोल सकता है।</p></section>
 <section id="dashboard" class="hidden"><div class="stats"><div class="stat"><small>Total orders</small><strong id="totalOrders">0</strong></div><div class="stat"><small>New / Placed</small><strong id="newOrders">0</strong></div><div class="stat"><small>Preparing</small><strong id="preparingOrders">0</strong></div><div class="stat"><small>Completed</small><strong id="completedOrders">0</strong></div></div>
@@ -23,7 +23,7 @@
 <p class="status" id="broadcastStatus" role="status"></p>
 </form><div class="note">यह संदेश वेबसाइट पर लॉगिन किए हुए ग्राहकों को लाइव दिखेगा। वेबसाइट बंद होने पर मोबाइल Push Notification के लिए अलग FCM setup आवश्यक होगा।</div>
 </div>
-<div class="panel"><div class="panelhead"><div><span class="eyebrow">CUSTOMER ORDERS</span><h2>Order Management</h2></div><select id="filter"><option value="all">All orders</option><option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="orders" id="orders"><p class="muted">Orders load honge…</p></div></div>
+<div class="panel" id="ordersPanel"><div class="panelhead"><div><span class="eyebrow">CUSTOMER ORDERS</span><h2>Order Management</h2></div><select id="filter"><option value="all">All orders</option><option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="orders" id="orders"><p class="muted">Orders load honge…</p></div></div>
 <div class="panel" id="customerDirectoryPanel">
 <div class="panelhead"><div><span class="eyebrow">CUSTOMER RECORDS</span><h2>ग्राहक सूची / Customer Directory</h2><p class="muted">यह सूची सभी ऑर्डर से बनेगी—नए, चल रहे और पूरे हो चुके ऑर्डर सहित।</p></div><input id="customerSearch" type="search" placeholder="नाम / मोबाइल / ईमेल खोजें" style="max-width:280px;width:100%;padding:10px;border:1px solid #8e795b77;border-radius:7px;background:#11100e;color:#f1e8d8"></div>
 <div id="customerDirectory" class="orders"><p class="muted">ग्राहक रिकॉर्ड लोड हो रहे हैं…</p></div>
@@ -57,6 +57,7 @@ function notifyNewOrder(o){
  const where=o.deliveryLocation?.address||o.deliveryLocation?.manualAddress||(o.deliveryLocation?.latitude!=null?Number(o.deliveryLocation.latitude).toFixed(5)+", "+Number(o.deliveryLocation.longitude).toFixed(5):"पता उपलब्ध नहीं");
  $("newOrderAlert").hidden=false;
  $("newOrderAlert").innerHTML='<button class="alertClose" type="button" aria-label="Close" onclick="document.getElementById(\'newOrderAlert\').hidden=true">×</button><strong>🔔 नया ऑर्डर मिला!</strong><p><b>Order #'+esc(String(o.id).slice(-8))+'</b></p><p>ग्राहक: '+esc(o.customerName||"—")+'<br>मोबाइल: '+esc(o.customerPhone||"—")+'<br>ईमेल: '+esc(o.customerEmail||"—")+'</p><p><b>आइटम</b><br>'+itemLines+'</p><p><b>कुल राशि:</b> ₹'+Number(o.total||0)+'</p><p><b>डिलीवरी पता:</b> '+esc(where)+'</p><p><b>निर्देश:</b> '+esc(o.note||"कोई निर्देश नहीं")+'</p><p><a href="#order-'+esc(o.id)+'">ऑर्डर खोलें और स्वीकार करें ↗</a></p>';
+ $("newOrderAlert").insertAdjacentHTML("beforeend", '<button class="alertClose" type="button">इस सूचना को बंद करें</button>');
  $("dashStatus").textContent=info.title+" — "+info.body;
  if(alertsEnabled&&"Notification" in window&&Notification.permission==="granted"){
   const n=new Notification(info.title,{body:info.body,tag:"qb-order-"+o.id});
@@ -75,6 +76,7 @@ async function enableAlerts(){
  $("enableAlerts").textContent="✓ Order alerts enabled";
  $("dashStatus").textContent="Order browser notifications और sound enabled हैं। Dashboard खुला रखें।";
 }
+$("newOrderAlert").addEventListener("click",e=>{if(e.target.closest(".alertClose"))$("newOrderAlert").hidden=true});
 const labels={placed:"Placed",confirmed:"Confirmed",preparing:"Preparing",ready:"Ready",completed:"Completed",cancelled:"Cancelled"};
 function showLogin(msg=""){ $("loginBox").classList.remove("hidden");$("dashboard").classList.add("hidden");$("logout").classList.add("hidden");$("loginStatus").textContent=msg;}
 function ownerCheck(user){return QB_ADMIN_UID!=="PASTE_OWNER_AUTH_UID"&&user&&user.uid===QB_ADMIN_UID;}
