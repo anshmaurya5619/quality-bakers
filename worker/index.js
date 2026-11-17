@@ -119,7 +119,12 @@ function toFirestoreValue(value) {
   throw new Error("Unsupported order field type");
 }
 function toFirestoreFields(data) {
-  return Object.fromEntries(Object.entries(data).map(([k, v]) => [k, toFirestoreValue(v)]));
+  return Object.fromEntries(Object.entries(data).map(([k, v]) => [
+    k,
+    k === "createdAt" && typeof v === "string"
+      ? { timestampValue: v }
+      : toFirestoreValue(v)
+  ]));
 }
 export function validateOrder(input, menu, claims) {
   if (!input || typeof input !== "object") throw new Error("Order data is missing");
