@@ -1947,7 +1947,8 @@ if(!window.QB_AUTH_USER){
 }
 const item=items.find(x=>x.id===id),sel=$("size-"+id),price=item.prices[Number(sel.value)],key=id+"-"+price[0];
 const existing=cart.find(x=>x.key===key);
-if(existing)existing.qty++;else cart.push({key,id,size:price[0],price:price[1],qty:1});
+if(existing){if(existing.qty>=99){showToast(lang==="hi"?"एक डिश की अधिकतम मात्रा 99 है।":"Maximum quantity per dish is 99.");return}existing.qty++}
+else{if(cart.length>=30){showToast(lang==="hi"?"एक ऑर्डर में अधिकतम 30 अलग आइटम रख सकते हैं।":"An order can contain up to 30 different items.");return}cart.push({key,id,size:price[0],price:price[1],qty:1})}
 updateCart();showToast(lang==="hi"?"कार्ट में जोड़ दिया गया":"Added to cart");
 }
 window.QB_ADD_ORDER_ITEMS=rows=>{rows.forEach(row=>{const item=items.find(x=>String(x.id)===String(row.id));if(!item)return;const price=item.prices.find(p=>String(p[0])===String(row.size))||item.prices.find(p=>Number(p[1])===Number(row.price));if(!price)return;const key=item.id+"-"+price[0],existing=cart.find(x=>x.key===key);if(existing)existing.qty+=Math.max(1,Number(row.quantity)||1);else cart.push({key,id:item.id,size:price[0],price:price[1],qty:Math.max(1,Number(row.quantity)||1)})});updateCart();showToast("पुराना ऑर्डर कार्ट में जोड़ दिया गया।")};
