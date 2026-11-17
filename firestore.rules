@@ -169,6 +169,7 @@ service cloud.firestore {
             'name',
             'email',
             'phone',
+            'createdAt',
             'updatedAt',
             'addresses'
           ]);
