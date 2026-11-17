@@ -1,0 +1,7 @@
+name = "quality-bakers-orders"
+main = "index.js"
+compatibility_date = "2026-11-17"
+
+[vars]
+FIREBASE_PROJECT_ID = "quality-bakers-6db0b"
+ALLOWED_ORIGINS = "https://anshmaurya5619.github.io"
