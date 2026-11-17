@@ -1946,9 +1946,9 @@ if(!window.QB_AUTH_USER){
  openAccount();return;
 }
 const item=items.find(x=>x.id===id),sel=$("size-"+id),price=item.prices[Number(sel.value)],key=id+"-"+price[0];
-const existing=cart.find(x=>x.key===key);
-if(existing){if(existing.qty>=99){showToast(lang==="hi"?"एक डिश की अधिकतम मात्रा 99 है।":"Maximum quantity per dish is 99.");return}existing.qty++}
-else{if(cart.length>=30){showToast(lang==="hi"?"एक ऑर्डर में अधिकतम 30 अलग आइटम रख सकते हैं।":"An order can contain up to 30 different items.");return}cart.push({key,id,size:price[0],price:price[1],qty:1})}
+const existing=cart.find(x=>x.key===key),cartTotal=cart.reduce((sum,x)=>sum+x.qty*x.price,0);
+if(existing){if(existing.qty>=99){showToast(lang==="hi"?"एक डिश की अधिकतम मात्रा 99 है।":"Maximum quantity per dish is 99.");return}if(cartTotal+Number(price[1])>100000){showToast(lang==="hi"?"ऑर्डर की अधिकतम राशि ₹1,00,000 है।":"Maximum order total is ₹100,000.");return}existing.qty++}
+else{if(cart.length>=30){showToast(lang==="hi"?"एक ऑर्डर में अधिकतम 30 अलग आइटम रख सकते हैं।":"An order can contain up to 30 different items.");return}if(cartTotal+Number(price[1])>100000){showToast(lang==="hi"?"ऑर्डर की अधिकतम राशि ₹1,00,000 है।":"Maximum order total is ₹100,000.");return}cart.push({key,id,size:price[0],price:price[1],qty:1})}
 updateCart();showToast(lang==="hi"?"कार्ट में जोड़ दिया गया":"Added to cart");
 }
 window.QB_ADD_ORDER_ITEMS=rows=>{rows.forEach(row=>{const item=items.find(x=>String(x.id)===String(row.id));if(!item)return;const price=item.prices.find(p=>String(p[0])===String(row.size))||item.prices.find(p=>Number(p[1])===Number(row.price));if(!price)return;const key=item.id+"-"+price[0],existing=cart.find(x=>x.key===key);if(existing)existing.qty+=Math.max(1,Number(row.quantity)||1);else cart.push({key,id:item.id,size:price[0],price:price[1],qty:Math.max(1,Number(row.quantity)||1)})});updateCart();showToast("पुराना ऑर्डर कार्ट में जोड़ दिया गया।")};
@@ -2034,7 +2034,7 @@ $("menuGrid").addEventListener("click",e=>{
 });
 $("cartItems").addEventListener("click",e=>{
 const q=e.target.closest("[data-qty]"),r=e.target.closest("[data-remove]");
-if(q){const item=cart.find(x=>x.key===q.dataset.qty);if(item){item.qty+=Number(q.dataset.delta);if(item.qty<=0)cart=cart.filter(x=>x.key!==item.key)}updateCart()}
+if(q){const item=cart.find(x=>x.key===q.dataset.qty);if(item){const delta=Number(q.dataset.delta),cartTotal=cart.reduce((sum,x)=>sum+x.qty*x.price,0);if(delta>0&&(item.qty>=99||cartTotal+item.price>100000)){showToast(lang==="hi"?"मात्रा या ऑर्डर राशि की अधिकतम सीमा पूरी हो गई।":"Maximum quantity or order total reached.");return}item.qty+=delta;if(item.qty<=0)cart=cart.filter(x=>x.key!==item.key)}updateCart()}
 if(r){cart=cart.filter(x=>x.key!==r.dataset.remove);updateCart()}
 });
 $("cartOpen").addEventListener("click",openCart);
