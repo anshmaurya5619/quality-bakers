@@ -45,8 +45,9 @@ test("only the configured owner can publish menu changes", async () => {
   await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), "publicMenu/attacker"), menu));
 });
 
-test("customer can create an order only under their own UID", async () => {
-  const db = env.authenticatedContext(customerUid).firestore();
+test("browser clients cannot create orders directly; trusted order API is required", async () => {
+  const customerDb = env.authenticatedContext(customerUid).firestore();
+  const ownerDb = env.authenticatedContext(ownerUid).firestore();
   const order = {
     customerUid,
     customerName: "Test Customer",
@@ -54,14 +55,15 @@ test("customer can create an order only under their own UID", async () => {
     customerPhone: "9876543210",
     note: "",
     deliveryLocation: { mode: "manual", address: "Test address, Jaunpur" },
-    items: [{ id: "burger", nameHi: "बर्गर", quantity: 1, price: 60 }],
+    items: [{ id: "burger", nameHi: "बर्गर", nameEn: "Burger", size: "Full", price: 60, quantity: 1, lineTotal: 60 }],
     total: 60,
     status: "placed",
     createdAt: serverTimestamp()
   };
-  await assertSucceeds(setDoc(doc(db, "orders/order-own"), order));
-  await assertFails(setDoc(doc(db, "orders/order-other"), { ...order, customerUid: "someone-else" }));
+  await assertFails(setDoc(doc(customerDb, "orders/order-own"), order));
+  await assertFails(setDoc(doc(ownerDb, "orders/order-from-browser"), order));
 });
+
 
 test("customer cannot read another customer's order or change order status", async () => {
   await env.withSecurityRulesDisabled(async context => {
@@ -120,13 +122,50 @@ test("owner GPS tracking is allowed only for active delivery statuses", async ()
   }));
 });
 
-test("customer profile is private to its authenticated UID", async () => {
+test("customer profile and saved addresses are private and bounded to 10", async () => {
   const ownDb = env.authenticatedContext(customerUid).firestore();
-  await assertSucceeds(setDoc(doc(ownDb, "customers/" + customerUid), {
+  const profileRef = doc(ownDb, "customers/" + customerUid);
+  await assertSucceeds(setDoc(profileRef, {
     uid: customerUid, name: "Test Customer", email: "customer@example.com",
     phone: "9876543210", createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
-    addresses: []
+    addresses: [{ label: "Home", address: "House 1, Main Road", createdAt: new Date().toISOString() }]
   }));
-  await assertSucceeds(getDoc(doc(ownDb, "customers/" + customerUid)));
+  await assertSucceeds(getDoc(profileRef));
+  await assertSucceeds(updateDoc(profileRef, {
+    addresses: [{ label: "Home", address: "House 1, Main Road", createdAt: new Date().toISOString() }],
+    updatedAt: serverTimestamp()
+  }));
+  const tooMany = Array.from({ length: 11 }, (_, i) => ({
+    label: "Address " + i, address: "House " + i + ", Main Road", createdAt: new Date().toISOString()
+  }));
+  await assertFails(updateDoc(profileRef, { addresses: tooMany, updatedAt: serverTimestamp() }));
   await assertFails(getDoc(doc(env.authenticatedContext("other-customer").firestore(), "customers/" + customerUid)));
+  await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), "customers/" + customerUid)));
+});
+
+test("owner can publish and delete announcements; customers are read-only", async () => {
+  const ownerDb = env.authenticatedContext(ownerUid).firestore();
+  const customerDb = env.authenticatedContext(customerUid).firestore();
+  const announcement = doc(ownerDb, "announcements/notice-1");
+  await assertSucceeds(setDoc(announcement, {
+    title: "Weekend Offer", message: "Fresh menu today", createdAt: serverTimestamp(), createdBy: ownerUid
+  }));
+  await assertSucceeds(getDoc(doc(customerDb, "announcements/notice-1")));
+  await assertFails(setDoc(doc(customerDb, "announcements/notice-2"), {
+    title: "Fake", message: "Not allowed", createdAt: serverTimestamp(), createdBy: customerUid
+  }));
+  await assertFails(updateDoc(announcement, { message: "Tampered" }));
+});
+
+test("owner status updates require legal progression and timestamp", async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "orders/transition-order"), { customerUid, status: "placed" });
+  });
+  const ownerDb = env.authenticatedContext(ownerUid).firestore();
+  await assertFails(updateDoc(doc(ownerDb, "orders/transition-order"), {
+    status: "completed", updatedAt: serverTimestamp()
+  }));
+  await assertSucceeds(updateDoc(doc(ownerDb, "orders/transition-order"), {
+    status: "confirmed", updatedAt: serverTimestamp()
+  }));
 });
